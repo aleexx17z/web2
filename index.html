@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>MTASA Script Letöltő</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        h1 { text-align: center; }
+        .login-form, .upload-form { max-width: 350px; margin: 30px auto; }
+        .login-form input, .upload-form input, .upload-form textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+        .script-list { margin-top: 30px; }
+        .script { background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
+        .script-title { font-weight: bold; }
+        .free { color: green; }
+        .paid { color: #b00; }
+        .logout-btn { float: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MTASA Script Letöltő</h1>
+        <div id="user-section"></div>
+        <div id="upload-section" style="display:none;"></div>
+        <div class="script-list" id="script-list"></div>
+    </div>
+    <script>
+        // --- Helper functions for localStorage ---
+        function getScripts() {
+            let scripts = localStorage.getItem('mtasa_scripts');
+            if (!scripts) return [];
+            try { return JSON.parse(scripts); } catch { return []; }
+        }
+        function saveScripts(scripts) {
+            localStorage.setItem('mtasa_scripts', JSON.stringify(scripts));
+        }
+
+        // --- Authentication ---
+        function isLoggedIn() {
+            return localStorage.getItem('mtasa_loggedin') === 'true';
+        }
+        function login(username, password) {
+            if (username === 'aleexx' && password === 'KURVAANYAD1') {
+                localStorage.setItem('mtasa_loggedin', 'true');
+                return true;
+            }
+            return false;
+        }
+        function logout() {
+            localStorage.removeItem('mtasa_loggedin');
+            location.reload();
+        }
+
+        // --- UI Rendering ---
+        function renderUserSection() {
+            const userSection = document.getElementById('user-section');
+            userSection.innerHTML = '';
+            if (isLoggedIn()) {
+                userSection.innerHTML = `
+                    <div>
+                        Bejelentkezve mint <b>aleexx</b>
+                        <button class="logout-btn" onclick="logout()">Kijelentkezés</button>
+                    </div>
+                `;
+            } else {
+                userSection.innerHTML = `
+                    <form class="login-form" onsubmit="return handleLogin(event)">
+                        <h3>Bejelentkezés</h3>
+                        <input type="text" id="login-username" placeholder="Felhasználónév" required>
+                        <input type="password" id="login-password" placeholder="Jelszó" required>
+                        <button type="submit">Bejelentkezés</button>
+                        <div style="margin-top:10px; color:#888;">Vendégként is böngészhetsz!</div>
+                    </form>
+                `;
+            }
+        }
+
+        function renderUploadSection() {
+            const uploadSection = document.getElementById('upload-section');
+            if (isLoggedIn()) {
+                uploadSection.style.display = '';
+                uploadSection.innerHTML = `
+                    <form class="upload-form" onsubmit="return handleUpload(event)">
+                        <h3>Script feltöltése</h3>
+                        <input type="text" id="script-title" placeholder="Script neve" required>
+                        <textarea id="script-desc" placeholder="Leírás" required></textarea>
+                        <input type="url" id="script-link" placeholder="Letöltési link (pl. GitHub, Mediafire, stb.)" required>
+                        <select id="script-type">
+                            <option value="free">Ingyenes</option>
+                            <option value="paid">Fizetős</option>
+                        </select>
+                        <input type="text" id="script-price" placeholder="Ár (ha fizetős, pl. 1500 Ft)">
+                        <button type="submit">Feltöltés</button>
+                    </form>
+                `;
+            } else {
+                uploadSection.style.display = 'none';
+                uploadSection.innerHTML = '';
+            }
+        }
+
+        function renderScriptList() {
+            const list = document.getElementById('script-list');
+            const scripts = getScripts();
+            if (scripts.length === 0) {
+                list.innerHTML = '<i>Még nincs feltöltött script.</i>';
+                return;
+            }
+            list.innerHTML = scripts.map(script => `
+                <div class="script">
+                    <div class="script-title">${script.title}</div>
+                    <div>${script.desc}</div>
+                    <div>
+                        <span class="${script.type === 'free' ? 'free' : 'paid'}">
+                            ${script.type === 'free' ? 'Ingyenes' : 'Fizetős'}
+                        </span>
+                        ${script.type === 'paid' && script.price ? `- Ár: ${script.price}` : ''}
+                    </div>
+                    <div>
+                        <a href="${script.link}" target="_blank">Letöltés / Megtekintés</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- Event Handlers ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            if (login(username, password)) {
+                renderUserSection();
+                renderUploadSection();
+            } else {
+                alert('Hibás felhasználónév vagy jelszó!');
+            }
+            return false;
+        }
+
+        function handleUpload(e) {
+            e.preventDefault();
+            const title = document.getElementById('script-title').value.trim();
+            const desc = document.getElementById('script-desc').value.trim();
+            const link = document.getElementById('script-link').value.trim();
+            const type = document.getElementById('script-type').value;
+            const price = document.getElementById('script-price').value.trim();
+
+            if (!title || !desc || !link) {
+                alert('Minden mező kitöltése kötelező!');
+                return false;
+            }
+            if (type === 'paid' && !price) {
+                alert('Add meg az árat a fizetős scripthez!');
+                return false;
+            }
+
+            const scripts = getScripts();
+            scripts.unshift({
+                title, desc, link, type, price: type === 'paid' ? price : ''
+            });
+            saveScripts(scripts);
+            renderScriptList();
+            e.target.reset();
+            alert('Script sikeresen feltöltve!');
+            return false;
+        }
+
+        // --- Initial Render ---
+        renderUserSection();
+        renderUploadSection();
+        renderScriptList();
+
+        // --- Keep upload section in sync on login/logout ---
+        window.logout = logout;
+        window.handleLogin = handleLogin;
+        window.handleUpload = handleUpload;
+    </script>
+</body>
+</html>
+
+
+
