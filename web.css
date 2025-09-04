@@ -1,45 +1,51 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    background: #181a20;
+    color: #e0e0e0;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 700px;
     margin: 40px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px #0001;
+    background: #23262e;
+    padding: 32px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 32px #000a, 0 1.5px 6px #0004;
 }
 
 h1 {
     text-align: center;
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-    color: #222;
-    letter-spacing: 1px;
+    font-size: 2.3rem;
+    margin-bottom: 24px;
+    color: #f3f3f3;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-shadow: 0 2px 12px #0008;
 }
 
 .login-form,
 .upload-form {
-    max-width: 350px;
-    margin: 30px auto;
-    background: #fafafa;
-    padding: 20px 18px 18px 18px;
-    border-radius: 7px;
-    box-shadow: 0 1px 4px #0001;
+    max-width: 370px;
+    margin: 32px auto;
+    background: #20222a;
+    padding: 22px 20px 20px 20px;
+    border-radius: 9px;
+    box-shadow: 0 2px 12px #0005;
+    border: 1px solid #23262e;
 }
 
 .login-form h3,
 .upload-form h3 {
     margin-top: 0;
-    margin-bottom: 18px;
-    font-size: 1.2rem;
-    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    color: #e0e0e0;
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .login-form input,
@@ -47,13 +53,14 @@ h1 {
 .upload-form textarea,
 .upload-form select {
     width: 100%;
-    margin-bottom: 12px;
-    padding: 9px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    border: 1.5px solid #23262e;
+    border-radius: 5px;
     font-size: 1rem;
-    background: #fff;
-    transition: border 0.2s;
+    background: #181a20;
+    color: #e0e0e0;
+    transition: border 0.2s, background 0.2s;
     box-sizing: border-box;
 }
 
@@ -61,115 +68,128 @@ h1 {
 .upload-form input:focus,
 .upload-form textarea:focus,
 .upload-form select:focus {
-    border-color: #b0c4de;
+    border-color: #2d8cff;
+    background: #23262e;
     outline: none;
 }
 
 .upload-form textarea {
-    min-height: 60px;
+    min-height: 70px;
     resize: vertical;
 }
 
 .login-form button,
 .upload-form button {
     width: 100%;
-    padding: 10px 0;
-    background: #2d8cff;
+    padding: 11px 0;
+    background: linear-gradient(90deg, #2d8cff 60%, #1766c2 100%);
     color: #fff;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
+    border-radius: 5px;
+    font-size: 1.05rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 1.5px 6px #0003;
+    letter-spacing: 0.5px;
 }
 
 .login-form button:hover,
 .upload-form button:hover {
-    background: #1766c2;
+    background: linear-gradient(90deg, #1766c2 60%, #2d8cff 100%);
+    box-shadow: 0 2.5px 12px #2d8cff33;
 }
 
 .script-list {
-    margin-top: 30px;
+    margin-top: 36px;
 }
 
 .script {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px 18px 13px 18px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 3px #0001;
-    transition: box-shadow 0.2s;
+    background: #23262e;
+    border: 1.5px solid #23262e;
+    border-radius: 7px;
+    padding: 18px 22px 15px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px #0004;
+    transition: box-shadow 0.2s, border 0.2s;
 }
 
 .script:hover {
-    box-shadow: 0 2px 8px #0002;
+    box-shadow: 0 4px 24px #2d8cff22, 0 2px 10px #0006;
+    border-color: #2d8cff;
 }
 
 .script-title {
     font-weight: bold;
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-    color: #222;
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+    color: #f3f3f3;
+    letter-spacing: 0.2px;
 }
 
 .script .free {
-    color: #1a8a1a;
-    font-weight: 500;
+    color: #3be97a;
+    font-weight: 600;
+    text-shadow: 0 1px 6px #1a8a1a33;
 }
 
 .script .paid {
-    color: #b00;
-    font-weight: 500;
+    color: #ff4b4b;
+    font-weight: 600;
+    text-shadow: 0 1px 6px #b003;
 }
 
 .script a {
     color: #2d8cff;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: 600;
+    transition: color 0.18s, text-shadow 0.18s;
+    text-shadow: 0 1px 6px #2d8cff22;
 }
 
 .script a:hover {
-    color: #1766c2;
+    color: #fff;
+    text-shadow: 0 2px 12px #2d8cff99;
     text-decoration: underline;
 }
 
 .logout-btn {
     float: right;
-    background: #eee;
-    color: #444;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 14px;
-    font-size: 0.95rem;
+    background: #23262e;
+    color: #e0e0e0;
+    border: 1px solid #2d8cff;
+    border-radius: 5px;
+    padding: 7px 16px;
+    font-size: 1rem;
     cursor: pointer;
-    margin-left: 10px;
-    transition: background 0.2s, color 0.2s;
+    margin-left: 12px;
+    transition: background 0.18s, color 0.18s, border 0.18s;
+    font-weight: 500;
+    box-shadow: 0 1px 4px #0003;
 }
 
 .logout-btn:hover {
-    background: #f44336;
+    background: #ff4b4b;
     color: #fff;
+    border-color: #ff4b4b;
 }
 
 @media (max-width: 800px) {
     .container {
-        max-width: 98vw;
-        padding: 10px;
+        max-width: 99vw;
+        padding: 8px;
     }
     .login-form,
     .upload-form {
-        max-width: 98vw;
-        padding: 12px 6px;
+        max-width: 99vw;
+        padding: 10px 4px;
     }
     .script {
-        padding: 10px 7px 8px 7px;
+        padding: 10px 6px 8px 6px;
     }
 }
 
-::-webkit-input-placeholder { color: #aaa; }
-::-moz-placeholder { color: #aaa; }
-:-ms-input-placeholder { color: #aaa; }
-::placeholder { color: #aaa; }
+::-webkit-input-placeholder { color: #888; }
+::-moz-placeholder { color: #888; }
+:-ms-input-placeholder { color: #888; }
+::placeholder { color: #888; }
