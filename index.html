@@ -20,6 +20,7 @@
             --info-bg: #1a2332;
             --info-border: #2d8cff;
             --info-light-bg: #eaf2ff;
+            --star: #ffd700;
         }
         body[data-theme="dark"] {
             background: var(--bg-dark);
@@ -30,7 +31,7 @@
             color: var(--text-light);
         }
         .container {
-            max-width: 700px;
+            max-width: 900px;
             margin: 40px auto;
             background: var(--container-dark);
             padding: 32px 24px;
@@ -44,23 +45,32 @@
         }
         h1 {
             text-align: center;
-            font-size: 2.3rem;
+            font-size: 2.5rem;
             margin-bottom: 24px;
-            color: #f3f3f3;
+            color: #2d8cff;
             letter-spacing: 1.5px;
-            font-weight: 700;
+            font-weight: 800;
             text-shadow: 0 2px 12px #0008;
         }
         body[data-theme="light"] h1 {
-            color: var(--text-light);
+            color: var(--accent);
             text-shadow: none;
         }
         .topbar {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             gap: 12px;
             margin-bottom: 18px;
+        }
+        .topbar .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .topbar select, .topbar button {
             background: transparent;
@@ -81,6 +91,27 @@
             background: var(--paid);
             color: #fff;
             border-color: var(--paid);
+        }
+        .nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 7px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 1px 6px #2d8cff22;
+        }
+        .nav-btn:hover {
+            background: #1a2332;
+            color: var(--primary);
         }
         .info-section {
             background: var(--info-bg);
@@ -184,7 +215,7 @@
             background: #ff4b4b;
             color: #fff;
         }
-        .login-form, .upload-form {
+        .login-form, .upload-form, .review-form {
             max-width: 370px;
             margin: 32px auto;
             background: #20222a;
@@ -194,12 +225,13 @@
             border: 1px solid #23262e;
         }
         body[data-theme="light"] .login-form, 
-        body[data-theme="light"] .upload-form {
+        body[data-theme="light"] .upload-form,
+        body[data-theme="light"] .review-form {
             background: #f8fafd;
             border: 1px solid #e0e0e0;
             color: var(--text-light);
         }
-        .login-form h3, .upload-form h3 {
+        .login-form h3, .upload-form h3, .review-form h3 {
             margin-top: 0;
             margin-bottom: 20px;
             font-size: 1.25rem;
@@ -209,10 +241,11 @@
             letter-spacing: 0.5px;
         }
         body[data-theme="light"] .login-form h3, 
-        body[data-theme="light"] .upload-form h3 {
+        body[data-theme="light"] .upload-form h3,
+        body[data-theme="light"] .review-form h3 {
             color: var(--text-light);
         }
-        .login-form input, .upload-form input, .upload-form textarea, .upload-form select {
+        .login-form input, .upload-form input, .upload-form textarea, .upload-form select, .review-form textarea {
             width: 100%;
             margin-bottom: 14px;
             padding: 10px 12px;
@@ -227,12 +260,13 @@
         body[data-theme="light"] .login-form input, 
         body[data-theme="light"] .upload-form input, 
         body[data-theme="light"] .upload-form textarea, 
-        body[data-theme="light"] .upload-form select {
+        body[data-theme="light"] .upload-form select,
+        body[data-theme="light"] .review-form textarea {
             background: #fff;
             color: var(--text-light);
             border: 1.5px solid #e0e0e0;
         }
-        .login-form input:focus, .upload-form input:focus, .upload-form textarea:focus, .upload-form select:focus {
+        .login-form input:focus, .upload-form input:focus, .upload-form textarea:focus, .upload-form select:focus, .review-form textarea:focus {
             border-color: var(--accent);
             background: #23262e;
             outline: none;
@@ -240,7 +274,8 @@
         body[data-theme="light"] .login-form input:focus, 
         body[data-theme="light"] .upload-form input:focus, 
         body[data-theme="light"] .upload-form textarea:focus, 
-        body[data-theme="light"] .upload-form select:focus {
+        body[data-theme="light"] .upload-form select:focus,
+        body[data-theme="light"] .review-form textarea:focus {
             background: #f4f6fa;
         }
         .script-list {
@@ -254,20 +289,65 @@
             margin-bottom: 18px;
             box-shadow: 0 1px 6px #0002;
             transition: background 0.2s, border 0.2s;
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            align-items: flex-start;
         }
         body[data-theme="light"] .script {
             background: #fff;
             border: 1px solid #e0e0e0;
         }
+        .script-image {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 7px;
+            background: #181a20;
+            border: 1px solid #2d8cff22;
+            margin-right: 12px;
+        }
+        .script-content {
+            flex: 1;
+        }
         .script-title {
-            font-weight: 600;
-            font-size: 1.15rem;
+            font-weight: 700;
+            font-size: 1.18rem;
             margin-bottom: 4px;
             color: var(--accent);
         }
         .free { color: var(--free); font-weight: 500; }
         .paid { color: var(--paid); font-weight: 500; }
         .usd { color: var(--usd); font-weight: 500; }
+        .script-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .buy-btn, .review-btn, .details-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 1px 6px #2d8cff22;
+        }
+        .buy-btn:hover {
+            background: var(--paid);
+        }
+        .review-btn:hover {
+            background: var(--star);
+            color: #23262e;
+        }
+        .details-btn:hover {
+            background: #1a2332;
+            color: var(--primary);
+        }
         .logout-btn {
             float: right;
             background: #23262e;
@@ -298,22 +378,171 @@
             text-shadow: 0 2px 12px #2d8cff99;
             text-decoration: underline;
         }
+        .stars {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .star {
+            color: var(--star);
+            font-size: 1.1em;
+        }
+        .star.inactive {
+            color: #888;
+        }
+        .review-list {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .review {
+            background: #181a20;
+            color: #e0e0e0;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-bottom: 7px;
+            font-size: 0.98em;
+            box-shadow: 0 1px 4px #0002;
+        }
+        body[data-theme="light"] .review {
+            background: #f4f6fa;
+            color: #23262e;
+        }
+        .review .review-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .review .review-date {
+            font-size: 0.92em;
+            color: #888;
+            margin-left: 8px;
+        }
+        .review .review-stars {
+            margin-left: 6px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000a;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #23262e;
+            color: #e0e0e0;
+            border-radius: 10px;
+            padding: 28px 28px 18px 28px;
+            min-width: 320px;
+            max-width: 95vw;
+            box-shadow: 0 4px 32px #000a, 0 1.5px 6px #0004;
+            position: relative;
+        }
+        body[data-theme="light"] .modal-content {
+            background: #fff;
+            color: #23262e;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: #888;
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        .modal-desc {
+            margin-bottom: 12px;
+        }
+        .modal .discord-link {
+            margin-top: 8px;
+        }
+        .featured-section {
+            margin: 32px 0 18px 0;
+            padding: 18px 18px 12px 18px;
+            background: #1a2332;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 12px #0002;
+        }
+        body[data-theme="light"] .featured-section {
+            background: #eaf2ff;
+        }
+        .featured-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .featured-list {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .featured-item {
+            background: #23262e;
+            color: #e0e0e0;
+            border-radius: 7px;
+            padding: 12px 14px;
+            min-width: 180px;
+            box-shadow: 0 1px 6px #0002;
+            border: 1px solid #2d8cff22;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        body[data-theme="light"] .featured-item {
+            background: #fff;
+            color: #23262e;
+            border: 1px solid #e0e0e0;
+        }
+        .featured-item .script-title {
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+        .featured-item .stars {
+            margin-bottom: 4px;
+        }
+        .featured-item .buy-btn {
+            padding: 4px 12px;
+            font-size: 0.98rem;
+        }
         @media (max-width: 800px) {
             .container {
                 max-width: 99vw;
                 padding: 8px;
             }
-            .login-form, .upload-form {
+            .login-form, .upload-form, .review-form {
                 max-width: 99vw;
                 padding: 10px 4px;
             }
             .script {
+                flex-direction: column;
                 padding: 10px 6px 8px 6px;
+            }
+            .script-image {
+                width: 100%;
+                height: 180px;
+                margin-bottom: 10px;
             }
             .info-section {
                 flex-direction: column;
                 gap: 8px;
                 padding: 12px 8px 10px 12px;
+            }
+            .featured-list {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -321,20 +550,32 @@
 <body data-theme="dark">
     <div class="container">
         <div class="topbar">
-            <select id="lang-switch">
-                <option value="hu">🇭🇺 Magyar</option>
-                <option value="en">🇬🇧 English</option>
-            </select>
-            <select id="currency-switch">
-                <option value="huf">HUF (Ft)</option>
-                <option value="eur">EUR (€)</option>
-                <option value="usd">USD ($)</option>
-            </select>
-            <button id="theme-switch" title="Váltás világos/sötét témára">🌙</button>
-            <button id="login-btn"></button>
+            <div class="logo">
+                <img src="https://img.icons8.com/color/48/000000/code.png" alt="Logo" style="height:28px;width:28px;vertical-align:middle;">
+                MTASA Scripts
+            </div>
+            <div class="nav">
+                <button class="nav-btn" id="nav-home">Főoldal</button>
+                <button class="nav-btn" id="nav-featured">Kiemelt</button>
+                <button class="nav-btn" id="nav-upload">Feltöltés</button>
+                <button class="nav-btn" id="nav-contact">Kapcsolat</button>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <select id="lang-switch">
+                    <option value="hu">🇭🇺 Magyar</option>
+                    <option value="en">🇬🇧 English</option>
+                </select>
+                <select id="currency-switch">
+                    <option value="huf">HUF (Ft)</option>
+                    <option value="eur">EUR (€)</option>
+                    <option value="usd">USD ($)</option>
+                </select>
+                <button id="theme-switch" title="Váltás világos/sötét témára">🌙</button>
+                <button id="login-btn"></button>
+            </div>
         </div>
         <!-- Info Section: új -->
-        <div class="info-section">
+        <div class="info-section" id="info-section">
             <span class="info-icon" aria-hidden="true">ℹ️</span>
             <div class="info-content">
                 <div style="font-size:1.13em; font-weight:600; margin-bottom:2px;">
@@ -343,32 +584,69 @@
                 </div>
                 <div style="margin-bottom:6px;">
                     <span id="info-desc-hu" style="display:none;">
-                        <b>Fizetős scriptek</b> vásárlásához vagy egyedi fejlesztéshez keress Discordon: 
+                        <b>Fizetős scriptek</b> vásárlásához vagy egyedi fejlesztéshez kattints a <b>Vásárlás</b> gombra a scriptnél, vagy keress Discordon: 
                         <a class="discord-link" href="https://discord.com/users/334232232857567232" target="_blank">
                             <span class="discord-icon">💬</span>aleexx17z
                         </a>
                     </span>
                     <span id="info-desc-en" style="display:none;">
-                        For <b>paid scripts</b> or custom development, contact me on Discord: 
+                        For <b>paid scripts</b> or custom development, click the <b>Buy</b> button on the script, or contact me on Discord: 
                         <a class="discord-link" href="https://discord.com/users/334232232857567232" target="_blank">
                             <span class="discord-icon">💬</span>aleexx17z
                         </a>
                     </span>
                 </div>
                 <div class="info-badges">
-                    <span class="badge feature" id="badge-feature-hu" style="display:none;">Új: Sötét/Világos téma</span>
-                    <span class="badge feature" id="badge-feature-en" style="display:none;">New: Dark/Light theme</span>
+                    <span class="badge feature" id="badge-feature-hu" style="display:none;">Új: Vásárlás gomb, értékelések, képek</span>
+                    <span class="badge feature" id="badge-feature-en" style="display:none;">New: Buy button, reviews, images</span>
                     <span class="badge update" id="badge-update-hu" style="display:none;">Több pénznem támogatás</span>
                     <span class="badge update" id="badge-update-en" style="display:none;">Multi-currency support</span>
-                    <span class="badge soon" id="badge-soon-hu" style="display:none;">Hamarosan: Képek, értékelés</span>
-                    <span class="badge soon" id="badge-soon-en" style="display:none;">Coming soon: Images, ratings</span>
+                    <span class="badge soon" id="badge-soon-hu" style="display:none;">Hamarosan: Felhasználói profilok</span>
+                    <span class="badge soon" id="badge-soon-en" style="display:none;">Coming soon: User profiles</span>
                 </div>
             </div>
+        </div>
+        <!-- Featured Scripts Section -->
+        <div class="featured-section" id="featured-section">
+            <div class="featured-title" id="featured-title">Kiemelt scriptek</div>
+            <div class="featured-list" id="featured-list"></div>
         </div>
         <h1 id="main-title">MTASA Script Letöltő</h1>
         <div id="user-section"></div>
         <div id="upload-section" style="display:none;"></div>
         <div class="script-list" id="script-list"></div>
+    </div>
+    <!-- Buy Modal -->
+    <div class="modal" id="buy-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBuyModal()">✕</button>
+            <div class="modal-title" id="buy-modal-title"></div>
+            <div class="modal-desc" id="buy-modal-desc"></div>
+            <a class="discord-link" href="https://discord.com/users/334232232857567232" target="_blank">
+                <span class="discord-icon">💬</span>aleexx17z
+            </a>
+        </div>
+    </div>
+    <!-- Review Modal -->
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeReviewModal()">✕</button>
+            <div class="modal-title" id="review-modal-title"></div>
+            <form class="review-form" onsubmit="return handleReviewSubmit(event)">
+                <label for="review-stars" style="font-weight:500;">Értékelés:</label>
+                <div id="review-stars" class="stars" style="margin-bottom:8px;"></div>
+                <textarea id="review-text" placeholder="Írd le a véleményed..." required></textarea>
+                <button type="submit" class="review-btn">Küldés</button>
+            </form>
+        </div>
+    </div>
+    <!-- Script Details Modal -->
+    <div class="modal" id="details-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDetailsModal()">✕</button>
+            <div class="modal-title" id="details-modal-title"></div>
+            <div id="details-modal-body"></div>
+        </div>
     </div>
     <!-- Login Modal -->
     <div id="login-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000a; z-index:1000; align-items:center; justify-content:center;">
@@ -409,7 +687,23 @@
                 loginTitle: "Bejelentkezés",
                 loginBtn: "Bejelentkezés",
                 themeLight: "🌞",
-                themeDark: "🌙"
+                themeDark: "🌙",
+                buy: "Vásárlás",
+                review: "Értékelés",
+                details: "Részletek",
+                contact: "Kapcsolat",
+                featured: "Kiemelt scriptek",
+                home: "Főoldal",
+                uploadNav: "Feltöltés",
+                reviewPlaceholder: "Írd le a véleményed...",
+                reviewSent: "Köszönjük az értékelést!",
+                noReviews: "Még nincs értékelés.",
+                stars: "csillag",
+                image: "Kép URL (opcionális)",
+                detailsTitle: "Script részletei",
+                author: "Feltöltő",
+                date: "Dátum",
+                back: "Vissza"
             },
             en: {
                 title: "MTASA Script Downloader",
@@ -436,7 +730,23 @@
                 loginTitle: "Login",
                 loginBtn: "Login",
                 themeLight: "🌞",
-                themeDark: "🌙"
+                themeDark: "🌙",
+                buy: "Buy",
+                review: "Review",
+                details: "Details",
+                contact: "Contact",
+                featured: "Featured Scripts",
+                home: "Home",
+                uploadNav: "Upload",
+                reviewPlaceholder: "Write your review...",
+                reviewSent: "Thank you for your review!",
+                noReviews: "No reviews yet.",
+                stars: "star",
+                image: "Image URL (optional)",
+                detailsTitle: "Script Details",
+                author: "Uploader",
+                date: "Date",
+                back: "Back"
             }
         };
         const currencyData = {
@@ -449,15 +759,38 @@
         let currentLang = localStorage.getItem('mtasa_lang') || 'hu';
         let currentCurrency = localStorage.getItem('mtasa_currency') || 'huf';
         let currentTheme = localStorage.getItem('mtasa_theme') || 'dark';
+        let currentView = 'home'; // home, featured, upload, contact
+        let scriptsCache = null;
+        let featuredScripts = [];
+        let reviews = JSON.parse(localStorage.getItem('mtasa_reviews') || '{}');
+        let lastScriptId = parseInt(localStorage.getItem('mtasa_lastid') || '0', 10);
 
         // --- Helper functions for localStorage ---
         function getScripts() {
+            if (scriptsCache) return scriptsCache;
             let scripts = localStorage.getItem('mtasa_scripts');
             if (!scripts) return [];
-            try { return JSON.parse(scripts); } catch { return []; }
+            try { scriptsCache = JSON.parse(scripts); return scriptsCache; } catch { return []; }
         }
         function saveScripts(scripts) {
+            scriptsCache = scripts;
             localStorage.setItem('mtasa_scripts', JSON.stringify(scripts));
+        }
+        function saveReviews() {
+            localStorage.setItem('mtasa_reviews', JSON.stringify(reviews));
+        }
+        function getScriptReviews(id) {
+            return reviews[id] || [];
+        }
+        function addScriptReview(id, review) {
+            if (!reviews[id]) reviews[id] = [];
+            reviews[id].unshift(review);
+            saveReviews();
+        }
+        function getNextScriptId() {
+            lastScriptId++;
+            localStorage.setItem('mtasa_lastid', lastScriptId);
+            return lastScriptId;
         }
 
         // --- Authentication ---
@@ -528,6 +861,11 @@
 
         function renderUploadSection() {
             const uploadSection = document.getElementById('upload-section');
+            if (currentView !== 'upload') {
+                uploadSection.style.display = 'none';
+                uploadSection.innerHTML = '';
+                return;
+            }
             if (isLoggedIn()) {
                 uploadSection.style.display = '';
                 uploadSection.innerHTML = `
@@ -536,6 +874,7 @@
                         <input type="text" id="script-title" placeholder="${translations[currentLang].scriptName}" required>
                         <textarea id="script-desc" placeholder="${translations[currentLang].description}" required></textarea>
                         <input type="url" id="script-link" placeholder="${translations[currentLang].downloadLink}" required>
+                        <input type="url" id="script-image" placeholder="${translations[currentLang].image}">
                         <select id="script-type">
                             <option value="free">${translations[currentLang].free}</option>
                             <option value="paid">${translations[currentLang].paid}</option>
@@ -544,16 +883,15 @@
                         <button type="submit">${translations[currentLang].submit}</button>
                     </form>
                 `;
-                // Currency symbol in price field
-                const priceInput = uploadSection.querySelector('#script-price');
-                priceInput.addEventListener('focus', function() {
-                    if (!this.value && currentCurrency !== 'huf') {
-                        this.value = '';
-                    }
-                });
             } else {
-                uploadSection.style.display = 'none';
-                uploadSection.innerHTML = '';
+                uploadSection.style.display = '';
+                uploadSection.innerHTML = `
+                    <div class="upload-form" style="text-align:center;">
+                        <h3>${translations[currentLang].upload}</h3>
+                        <p style="margin-bottom:0.5em;">${translations[currentLang].login} szükséges a feltöltéshez.</p>
+                        <button class="nav-btn" onclick="openLoginModal()">${translations[currentLang].loginBtn}</button>
+                    </div>
+                `;
             }
         }
 
@@ -568,31 +906,106 @@
 
         function renderScriptList() {
             const list = document.getElementById('script-list');
+            if (currentView !== 'home') {
+                list.innerHTML = '';
+                return;
+            }
             const scripts = getScripts();
             if (scripts.length === 0) {
                 list.innerHTML = `<i>${translations[currentLang].noScripts}</i>`;
                 return;
             }
-            list.innerHTML = scripts.map(script => {
-                let typeLabel = script.type === 'free' ? translations[currentLang].free : translations[currentLang].paid;
-                let typeClass = script.type === 'free' ? 'free' : (currentCurrency === 'usd' ? 'usd' : 'paid');
-                let priceStr = (script.type === 'paid' && script.price) ? `- ${translations[currentLang].price.split(' ')[0]}: <span class="${typeClass}">${formatPrice(script.price)}</span>` : '';
-                return `
-                <div class="script">
+            list.innerHTML = scripts.map(script => renderScriptCard(script)).join('');
+        }
+
+        function renderScriptCard(script) {
+            let typeLabel = script.type === 'free' ? translations[currentLang].free : translations[currentLang].paid;
+            let typeClass = script.type === 'free' ? 'free' : (currentCurrency === 'usd' ? 'usd' : 'paid');
+            let priceStr = (script.type === 'paid' && script.price) ? `- ${translations[currentLang].price.split(' ')[0]}: <span class="${typeClass}">${formatPrice(script.price)}</span>` : '';
+            let image = script.image ? `<img class="script-image" src="${script.image}" alt="Script image" onerror="this.style.display='none'">` : `<div class="script-image" style="display:flex;align-items:center;justify-content:center;font-size:2.2em;color:#2d8cff22;">🧩</div>`;
+            let reviewsArr = getScriptReviews(script.id);
+            let avgStars = reviewsArr.length ? (reviewsArr.reduce((a, r) => a + r.stars, 0) / reviewsArr.length) : 0;
+            let starsHtml = renderStars(avgStars, true);
+            return `
+                ${image}
+                <div class="script-content">
                     <div class="script-title">${script.title}</div>
-                    <div>${script.desc}</div>
+                    <div style="margin-bottom:4px;">${script.desc}</div>
                     <div>
                         <span class="${typeClass}">
                             ${typeLabel}
                         </span>
                         ${priceStr}
+                        <span class="stars" style="margin-left:10px;">${starsHtml}</span>
+                        <span style="font-size:0.95em;color:#888;">(${reviewsArr.length})</span>
                     </div>
-                    <div>
-                        <a href="${script.link}" target="_blank">${translations[currentLang].download}</a>
+                    <div class="script-actions">
+                        <a href="${script.link}" target="_blank" class="details-btn">${translations[currentLang].download}</a>
+                        ${script.type === 'paid' ? `<button class="buy-btn" onclick="openBuyModal(${script.id})">${translations[currentLang].buy}</button>` : ''}
+                        <button class="review-btn" onclick="openReviewModal(${script.id})">${translations[currentLang].review}</button>
+                        <button class="details-btn" onclick="openDetailsModal(${script.id})">${translations[currentLang].details}</button>
+                    </div>
+                    <div class="review-list">
+                        ${renderReviewList(script.id, 2)}
                     </div>
                 </div>
+            `;
+        }
+
+        function renderReviewList(scriptId, max = 2) {
+            let arr = getScriptReviews(scriptId);
+            if (!arr.length) return `<div style="color:#888;font-size:0.97em;">${translations[currentLang].noReviews}</div>`;
+            return arr.slice(0, max).map(r => `
+                <div class="review">
+                    <span class="review-author">${r.author || "Anon"}</span>
+                    <span class="review-date">${r.date}</span>
+                    <span class="review-stars">${renderStars(r.stars)}</span>
+                    <div>${r.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderStars(stars, allowHalf = false) {
+            let html = '';
+            let full = Math.floor(stars);
+            let half = allowHalf && stars - full >= 0.5 ? 1 : 0;
+            for (let i = 0; i < 5; i++) {
+                if (i < full) html += `<span class="star">★</span>`;
+                else if (half && i === full) html += `<span class="star">☆</span>`;
+                else html += `<span class="star inactive">★</span>`;
+            }
+            return html;
+        }
+
+        function renderFeaturedSection() {
+            const section = document.getElementById('featured-section');
+            const list = document.getElementById('featured-list');
+            if (currentView !== 'featured') {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = '';
+            if (!featuredScripts.length) {
+                // Pick top 3 scripts by review count or random
+                let scripts = getScripts();
+                featuredScripts = scripts.slice(0, 3);
+            }
+            list.innerHTML = featuredScripts.map(script => {
+                let reviewsArr = getScriptReviews(script.id);
+                let avgStars = reviewsArr.length ? (reviewsArr.reduce((a, r) => a + r.stars, 0) / reviewsArr.length) : 0;
+                let starsHtml = renderStars(avgStars, true);
+                let image = script.image ? `<img class="script-image" src="${script.image}" alt="Script image" style="width:70px;height:70px;object-fit:cover;margin-bottom:6px;" onerror="this.style.display='none'">` : `<div class="script-image" style="width:70px;height:70px;display:flex;align-items:center;justify-content:center;font-size:1.5em;color:#2d8cff22;margin-bottom:6px;">🧩</div>`;
+                return `
+                    <div class="featured-item">
+                        ${image}
+                        <div class="script-title">${script.title}</div>
+                        <div class="stars">${starsHtml}</div>
+                        <button class="buy-btn" onclick="openBuyModal(${script.id})">${translations[currentLang].buy}</button>
+                        <button class="details-btn" onclick="openDetailsModal(${script.id})">${translations[currentLang].details}</button>
+                    </div>
                 `;
             }).join('');
+            document.getElementById('featured-title').textContent = translations[currentLang].featured;
         }
 
         // --- Info Section Language Switch ---
@@ -638,6 +1051,108 @@
             document.body.style.overflow = "";
         }
 
+        // --- Buy Modal ---
+        function openBuyModal(scriptId) {
+            const modal = document.getElementById('buy-modal');
+            const script = getScripts().find(s => s.id === scriptId);
+            document.getElementById('buy-modal-title').textContent = script.title;
+            document.getElementById('buy-modal-desc').innerHTML = `
+                <b>${translations[currentLang].price.split(' ')[0]}:</b> ${formatPrice(script.price)}<br>
+                <b>${translations[currentLang].description}:</b> ${script.desc}<br>
+                <div style="margin-top:8px;">
+                    ${currentLang === 'hu'
+                        ? 'A vásárláshoz vedd fel velem a kapcsolatot Discordon:'
+                        : 'To purchase, contact me on Discord:'}
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+        function closeBuyModal() {
+            document.getElementById('buy-modal').classList.remove('active');
+        }
+
+        // --- Review Modal ---
+        let reviewScriptId = null;
+        function openReviewModal(scriptId) {
+            reviewScriptId = scriptId;
+            document.getElementById('review-modal-title').textContent = translations[currentLang].review + " - " + (getScripts().find(s => s.id === scriptId)?.title || "");
+            document.getElementById('review-text').value = "";
+            renderReviewStars(0);
+            document.getElementById('review-modal').classList.add('active');
+        }
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.remove('active');
+        }
+        function renderReviewStars(selected) {
+            const starsDiv = document.getElementById('review-stars');
+            starsDiv.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                let star = document.createElement('span');
+                star.className = 'star' + (i <= selected ? '' : ' inactive');
+                star.textContent = '★';
+                star.style.cursor = 'pointer';
+                star.onclick = () => renderReviewStars(i);
+                starsDiv.appendChild(star);
+            }
+            starsDiv.setAttribute('data-stars', selected);
+        }
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            let stars = parseInt(document.getElementById('review-stars').getAttribute('data-stars')) || 0;
+            let text = document.getElementById('review-text').value.trim();
+            if (!stars || !text) return false;
+            let author = isLoggedIn() ? "aleexx" : "Anon";
+            let date = new Date().toLocaleDateString(currentLang === 'hu' ? 'hu-HU' : 'en-US');
+            addScriptReview(reviewScriptId, { stars, text, author, date });
+            closeReviewModal();
+            renderAll();
+            setTimeout(() => alert(translations[currentLang].reviewSent), 100);
+            return false;
+        }
+
+        // --- Details Modal ---
+        function openDetailsModal(scriptId) {
+            const modal = document.getElementById('details-modal');
+            const script = getScripts().find(s => s.id === scriptId);
+            let reviewsArr = getScriptReviews(scriptId);
+            let avgStars = reviewsArr.length ? (reviewsArr.reduce((a, r) => a + r.stars, 0) / reviewsArr.length) : 0;
+            let starsHtml = renderStars(avgStars, true);
+            let image = script.image ? `<img class="script-image" src="${script.image}" alt="Script image" style="width:120px;height:120px;object-fit:cover;margin-bottom:10px;" onerror="this.style.display='none'">` : '';
+            document.getElementById('details-modal-title').textContent = translations[currentLang].detailsTitle;
+            document.getElementById('details-modal-body').innerHTML = `
+                <div style="display:flex;gap:18px;align-items:flex-start;">
+                    ${image}
+                    <div>
+                        <div class="script-title" style="font-size:1.25em;">${script.title}</div>
+                        <div style="margin-bottom:6px;">${script.desc}</div>
+                        <div>
+                            <span class="${script.type === 'free' ? 'free' : (currentCurrency === 'usd' ? 'usd' : 'paid')}">
+                                ${script.type === 'free' ? translations[currentLang].free : translations[currentLang].paid}
+                            </span>
+                            ${script.type === 'paid' && script.price ? `- ${translations[currentLang].price.split(' ')[0]}: <span class="${script.type === 'free' ? 'free' : (currentCurrency === 'usd' ? 'usd' : 'paid')}">${formatPrice(script.price)}</span>` : ''}
+                        </div>
+                        <div class="stars" style="margin:8px 0;">${starsHtml} <span style="font-size:0.95em;color:#888;">(${reviewsArr.length})</span></div>
+                        <div><b>${translations[currentLang].author}:</b> ${script.author || "aleexx"}</div>
+                        <div><b>${translations[currentLang].date}:</b> ${script.date || "-"}</div>
+                        <div style="margin-top:10px;">
+                            <a href="${script.link}" target="_blank" class="details-btn">${translations[currentLang].download}</a>
+                            ${script.type === 'paid' ? `<button class="buy-btn" onclick="openBuyModal(${script.id})">${translations[currentLang].buy}</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:18px;">
+                    <div style="font-weight:600;margin-bottom:6px;">${translations[currentLang].review}:</div>
+                    <div class="review-list">
+                        ${renderReviewList(script.id, 10)}
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+        function closeDetailsModal() {
+            document.getElementById('details-modal').classList.remove('active');
+        }
+
         // --- Event Handlers ---
         function handleLogin(e) {
             e.preventDefault();
@@ -659,6 +1174,7 @@
             const link = document.getElementById('script-link').value.trim();
             const type = document.getElementById('script-type').value;
             const price = document.getElementById('script-price').value.trim();
+            const image = document.getElementById('script-image').value.trim();
 
             if (!title || !desc || !link) {
                 alert(translations[currentLang].fillAll);
@@ -670,14 +1186,32 @@
             }
 
             const scripts = getScripts();
+            const id = getNextScriptId();
             scripts.unshift({
-                title, desc, link, type, price: type === 'paid' ? price : ''
+                id, title, desc, link, type, price: type === 'paid' ? price : '', image, author: "aleexx", date: new Date().toLocaleDateString(currentLang === 'hu' ? 'hu-HU' : 'en-US')
             });
             saveScripts(scripts);
             renderScriptList();
             e.target.reset();
             alert(translations[currentLang].uploaded);
             return false;
+        }
+
+        // --- Navigation ---
+        function setView(view) {
+            currentView = view;
+            // Hide all main sections
+            document.getElementById('script-list').style.display = (view === 'home') ? '' : 'none';
+            document.getElementById('featured-section').style.display = (view === 'featured') ? '' : 'none';
+            renderUploadSection();
+            renderScriptList();
+            renderFeaturedSection();
+            // Highlight nav
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (view === 'home') document.getElementById('nav-home').classList.add('active');
+            if (view === 'featured') document.getElementById('nav-featured').classList.add('active');
+            if (view === 'upload') document.getElementById('nav-upload').classList.add('active');
+            if (view === 'contact') document.getElementById('nav-contact').classList.add('active');
         }
 
         // --- Render All ---
@@ -687,15 +1221,22 @@
             renderLoginBtn();
             renderUploadSection();
             renderScriptList();
+            renderFeaturedSection();
             // Set language/currency selects
             document.getElementById('lang-switch').value = currentLang;
             document.getElementById('currency-switch').value = currentCurrency;
             setTheme(currentTheme);
             updateInfoSection();
+            // Update nav labels
+            document.getElementById('nav-home').textContent = translations[currentLang].home;
+            document.getElementById('nav-featured').textContent = translations[currentLang].featured;
+            document.getElementById('nav-upload').textContent = translations[currentLang].uploadNav;
+            document.getElementById('nav-contact').textContent = translations[currentLang].contact;
         }
 
         // --- Initial Render ---
         renderAll();
+        setView('home');
 
         // --- Event Listeners ---
         document.getElementById('lang-switch').addEventListener('change', function() {
@@ -708,25 +1249,112 @@
         document.getElementById('theme-switch').addEventListener('click', function() {
             setTheme(currentTheme === 'dark' ? 'light' : 'dark');
         });
+        document.getElementById('nav-home').addEventListener('click', function() {
+            setView('home');
+        });
+        document.getElementById('nav-featured').addEventListener('click', function() {
+            setView('featured');
+        });
+        document.getElementById('nav-upload').addEventListener('click', function() {
+            setView('upload');
+        });
+        document.getElementById('nav-contact').addEventListener('click', function() {
+            window.open("https://discord.com/users/334232232857567232", "_blank");
+        });
 
         // --- Expose for inline handlers ---
         window.logout = logout;
         window.handleLogin = handleLogin;
         window.handleUpload = handleUpload;
         window.closeLoginModal = closeLoginModal;
+        window.openBuyModal = openBuyModal;
+        window.closeBuyModal = closeBuyModal;
+        window.openReviewModal = openReviewModal;
+        window.closeReviewModal = closeReviewModal;
+        window.openDetailsModal = openDetailsModal;
+        window.closeDetailsModal = closeDetailsModal;
+        window.handleReviewSubmit = handleReviewSubmit;
 
         // --- Modal close on background click ---
         document.getElementById('login-modal').addEventListener('click', function(e) {
             if (e.target === this) closeLoginModal();
         });
+        document.getElementById('buy-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeBuyModal();
+        });
+        document.getElementById('review-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeReviewModal();
+        });
+        document.getElementById('details-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailsModal();
+        });
 
         // --- Keyboard: ESC closes modal ---
         document.addEventListener('keydown', function(e) {
-            if (e.key === "Escape") closeLoginModal();
+            if (e.key === "Escape") {
+                closeLoginModal();
+                closeBuyModal();
+                closeReviewModal();
+                closeDetailsModal();
+            }
         });
 
         // --- Info section language on load ---
         updateInfoSection();
+
+        // --- Review stars click init ---
+        document.getElementById('review-stars').addEventListener('click', function(e) {
+            if (e.target.classList.contains('star')) {
+                let idx = Array.from(this.children).indexOf(e.target) + 1;
+                renderReviewStars(idx);
+            }
+        });
+
+        // --- Demo data for first load ---
+        (function seedDemo() {
+            if (!localStorage.getItem('mtasa_scripts')) {
+                let demoScripts = [
+                    {
+                        id: getNextScriptId(),
+                        title: "Vehicle Spawner",
+                        desc: "Egyszerű jármű spawner script, testreszabható menüvel.",
+                        link: "https://github.com/aleexx17z/mtasa-vehicle-spawner",
+                        type: "free",
+                        price: "",
+                        image: "https://i.imgur.com/8QfQw1B.png",
+                        author: "aleexx",
+                        date: "2024.06.01"
+                    },
+                    {
+                        id: getNextScriptId(),
+                        title: "Premium Admin Panel",
+                        desc: "Fejlett admin panel, jogkezeléssel és logolással.",
+                        link: "https://github.com/aleexx17z/mtasa-admin-panel",
+                        type: "paid",
+                        price: "3500",
+                        image: "https://i.imgur.com/2QfQw1B.png",
+                        author: "aleexx",
+                        date: "2024.06.02"
+                    },
+                    {
+                        id: getNextScriptId(),
+                        title: "Scoreboard Plus",
+                        desc: "Modern scoreboard, játékos statisztikákkal és ranglistával.",
+                        link: "https://github.com/aleexx17z/mtasa-scoreboard",
+                        type: "free",
+                        price: "",
+                        image: "https://i.imgur.com/3QfQw1B.png",
+                        author: "aleexx",
+                        date: "2024.06.03"
+                    }
+                ];
+                saveScripts(demoScripts);
+                reviews = {};
+                addScriptReview(demoScripts[0].id, { stars: 5, text: "Nagyon hasznos script, ajánlom!", author: "Bence", date: "2024.06.04" });
+                addScriptReview(demoScripts[1].id, { stars: 4, text: "Jó admin panel, de lehetne több funkció.", author: "Dani", date: "2024.06.05" });
+                addScriptReview(demoScripts[2].id, { stars: 5, text: "Modern és átlátható scoreboard.", author: "Gábor", date: "2024.06.06" });
+            }
+        })();
     </script>
 </body>
 </html>
