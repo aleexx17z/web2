@@ -2,29 +2,312 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>MTASA Script Letöltő</title>
+    <title>MTASA Script Downloader</title>
+    <link rel="stylesheet" href="web.css">
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
-        h1 { text-align: center; }
-        .login-form, .upload-form { max-width: 350px; margin: 30px auto; }
-        .login-form input, .upload-form input, .upload-form textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
-        .script-list { margin-top: 30px; }
-        .script { background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
-        .script-title { font-weight: bold; }
-        .free { color: green; }
-        .paid { color: #b00; }
-        .logout-btn { float: right; }
+        :root {
+            --primary: #2d8cff;
+            --bg-dark: #181a20;
+            --bg-light: #f4f6fa;
+            --container-dark: #23262e;
+            --container-light: #fff;
+            --text-dark: #e0e0e0;
+            --text-light: #23262e;
+            --accent: #2d8cff;
+            --free: #3ecf8e;
+            --paid: #ff4b4b;
+            --usd: #f7b731;
+        }
+        body[data-theme="dark"] {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        body[data-theme="light"] {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: var(--container-dark);
+            padding: 32px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 32px #000a, 0 1.5px 6px #0004;
+            transition: background 0.2s, color 0.2s;
+        }
+        body[data-theme="light"] .container {
+            background: var(--container-light);
+            color: var(--text-light);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.3rem;
+            margin-bottom: 24px;
+            color: #f3f3f3;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            text-shadow: 0 2px 12px #0008;
+        }
+        body[data-theme="light"] h1 {
+            color: var(--text-light);
+            text-shadow: none;
+        }
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .topbar select, .topbar button {
+            background: transparent;
+            color: inherit;
+            border: 1.5px solid var(--accent);
+            border-radius: 5px;
+            padding: 7px 14px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s, border 0.18s;
+        }
+        .topbar button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+        }
+        .topbar button:hover, .logout-btn:hover {
+            background: var(--paid);
+            color: #fff;
+            border-color: var(--paid);
+        }
+        .login-form, .upload-form {
+            max-width: 370px;
+            margin: 32px auto;
+            background: #20222a;
+            padding: 22px 20px 20px 20px;
+            border-radius: 9px;
+            box-shadow: 0 2px 12px #0005;
+            border: 1px solid #23262e;
+        }
+        body[data-theme="light"] .login-form, 
+        body[data-theme="light"] .upload-form {
+            background: #f8fafd;
+            border: 1px solid #e0e0e0;
+            color: var(--text-light);
+        }
+        .login-form h3, .upload-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            color: #e0e0e0;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        body[data-theme="light"] .login-form h3, 
+        body[data-theme="light"] .upload-form h3 {
+            color: var(--text-light);
+        }
+        .login-form input, .upload-form input, .upload-form textarea, .upload-form select {
+            width: 100%;
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            border: 1.5px solid #23262e;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #181a20;
+            color: #e0e0e0;
+            transition: border 0.2s, background 0.2s;
+            box-sizing: border-box;
+        }
+        body[data-theme="light"] .login-form input, 
+        body[data-theme="light"] .upload-form input, 
+        body[data-theme="light"] .upload-form textarea, 
+        body[data-theme="light"] .upload-form select {
+            background: #fff;
+            color: var(--text-light);
+            border: 1.5px solid #e0e0e0;
+        }
+        .login-form input:focus, .upload-form input:focus, .upload-form textarea:focus, .upload-form select:focus {
+            border-color: var(--accent);
+            background: #23262e;
+            outline: none;
+        }
+        body[data-theme="light"] .login-form input:focus, 
+        body[data-theme="light"] .upload-form input:focus, 
+        body[data-theme="light"] .upload-form textarea:focus, 
+        body[data-theme="light"] .upload-form select:focus {
+            background: #f4f6fa;
+        }
+        .script-list {
+            margin-top: 30px;
+        }
+        .script {
+            background: #23262e;
+            border: 1px solid #2d8cff22;
+            border-radius: 7px;
+            padding: 18px 16px 14px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 6px #0002;
+            transition: background 0.2s, border 0.2s;
+        }
+        body[data-theme="light"] .script {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+        }
+        .script-title {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+            color: var(--accent);
+        }
+        .free { color: var(--free); font-weight: 500; }
+        .paid { color: var(--paid); font-weight: 500; }
+        .usd { color: var(--usd); font-weight: 500; }
+        .logout-btn {
+            float: right;
+            background: #23262e;
+            color: #e0e0e0;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            padding: 7px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 12px;
+            transition: background 0.18s, color 0.18s, border 0.18s;
+            font-weight: 500;
+            box-shadow: 0 1px 4px #0003;
+        }
+        body[data-theme="light"] .logout-btn {
+            background: #fff;
+            color: var(--text-light);
+            border: 1px solid var(--accent);
+        }
+        .script a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.18s, text-shadow 0.18s;
+        }
+        .script a:hover {
+            color: #fff;
+            text-shadow: 0 2px 12px #2d8cff99;
+            text-decoration: underline;
+        }
+        @media (max-width: 800px) {
+            .container {
+                max-width: 99vw;
+                padding: 8px;
+            }
+            .login-form, .upload-form {
+                max-width: 99vw;
+                padding: 10px 4px;
+            }
+            .script {
+                padding: 10px 6px 8px 6px;
+            }
+        }
     </style>
 </head>
-<body>
+<body data-theme="dark">
     <div class="container">
-        <h1>MTASA Script Letöltő</h1>
+        <div class="topbar">
+            <select id="lang-switch">
+                <option value="hu">🇭🇺 Magyar</option>
+                <option value="en">🇬🇧 English</option>
+            </select>
+            <select id="currency-switch">
+                <option value="huf">HUF (Ft)</option>
+                <option value="eur">EUR (€)</option>
+                <option value="usd">USD ($)</option>
+            </select>
+            <button id="theme-switch" title="Váltás világos/sötét témára">🌙</button>
+            <button id="login-btn"></button>
+        </div>
+        <h1 id="main-title">MTASA Script Letöltő</h1>
         <div id="user-section"></div>
         <div id="upload-section" style="display:none;"></div>
         <div class="script-list" id="script-list"></div>
     </div>
+    <!-- Login Modal -->
+    <div id="login-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000a; z-index:1000; align-items:center; justify-content:center;">
+        <form class="login-form" style="position:relative; z-index:1001; min-width:260px;" onsubmit="return handleLogin(event)">
+            <h3 id="login-title">Bejelentkezés</h3>
+            <input type="text" id="login-username" placeholder="Felhasználónév" required autocomplete="username">
+            <input type="password" id="login-password" placeholder="Jelszó" required autocomplete="current-password">
+            <button type="submit" id="login-submit-btn">Bejelentkezés</button>
+            <div style="margin-top:10px; color:#888;" id="guest-info">Vendégként is böngészhetsz!</div>
+            <button type="button" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.2rem;color:#888;cursor:pointer;" onclick="closeLoginModal()">✕</button>
+        </form>
+    </div>
     <script>
+        // --- Language and Currency Data ---
+        const translations = {
+            hu: {
+                title: "MTASA Script Letöltő",
+                login: "Bejelentkezés",
+                logout: "Kijelentkezés",
+                loggedInAs: "Bejelentkezve mint",
+                upload: "Script feltöltése",
+                scriptName: "Script neve",
+                description: "Leírás",
+                downloadLink: "Letöltési link (pl. GitHub, Mediafire, stb.)",
+                type: "Típus",
+                free: "Ingyenes",
+                paid: "Fizetős",
+                price: "Ár (ha fizetős, pl. 1500 Ft)",
+                submit: "Feltöltés",
+                noScripts: "Még nincs feltöltött script.",
+                download: "Letöltés / Megtekintés",
+                wrongCreds: "Hibás felhasználónév vagy jelszó!",
+                fillAll: "Minden mező kitöltése kötelező!",
+                enterPrice: "Add meg az árat a fizetős scripthez!",
+                uploaded: "Script sikeresen feltöltve!",
+                guest: "Vendégként is böngészhetsz!",
+                close: "Bezárás",
+                loginTitle: "Bejelentkezés",
+                loginBtn: "Bejelentkezés",
+                themeLight: "🌞",
+                themeDark: "🌙"
+            },
+            en: {
+                title: "MTASA Script Downloader",
+                login: "Login",
+                logout: "Logout",
+                loggedInAs: "Logged in as",
+                upload: "Upload Script",
+                scriptName: "Script name",
+                description: "Description",
+                downloadLink: "Download link (e.g. GitHub, Mediafire, etc.)",
+                type: "Type",
+                free: "Free",
+                paid: "Paid",
+                price: "Price (if paid, e.g. 5 EUR)",
+                submit: "Upload",
+                noScripts: "No scripts uploaded yet.",
+                download: "Download / View",
+                wrongCreds: "Wrong username or password!",
+                fillAll: "All fields are required!",
+                enterPrice: "Enter the price for paid script!",
+                uploaded: "Script uploaded successfully!",
+                guest: "You can browse as a guest!",
+                close: "Close",
+                loginTitle: "Login",
+                loginBtn: "Login",
+                themeLight: "🌞",
+                themeDark: "🌙"
+            }
+        };
+        const currencyData = {
+            huf: { symbol: "Ft", name: "HUF", rate: 1, locale: "hu-HU", decimals: 0 },
+            eur: { symbol: "€", name: "EUR", rate: 0.0026, locale: "de-DE", decimals: 2 },
+            usd: { symbol: "$", name: "USD", rate: 0.0028, locale: "en-US", decimals: 2 }
+        };
+
+        // --- State ---
+        let currentLang = localStorage.getItem('mtasa_lang') || 'hu';
+        let currentCurrency = localStorage.getItem('mtasa_currency') || 'huf';
+        let currentTheme = localStorage.getItem('mtasa_theme') || 'dark';
+
         // --- Helper functions for localStorage ---
         function getScripts() {
             let scripts = localStorage.getItem('mtasa_scripts');
@@ -48,7 +331,31 @@
         }
         function logout() {
             localStorage.removeItem('mtasa_loggedin');
-            location.reload();
+            renderAll();
+        }
+
+        // --- Theme, Language, Currency Switch ---
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('mtasa_theme', theme);
+            currentTheme = theme;
+            updateThemeBtn();
+        }
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('mtasa_lang', lang);
+            renderAll();
+        }
+        function setCurrency(cur) {
+            currentCurrency = cur;
+            localStorage.setItem('mtasa_currency', cur);
+            renderScriptList();
+            renderUploadSection();
+        }
+        function updateThemeBtn() {
+            const btn = document.getElementById('theme-switch');
+            btn.textContent = currentTheme === 'dark' ? translations[currentLang].themeLight : translations[currentLang].themeDark;
+            btn.title = currentTheme === 'dark' ? "Switch to light theme" : "Switch to dark theme";
         }
 
         // --- UI Rendering ---
@@ -58,20 +365,21 @@
             if (isLoggedIn()) {
                 userSection.innerHTML = `
                     <div>
-                        Bejelentkezve mint <b>aleexx</b>
-                        <button class="logout-btn" onclick="logout()">Kijelentkezés</button>
+                        ${translations[currentLang].loggedInAs} <b>aleexx</b>
+                        <button class="logout-btn" onclick="logout()">${translations[currentLang].logout}</button>
                     </div>
                 `;
+            }
+        }
+
+        function renderLoginBtn() {
+            const btn = document.getElementById('login-btn');
+            if (isLoggedIn()) {
+                btn.style.display = "none";
             } else {
-                userSection.innerHTML = `
-                    <form class="login-form" onsubmit="return handleLogin(event)">
-                        <h3>Bejelentkezés</h3>
-                        <input type="text" id="login-username" placeholder="Felhasználónév" required>
-                        <input type="password" id="login-password" placeholder="Jelszó" required>
-                        <button type="submit">Bejelentkezés</button>
-                        <div style="margin-top:10px; color:#888;">Vendégként is böngészhetsz!</div>
-                    </form>
-                `;
+                btn.style.display = "";
+                btn.textContent = translations[currentLang].loginBtn;
+                btn.onclick = openLoginModal;
             }
         }
 
@@ -81,46 +389,81 @@
                 uploadSection.style.display = '';
                 uploadSection.innerHTML = `
                     <form class="upload-form" onsubmit="return handleUpload(event)">
-                        <h3>Script feltöltése</h3>
-                        <input type="text" id="script-title" placeholder="Script neve" required>
-                        <textarea id="script-desc" placeholder="Leírás" required></textarea>
-                        <input type="url" id="script-link" placeholder="Letöltési link (pl. GitHub, Mediafire, stb.)" required>
+                        <h3>${translations[currentLang].upload}</h3>
+                        <input type="text" id="script-title" placeholder="${translations[currentLang].scriptName}" required>
+                        <textarea id="script-desc" placeholder="${translations[currentLang].description}" required></textarea>
+                        <input type="url" id="script-link" placeholder="${translations[currentLang].downloadLink}" required>
                         <select id="script-type">
-                            <option value="free">Ingyenes</option>
-                            <option value="paid">Fizetős</option>
+                            <option value="free">${translations[currentLang].free}</option>
+                            <option value="paid">${translations[currentLang].paid}</option>
                         </select>
-                        <input type="text" id="script-price" placeholder="Ár (ha fizetős, pl. 1500 Ft)">
-                        <button type="submit">Feltöltés</button>
+                        <input type="text" id="script-price" placeholder="${translations[currentLang].price}">
+                        <button type="submit">${translations[currentLang].submit}</button>
                     </form>
                 `;
+                // Currency symbol in price field
+                const priceInput = uploadSection.querySelector('#script-price');
+                priceInput.addEventListener('focus', function() {
+                    if (!this.value && currentCurrency !== 'huf') {
+                        this.value = '';
+                    }
+                });
             } else {
                 uploadSection.style.display = 'none';
                 uploadSection.innerHTML = '';
             }
         }
 
+        function formatPrice(price) {
+            if (!price) return '';
+            let num = parseFloat(price.replace(/[^0-9.,]/g, '').replace(',', '.'));
+            if (isNaN(num)) return price;
+            let cur = currencyData[currentCurrency];
+            let converted = currentCurrency === 'huf' ? num : Math.round(num / currencyData['huf'].rate * cur.rate * 100) / 100;
+            return converted.toLocaleString(cur.locale, { minimumFractionDigits: cur.decimals, maximumFractionDigits: cur.decimals }) + ' ' + cur.symbol;
+        }
+
         function renderScriptList() {
             const list = document.getElementById('script-list');
             const scripts = getScripts();
             if (scripts.length === 0) {
-                list.innerHTML = '<i>Még nincs feltöltött script.</i>';
+                list.innerHTML = `<i>${translations[currentLang].noScripts}</i>`;
                 return;
             }
-            list.innerHTML = scripts.map(script => `
+            list.innerHTML = scripts.map(script => {
+                let typeLabel = script.type === 'free' ? translations[currentLang].free : translations[currentLang].paid;
+                let typeClass = script.type === 'free' ? 'free' : (currentCurrency === 'usd' ? 'usd' : 'paid');
+                let priceStr = (script.type === 'paid' && script.price) ? `- ${translations[currentLang].price.split(' ')[0]}: <span class="${typeClass}">${formatPrice(script.price)}</span>` : '';
+                return `
                 <div class="script">
                     <div class="script-title">${script.title}</div>
                     <div>${script.desc}</div>
                     <div>
-                        <span class="${script.type === 'free' ? 'free' : 'paid'}">
-                            ${script.type === 'free' ? 'Ingyenes' : 'Fizetős'}
+                        <span class="${typeClass}">
+                            ${typeLabel}
                         </span>
-                        ${script.type === 'paid' && script.price ? `- Ár: ${script.price}` : ''}
+                        ${priceStr}
                     </div>
                     <div>
-                        <a href="${script.link}" target="_blank">Letöltés / Megtekintés</a>
+                        <a href="${script.link}" target="_blank">${translations[currentLang].download}</a>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        // --- Login Modal ---
+        function openLoginModal() {
+            document.getElementById('login-modal').style.display = "flex";
+            document.getElementById('login-username').focus();
+            document.body.style.overflow = "hidden";
+            document.getElementById('login-title').textContent = translations[currentLang].loginTitle;
+            document.getElementById('login-submit-btn').textContent = translations[currentLang].loginBtn;
+            document.getElementById('guest-info').textContent = translations[currentLang].guest;
+        }
+        function closeLoginModal() {
+            document.getElementById('login-modal').style.display = "none";
+            document.body.style.overflow = "";
         }
 
         // --- Event Handlers ---
@@ -129,10 +472,10 @@
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
             if (login(username, password)) {
-                renderUserSection();
-                renderUploadSection();
+                closeLoginModal();
+                renderAll();
             } else {
-                alert('Hibás felhasználónév vagy jelszó!');
+                alert(translations[currentLang].wrongCreds);
             }
             return false;
         }
@@ -146,11 +489,11 @@
             const price = document.getElementById('script-price').value.trim();
 
             if (!title || !desc || !link) {
-                alert('Minden mező kitöltése kötelező!');
+                alert(translations[currentLang].fillAll);
                 return false;
             }
             if (type === 'paid' && !price) {
-                alert('Add meg az árat a fizetős scripthez!');
+                alert(translations[currentLang].enterPrice);
                 return false;
             }
 
@@ -161,22 +504,52 @@
             saveScripts(scripts);
             renderScriptList();
             e.target.reset();
-            alert('Script sikeresen feltöltve!');
+            alert(translations[currentLang].uploaded);
             return false;
         }
 
-        // --- Initial Render ---
-        renderUserSection();
-        renderUploadSection();
-        renderScriptList();
+        // --- Render All ---
+        function renderAll() {
+            document.getElementById('main-title').textContent = translations[currentLang].title;
+            renderUserSection();
+            renderLoginBtn();
+            renderUploadSection();
+            renderScriptList();
+            // Set language/currency selects
+            document.getElementById('lang-switch').value = currentLang;
+            document.getElementById('currency-switch').value = currentCurrency;
+            setTheme(currentTheme);
+        }
 
-        // --- Keep upload section in sync on login/logout ---
+        // --- Initial Render ---
+        renderAll();
+
+        // --- Event Listeners ---
+        document.getElementById('lang-switch').addEventListener('change', function() {
+            setLang(this.value);
+        });
+        document.getElementById('currency-switch').addEventListener('change', function() {
+            setCurrency(this.value);
+        });
+        document.getElementById('theme-switch').addEventListener('click', function() {
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // --- Expose for inline handlers ---
         window.logout = logout;
         window.handleLogin = handleLogin;
         window.handleUpload = handleUpload;
+        window.closeLoginModal = closeLoginModal;
+
+        // --- Modal close on background click ---
+        document.getElementById('login-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        // --- Keyboard: ESC closes modal ---
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") closeLoginModal();
+        });
     </script>
 </body>
 </html>
-
-
-
