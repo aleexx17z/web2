@@ -17,6 +17,9 @@
             --free: #3ecf8e;
             --paid: #ff4b4b;
             --usd: #f7b731;
+            --info-bg: #1a2332;
+            --info-border: #2d8cff;
+            --info-light-bg: #eaf2ff;
         }
         body[data-theme="dark"] {
             background: var(--bg-dark);
@@ -78,6 +81,108 @@
             background: var(--paid);
             color: #fff;
             border-color: var(--paid);
+        }
+        .info-section {
+            background: var(--info-bg);
+            border-left: 5px solid var(--info-border);
+            border-radius: 8px;
+            padding: 18px 22px 16px 22px;
+            margin-bottom: 28px;
+            margin-top: 10px;
+            color: #eaf2ff;
+            box-shadow: 0 2px 12px #0003;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            position: relative;
+        }
+        .info-section .info-icon {
+            font-size: 2.1rem;
+            margin-right: 8px;
+            flex-shrink: 0;
+            color: var(--accent);
+            filter: drop-shadow(0 2px 8px #2d8cff44);
+        }
+        .info-section .info-content {
+            flex: 1;
+        }
+        .info-section .discord-link {
+            display: inline-flex;
+            align-items: center;
+            background: #5865F2;
+            color: #fff;
+            border-radius: 5px;
+            padding: 4px 10px 4px 8px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: 4px;
+            margin-top: 4px;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 1px 6px #5865f244;
+            font-size: 1.01em;
+        }
+        .info-section .discord-link:hover {
+            background: #4752c4;
+            box-shadow: 0 2px 12px #5865f288;
+        }
+        .info-section .discord-link .discord-icon {
+            font-size: 1.2em;
+            margin-right: 6px;
+        }
+        .info-section .info-badges {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .info-section .badge {
+            display: inline-block;
+            background: #23262e;
+            color: #e0e0e0;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 0.98em;
+            font-weight: 500;
+            border: 1px solid #2d8cff55;
+            letter-spacing: 0.2px;
+            box-shadow: 0 1px 4px #0002;
+        }
+        .info-section .badge.feature {
+            background: #2d8cff;
+            color: #fff;
+            border: none;
+        }
+        .info-section .badge.update {
+            background: #3ecf8e;
+            color: #fff;
+            border: none;
+        }
+        .info-section .badge.soon {
+            background: #ff4b4b;
+            color: #fff;
+            border: none;
+        }
+        body[data-theme="light"] .info-section {
+            background: var(--info-light-bg);
+            color: #23262e;
+            border-left: 5px solid var(--accent);
+        }
+        body[data-theme="light"] .info-section .badge {
+            background: #f4f6fa;
+            color: #23262e;
+            border: 1px solid #2d8cff33;
+        }
+        body[data-theme="light"] .info-section .badge.feature {
+            background: #2d8cff;
+            color: #fff;
+        }
+        body[data-theme="light"] .info-section .badge.update {
+            background: #3ecf8e;
+            color: #fff;
+        }
+        body[data-theme="light"] .info-section .badge.soon {
+            background: #ff4b4b;
+            color: #fff;
         }
         .login-form, .upload-form {
             max-width: 370px;
@@ -205,6 +310,11 @@
             .script {
                 padding: 10px 6px 8px 6px;
             }
+            .info-section {
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px 8px 10px 12px;
+            }
         }
     </style>
 </head>
@@ -222,6 +332,38 @@
             </select>
             <button id="theme-switch" title="Váltás világos/sötét témára">🌙</button>
             <button id="login-btn"></button>
+        </div>
+        <!-- Info Section: új -->
+        <div class="info-section">
+            <span class="info-icon" aria-hidden="true">ℹ️</span>
+            <div class="info-content">
+                <div style="font-size:1.13em; font-weight:600; margin-bottom:2px;">
+                    <span id="info-title-hu" style="display:none;">Szeretnél scriptet vásárolni?</span>
+                    <span id="info-title-en" style="display:none;">Want to buy a script?</span>
+                </div>
+                <div style="margin-bottom:6px;">
+                    <span id="info-desc-hu" style="display:none;">
+                        <b>Fizetős scriptek</b> vásárlásához vagy egyedi fejlesztéshez keress Discordon: 
+                        <a class="discord-link" href="https://discord.com/users/334232232857567232" target="_blank">
+                            <span class="discord-icon">💬</span>aleexx17z
+                        </a>
+                    </span>
+                    <span id="info-desc-en" style="display:none;">
+                        For <b>paid scripts</b> or custom development, contact me on Discord: 
+                        <a class="discord-link" href="https://discord.com/users/334232232857567232" target="_blank">
+                            <span class="discord-icon">💬</span>aleexx17z
+                        </a>
+                    </span>
+                </div>
+                <div class="info-badges">
+                    <span class="badge feature" id="badge-feature-hu" style="display:none;">Új: Sötét/Világos téma</span>
+                    <span class="badge feature" id="badge-feature-en" style="display:none;">New: Dark/Light theme</span>
+                    <span class="badge update" id="badge-update-hu" style="display:none;">Több pénznem támogatás</span>
+                    <span class="badge update" id="badge-update-en" style="display:none;">Multi-currency support</span>
+                    <span class="badge soon" id="badge-soon-hu" style="display:none;">Hamarosan: Képek, értékelés</span>
+                    <span class="badge soon" id="badge-soon-en" style="display:none;">Coming soon: Images, ratings</span>
+                </div>
+            </div>
         </div>
         <h1 id="main-title">MTASA Script Letöltő</h1>
         <div id="user-section"></div>
@@ -345,6 +487,7 @@
             currentLang = lang;
             localStorage.setItem('mtasa_lang', lang);
             renderAll();
+            updateInfoSection();
         }
         function setCurrency(cur) {
             currentCurrency = cur;
@@ -452,6 +595,35 @@
             }).join('');
         }
 
+        // --- Info Section Language Switch ---
+        function updateInfoSection() {
+            // Hide all
+            document.getElementById('info-title-hu').style.display = 'none';
+            document.getElementById('info-title-en').style.display = 'none';
+            document.getElementById('info-desc-hu').style.display = 'none';
+            document.getElementById('info-desc-en').style.display = 'none';
+            document.getElementById('badge-feature-hu').style.display = 'none';
+            document.getElementById('badge-feature-en').style.display = 'none';
+            document.getElementById('badge-update-hu').style.display = 'none';
+            document.getElementById('badge-update-en').style.display = 'none';
+            document.getElementById('badge-soon-hu').style.display = 'none';
+            document.getElementById('badge-soon-en').style.display = 'none';
+            // Show current
+            if (currentLang === 'hu') {
+                document.getElementById('info-title-hu').style.display = '';
+                document.getElementById('info-desc-hu').style.display = '';
+                document.getElementById('badge-feature-hu').style.display = '';
+                document.getElementById('badge-update-hu').style.display = '';
+                document.getElementById('badge-soon-hu').style.display = '';
+            } else {
+                document.getElementById('info-title-en').style.display = '';
+                document.getElementById('info-desc-en').style.display = '';
+                document.getElementById('badge-feature-en').style.display = '';
+                document.getElementById('badge-update-en').style.display = '';
+                document.getElementById('badge-soon-en').style.display = '';
+            }
+        }
+
         // --- Login Modal ---
         function openLoginModal() {
             document.getElementById('login-modal').style.display = "flex";
@@ -519,6 +691,7 @@
             document.getElementById('lang-switch').value = currentLang;
             document.getElementById('currency-switch').value = currentCurrency;
             setTheme(currentTheme);
+            updateInfoSection();
         }
 
         // --- Initial Render ---
@@ -527,6 +700,7 @@
         // --- Event Listeners ---
         document.getElementById('lang-switch').addEventListener('change', function() {
             setLang(this.value);
+            updateInfoSection();
         });
         document.getElementById('currency-switch').addEventListener('change', function() {
             setCurrency(this.value);
@@ -550,6 +724,9 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === "Escape") closeLoginModal();
         });
+
+        // --- Info section language on load ---
+        updateInfoSection();
     </script>
 </body>
 </html>
