@@ -48,10 +48,11 @@
   <div id="messages"></div>
 
   <script type="module">
+    // CDN-es Firebase modulok importálása
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    // Firebase config (a te adataiddal)
+    // 🔹 Firebase config a te projektedből
     const firebaseConfig = {
       apiKey: "AIzaSyC3Cgmy41qLWLy-HLVAyn1QFejdlflUnSY",
       authDomain: "website-26acc.firebaseapp.com",
@@ -63,23 +64,32 @@
       measurementId: "G-P4XTEHXV4C"
     };
 
+    // Firebase inicializálás
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const messagesRef = ref(db, "messages");
 
-    // Üzenet mentése a Firebase-be
+    // 🔹 Üzenet mentése
     window.saveMessage = function() {
       const name = document.getElementById("name").value.trim();
       const msg = document.getElementById("message").value.trim();
 
       if(name && msg){
-        push(messagesRef, { name, msg });
-        document.getElementById("name").value = "";
-        document.getElementById("message").value = "";
+        push(messagesRef, { name, msg })
+          .then(() => {
+            // Üzenet elküldve, mezők törlése
+            document.getElementById("name").value = "";
+            document.getElementById("message").value = "";
+          })
+          .catch(err => {
+            console.error("Hiba az üzenet mentésekor:", err);
+          });
+      } else {
+        alert("Írd be a neved és az üzeneted!");
       }
     };
 
-    // Üzenetek megjelenítése valós időben
+    // 🔹 Valós idejű üzenetfrissítés
     onValue(messagesRef, (snapshot) => {
       const list = document.getElementById("messages");
       list.innerHTML = "";
