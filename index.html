@@ -3,497 +3,815 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CS2 Wall - Instastyle</title>
+  <title>Wall</title>
+  <link rel="stylesheet" href="texts-style.css">
   <style>
-    @import url('https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap');
+    @import url('https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap');
     :root {
-      --bg-main: #111015;
-      --bg-content: #18171c;
-      --card-max-width: 1100px;
-      --radius: 21px;
-      --shadow-light: 0 4px 20px -10px rgba(30,30,56,0.36), 0 1.5px 11px -6px #232337bb;
-      --shadow-pop: 0 6px 48px -18px #0004, 0 3px 11px 0px #23233719;
-      --border-card: #23222c;
-      --btn-bg: #22222b;
-      --btn-border: #2f2c40;
-      --btn-radius: 22px;
-      --btn-hover-bg: #23222c;
-      --accent: #e2e1e9;
-      --accent-text: #b9baff;
-      --focus: #36374b;
-      --input-bg: #212126;
-      --input-border: #262637;
-      --input-focus: #222234;
-      --danger: #e05d82;
-      --gray: #b2b4bf;
-      --danger-light: #e05d823a;
-      --surf-dark: #191822;
-      --surface: #23222c;
-      --icon-dark: #abb2d2;
-      --tab-active: #23222c;
-      --tab-active-bar: #6d5bff;
+      --surface: #18181c;
+      --surface-2: #19191d;
+      --surface-3: #121213;
+      --accent: #2d2d2d;
+      --primary-icon: #dadada;
+      --primary-text: #fff;
+      --secondary-text: #b0b0b0;
+      --border: #242428;
+      --input-bg: #202024;
+      --input-border: #29292d;
+      --radius: 18px;
+      --radius-sm: 13px;
+      --transition: .12s cubic-bezier(.5,0,.2,1);
+      --pm-surface: #171718;
+      --sidebar-width: 85px;
+      --pm-thread-bg: #18181b;
+      --message-accent: #212124;
+      --success-bg: #1d2117;
+      --success-color: #bbc6ae;
+      --error-bg: #261d1d;
+      --error-color: #d96b6b;
+      --modal-bg: rgba(20,20,24,0.93);
+      --modal-blur: 4px;
     }
-
-    *, *:focus { outline: none; }
     html, body {
-      min-height: 100vh;
       margin: 0;
-      padding: 0;
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--bg-main);
-      color: #edecf4;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--surface);
+      color: var(--primary-text);
       font-size: 17px;
-      overflow-x: hidden;
-      height: 100vh;
-      cursor: default;
+      min-height: 100vh;
     }
     body {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: stretch;
-      align-items: center;
-    }
-
-    .container {
       width: 100vw;
-      max-width: 100vw;
-      margin: 32px auto 0 auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      background: var(--surface);
+    }
+    #app-shell {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      width: 100vw;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background: var(--surface-3);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 26px 0 22px 0;
+      gap: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .sidebar .logo {
+      margin-bottom: 19px;
+      font-size: 2.04rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      letter-spacing: .17em;
+      color: #ededed;
       background: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 42px;
-    }
-
-    .header-bar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 0 20px 0;
-      margin-bottom: 13px;
-      border-bottom: 1.5px solid #23222c;
-      max-width: var(--card-max-width);
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .header-title {
-      letter-spacing: .07em;
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #fafafd;
-      text-shadow: 0 1.5px 12px #23228836, 0 1px 0 #131321;
-      text-transform: uppercase;
-      font-style: italic;
-      font-family: 'Inter', Arial, sans-serif;
-    }
-
-    .header-tabs {
-      display: flex;
-      gap: 2px;
-      background: var(--surf-dark);
-      border-radius: 17px;
-      padding: 3px 4px;
-      box-shadow: 0 0.5px 6px #1b1a258f;
-    }
-    .tab-btn {
-      background: transparent;
-      color: #c2c3cd;
-      border: none;
-      border-radius: 17px;
-      font-size: 1.08rem;
-      font-weight: 650;
-      padding: 7px 23px 7px 24px;
-      cursor: pointer;
-      margin: 0;
-      letter-spacing: .07em;
-      font-family: inherit;
-      transition: 
-        background .12s, color .17s, box-shadow .13s;
-      box-shadow: none;
-      opacity: .89;
-      position: relative;
       user-select: none;
+      text-transform: uppercase;
+      font-style: normal;
+      text-shadow: 0 2.5px 12px #11111136, 0 1px 0 #151515;
+      /* Move logo right to align with icons - fine-tuned for sidebar icon alignment */
+      margin-left: 9px;
+      align-self: flex-start;
+      /* These values can be tuned further */
+      line-height: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
     }
-    .tab-btn.selected, .tab-btn:focus {
-      background: var(--tab-active);
-      color: #fafafd;
-      box-shadow: 0 2px 11px -10px #2e2d3b99, 0 1px 5px -5px #22223d77;
-      opacity: 1;
-      font-weight: 800;
+    .sidebar .nav-btn {
+      width: 52px;
+      height: 52px;
+      background: transparent;
+      border: none;
+      border-radius: 14px;
+      transition: background var(--transition), color var(--transition);
+      color: var(--primary-icon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.55rem;
+      margin-bottom: 4px;
+      cursor: pointer;
+      outline: none;
+      position: relative;
     }
-    .tab-btn.selected:after, .tab-btn:focus:after {
-      content: '';
-      position: absolute;
-      left: 25%;
-      right: 25%;
-      bottom: 2px;
-      height: 2px;
-      border-radius: 2px;
-      background: var(--tab-active-bar);
-      display: block;
+    .sidebar .nav-btn.selected,
+    .sidebar .nav-btn:focus {
+      background: var(--surface-2);
+      color: #dedede;
+      box-shadow: 0 2px 12px #191a1a29;
     }
-    .tab-btn.hide { display: none !important; }
-    .tab-btn:hover:not(.selected) {
-      opacity: 0.98;
-      color: #fff;
-      background: #27263a;
+    .sidebar .nav-btn:hover:not(.selected) {
+      background: #232323;
+      color: #bbb;
     }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .card, .auth-container {
-      background: var(--bg-content);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-light);
-      border: 1.5px solid var(--border-card);
-      padding: 32px 44px 24px 44px;
-      z-index: 20;
-      min-height: 60px;
-      margin-bottom: 0;
-      margin-top: 0;
-      width: 98vw;
-      max-width: var(--card-max-width);
-      box-sizing: border-box;
-    }
-    .auth-container {
-      margin: 0 auto;
-      max-width: 500px;
-      box-shadow: 0 1px 22px -9px #36345e13;
-      border: 1.5px solid #252544;
-    }
-
-    h2, h3 {
-      text-align: center;
-      font-weight: 650;
-      margin-top: 0;
-      letter-spacing: 0.04em;
-      color: #e4e5ec;
-      font-family: 'Inter', Arial, sans-serif;
-    }
-    h2 { font-size: 1.45rem;}
-    h3 { font-size: 1.11rem; margin-bottom: 1.3rem;}
-
-    .input-group {
+    main {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
+      align-items: stretch;
+      background: var(--surface);
+      min-height: 100vh;
+      max-width: 100vw;
     }
-    label {
-      font-size: 0.99em;
-      font-weight: 500;
-      color: #a1a1b5;
-      margin-bottom: 3px;
-      letter-spacing: 0.01em;
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 32px 0 32px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      z-index: 6;
+      position: sticky;
+      top: 0;
+      min-height: 56px;
+      min-width: 0;
     }
-    input[type="text"], input[type="password"], input[type="file"], textarea, select {
+    .header-title {
+      font-size: 1.32rem;
+      font-weight: bold;
+      color: #ececec;
+      font-style: normal;
+      letter-spacing: 0.14em;
+      user-select: none;
+      text-transform: uppercase;
+      margin-right: 0;
+      text-shadow: none;
+    }
+    .main-search-bar-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-3);
+      padding: 0.7em 2em 0.7em 2em;
+      border-bottom: 1px solid var(--border);
+    }
+    .main-search-bar {
+      display: flex;
+      align-items: center;
       background: var(--input-bg);
-      border: 1.3px solid var(--input-border);
-      color: #ececf2;
-      font-size: 1.13em;
-      border-radius: var(--radius);
-      padding: 14px 15px;
-      transition: border 0.14s, background 0.13s;
+      border-radius: 13px;
+      border: 1.2px solid var(--input-border);
+      padding: 0.13em 0.98em;
+      width: 100%;
+      max-width: 370px;
+      min-width: 0;
+      box-shadow: 0 1px 8px -5px #16161614;
+      transition: box-shadow .14s;
+    }
+    .main-search-bar input[type="text"] {
+      background: transparent;
+      border: none;
+      color: #d8d8e2;
+      font-size: 1.02em;
       font-family: inherit;
       outline: none;
+      padding: 0.7em 0.7em 0.7em 0.11em;
+      width: 100%;
+      min-width: 0;
+      transition: background .16s;
+    }
+    .main-search-bar input[type="text"]:focus {
+      background: #222226;
+    }
+    .main-search-bar .search-icon {
+      color: #b8b8b9;
+      margin-right: 0.43em;
+      margin-left: 0.08em;
+      min-width: 20px;
+      min-height: 20px;
+      width: 1.17em;
+      height: 1.17em;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: flex; flex-direction: column; flex: 1 1 0%; }
+
+    /* Main Feed / Messages List */
+    .feed-outer {
+      display: flex;
+      gap: 0;
+      margin: 36px auto 0 auto;
+      max-width: 900px;
+      flex: 1 1 0%;
+      width: 98vw;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .feed-col {
+      flex: 2;
+      max-width: 640px;
+      min-width: 70vw;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 32px 36px 24px 36px;
+      margin-bottom: 0;
+      margin-top: 0;
+      box-shadow: 0 2px 11px -7px #10101019, 0 2px 8px -7px #00000022;
       width: 100%;
       box-sizing: border-box;
     }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--focus);
-      background: var(--input-focus);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 78px;
-      max-height: 250px;
-      font-size: 1.13em;
+
+    /* New message form */
+    .main-message-form {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-radius: var(--radius);
+      background: var(--input-bg);
+      border: 1.3px solid var(--input-border);
+      padding: 13px 18px;
       width: 100%;
+      box-shadow: 0 3px 10px -10px #1a1a1a13;
       box-sizing: border-box;
+      flex-direction: row;
+      flex-wrap: nowrap;
     }
-    button, .edit-profile-btn, .profile-pm-btn, .logout-btn {
-      font-family: inherit;
-      background: #23223b;
-      color: #e7e8fb;
-      font-size: 1.06rem;
-      font-weight: 570;
-      border-radius: var(--btn-radius);
-      border: none;
-      box-shadow: none;
-      padding: 16px 0;
-      letter-spacing: 0.11em;
-      margin-top: 11px;
-      cursor: pointer;
-      transition: 
-        background 0.13s, 
-        color 0.13s, 
-        letter-spacing 0.08s, 
-        box-shadow 0.15s;
-      min-width: 130px;
+    #main-profile-view, #guest-main-form {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: auto;
+      margin-bottom: 0;
+      min-width: 0;
+    }
+    .avatar,
+    .avatar-large {
+      border-radius: 50%;
+      background: #111111;
+      border: 2.5px solid #222223;
+      object-fit: cover;
+      box-shadow: 0 2px 10px #16161610;
+    }
+    .avatar-large { width: 48px; height: 48px; }
+    .avatar { width: 47px; height: 47px; }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      margin-top: 0;
+      justify-content: center;
+    }
+    #user-name-view,
+    #profile-tab-name {
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #efefef;
+      letter-spacing: .01em;
       margin-bottom: 2px;
-      width: 180px;
-      max-width: 100%;
-      align-self: flex-end;
+      margin-top: 2px;
     }
-    button:hover, .edit-profile-btn:hover, .profile-pm-btn:hover, .logout-btn:hover {
-      background: #2c2c43;
-      color: #fff;
-      letter-spacing: 0.14em;
-      box-shadow: 0 3px 26px -14px #7781fc42;
+    .main-message-form .message-input-container {
+      display: flex;
+      flex: 1 1 0%;
+      align-items: center;
+      gap: 0;
+      background: none;
+    }
+    .main-message-form input[type="text"] {
+      background: transparent;
+      border: none;
+      color: #e5e5ea;
+      resize: none;
+      font-size: 1.14em;
+      border-radius: 12px;
+      height: 44px;
+      width: 100%;
+      min-width: 0;
+      outline: none;
+      font-family: inherit;
+      padding: 9px 15px 9px 14px;
+      margin-right: 0px;
+      line-height: 1.27;
+      box-sizing: border-box;
+      box-shadow: none;
+      transition: background .18s;
+    }
+    .main-message-form input[type="text"]:focus,
+    .main-message-form input[type="text"]:active {
+      background: #242426;
+      box-shadow: 0 2px 17px #13131622;
+      transition: box-shadow .14s;
+    }
+    .main-message-form .send-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      color: #bdbdbd;
+      border: none;
+      border-radius: 9px;
+      margin-left: 10px;
+      margin-right: 4px;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 4px 8px;
+      font-size: 1.33rem;
+      cursor: pointer;
+      transition: background .11s, color .13s;
+      min-width: 38px;
+      min-height: 38px;
+      height: 44px;
+    }
+    .main-message-form .send-btn:hover {
+      background: #232324;
+      color: #efefef;
+    }
+
+    /* Message list */
+    .messages-area {
+      margin-top: 18px;
+      padding-bottom: 48px;
+      overflow-y: auto;
+      width: 100%;
+      min-height: 430px;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .message {
       display: flex;
       align-items: flex-start;
-      gap: 17px;
-      padding: 17px 24px 17px 18px;
-      border-radius: 22px;
-      background: #23222c;
-      box-shadow: 0 1px 4px #0a0a1148;
-      margin-bottom: 18px;
-      min-height: 54px;
-      flex-wrap: wrap;
+      gap: 15px;
+      padding: 17px 18px 13px 11px;
+      border-radius: 16px;
+      background: var(--message-accent);
+      margin-bottom: 15px;
       position: relative;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
+      transition: box-shadow .14s;
+      box-shadow: 0 0.5px 6px #15151508;
+      border: 1px solid #222224;
     }
-    .avatar {
-      border-radius: 50%;
-      width: 54px;
-      height: 54px;
-      object-fit: cover;
-      background: #25253a;
-      margin-right: 7px;
-      border: 2px solid #282842;
-      flex-shrink: 0;
-      box-shadow: 0 2.5px 7px #29294623;
+    .msg-mainblock {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+    .msg-headerrow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+      min-width: 0;
     }
     .msg-user {
-      font-weight: 700;
-      color: var(--accent-text);
-      font-size: 1.15rem;
+      font-weight: 800;
+      color: #cecece;
+      font-size: 1.08rem;
+      letter-spacing: 0.06em;
+      user-select: text;
+      text-transform: capitalize;
+      margin-right: 7px;
+      margin-top: 5px;
+      margin-bottom: 0;
+      display: block;
+    }
+    .msg-user[data-guest="1"] { color: #aaaaaa; font-weight: 500;}
+    .msg-user:hover:not([data-guest="1"]) { text-decoration: underline; }
+    .msg-actions {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5em;
+      margin-left: 0.8em;
+      margin-top: 4px;
+    }
+    .msg-delete-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0 2px 0 0;
+      color: #fff;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4.5px;
-      cursor: pointer;
-      text-decoration: none;
-      margin-right: 7px;
-      line-height: 1.18;
-      user-select: text;
-      transition: color 0.13s;
-      min-width: 86px;
+      font-size: 1.31em;
+      border-radius: 7px;
+      opacity: 0.72;
+      transition: color .16s, background .12s, opacity .16s;
     }
-    .msg-user[data-guest="1"],
-    .msg-user[data-profile="-"] {
-      color: #7e7e91;
-      cursor: default;
-      text-decoration: none;
-    }
-    .msg-user:hover:not([data-guest="1"]) {
-      color: #fafafd;
-      text-decoration: underline;
-    }
-    .msg-text {
-      font-size: 1.23rem;
-      color: #f2f2fb;
-      flex: 13;
-      font-weight: 455;
-      letter-spacing: 0.01em;
-      word-break: break-word;
-      margin-left: 9px;
-      line-height: 1.6;
-      min-width: 100px;
+    .msg-delete-btn:hover,
+    .msg-delete-btn:focus {
+      color: #e23c3b;
+      background: rgba(60,20,20,0.06);
+      opacity: 1;
     }
     .msg-time {
-      color: #8c8ca2;
-      font-size: 1.08em;
-      margin-left: 7px;
-      font-weight: 490;
+      color: #767676;
+      font-size: .98em;
+      font-weight: 480;
       letter-spacing: .01em;
-      align-self: flex-end;
-      min-width: 58px;
-      text-align: right;
-    }
-    .profile-view, .profile-other-view {
-      text-align: center;
-      padding: 4px 0 10px 0;
-    }
-    .avatar-large {
-      width: 89px;
-      height: 89px;
-      margin: 0 auto 1.2rem auto;
+      text-align: left;
+      margin: 2px 0 0 0;
+      font-variant-numeric: tabular-nums;
       display: block;
-      border-radius: 50%;
-      background: #181821;
-      border: 3px solid #27275311;
-      margin-bottom: 11px;
+    }
+    .msg-text {
+      font-size: 1.11rem;
+      color: #ededed;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.62;
+      word-break: break-word;
+      margin-left: 0;
+      margin-top: 2px;
+      flex: 1 1 0%;
+    }
+
+    .error-msg, .success-msg {
+      font-size: 1rem;
+      padding: 10px 16px;
+      border-radius: 12px;
+      margin-top: 9px;
+      margin-bottom: 9px;
+      text-align: center;
+      font-weight: 600;
+      display: block;
+      width: 100%;
+    }
+    .error-msg { color: var(--error-color); background: var(--error-bg); }
+    .success-msg { color: var(--success-color); background: var(--success-bg); }
+    .hide { display: none !important; }
+
+    /* Modal */
+    #overlay-blur {
+      position: fixed;
+      z-index: 99;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: var(--modal-bg);
+      backdrop-filter: blur(var(--modal-blur));
+      opacity: .93;
+      transition: opacity 0.18s;
+      display: flex;
+      align-items: center; justify-content: center;
+    }
+    #overlay-blur.hide {
+      display: none !important;
+    }
+    #delete-modal {
+      min-width: 312px;
+      background: #19191a;
+      color: #ececec;
+      border-radius: 17px;
+      border: 1.2px solid #322;
+      box-shadow: 0 2px 25px 2px #0a0b0f3a;
+      padding: 30px 27px 23px 27px;
+      text-align: center;
+      position: relative;
+      z-index: 120;
+      max-width: 90vw;
+      animation: modalpop .17s;
+      font-family: inherit;
+    }
+    @keyframes modalpop {
+      from { transform: translateY(28px) scale(.92); opacity: 0.3;}
+      to   { transform: none; opacity: 1;}
+    }
+    #delete-modal h4 {
+      color: #ffcfcf;
+      font-size: 1.16em;
+      margin: 0 0 14px 0;
+      font-weight: bold;
+      letter-spacing: .02em;
+    }
+    #delete-modal .dm-msg {
+      color: #beb1b1;
+      font-size: 1.07em;
+      margin-bottom: 21px;
+      margin-top: 5px;
+      line-height: 1.55;
+    }
+    #delete-modal .modal-btns {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 0; padding: 0;
+    }
+    #delete-modal button {
+      min-width: 92px;
+      font-size: 1.04em;
+      border: none;
+      font-weight: 700;
+      padding: 9px 0;
+      border-radius: 11px;
+      cursor: pointer;
+      margin: 0 2px;
+      transition: background .12s, color .13s;
+    }
+    #delete-modal .modal-btn-cancel {
+      background: #232325;
+      color: #dfdfdf;
+      border: 1.3px solid #343;
+    }
+    #delete-modal .modal-btn-cancel:hover { color: #fff; background: #2c2c2c;}
+    #delete-modal .modal-btn-del {
+      background: #970606;
+      color: #fff7f7;
+      border: 1.6px solid #b14d4d;
+    }
+    #delete-modal .modal-btn-del:hover {
+      background: #d21d1d;
+      color: #fff;
+      border-color: #a81a1a;
+    }
+
+    /* Auth / Profile, Forms */
+    .auth-container {
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      border: 1.5px solid #232323;
+      padding: 32px 38px 24px 38px;
+      margin: 48px auto 0 auto;
+      box-shadow: 0 1px 20px -8px #16161613;
+      max-width: 410px;
+      width: 97vw;
+      min-width: 0;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 17px;
+      gap: 3px;
+    }
+    .input-group label {
+      font-size: .97em;
+      font-weight: 540;
+      color: #ababab;
+      margin-bottom: 2.5px;
+      letter-spacing: 0.005em;
+    }
+    .input-group input[type="text"],
+    .input-group input[type="file"],
+    .input-group input[type="password"],
+    .input-group textarea {
+      width: 100%;
+      border: 1.2px solid var(--input-border);
+      background: var(--input-bg);
+      color: #e1e2ea;
+      font-size: 1.13em;
+      border-radius: 11px;
+      padding: 12px 14px;
+      margin-top: 2px;
+      transition: border 0.13s, background 0.13s, box-shadow .13s;
+      margin-bottom: 0;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .input-group input:focus,
+    .input-group textarea:focus {
+      border-color: #333;
+      background: #191919;
+      box-shadow: 0 0.5px 8px #20202033;
+    }
+    .auth-container h3 {
+      text-align: center;
+      font-size: 1.24rem;
+      font-weight: 690;
+      color: #dddddd;
+      letter-spacing: .06em;
+      margin-bottom: 22px;
+      margin-top: 0;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .auth-container button {
+      background: #232324;
+      color: #efefef;
+      min-width: 135px;
+      width: 100%;
+      margin-top: 11px;
+      margin-bottom: 6px;
+      font-size: 1.11rem;
+      font-weight: 700;
+      padding: 11px 0;
+      border-radius: var(--radius-sm);
+      border: none;
+      box-shadow: 0 2.5px 13px -6px #1a1a1a18;
+      cursor: pointer;
+      letter-spacing: .09em;
+      transition: background .12s, color .13s;
+    }
+    .auth-container button:hover {
+      background: #303032;
+      color: #fff;
+    }
+    .profile-section-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      justify-content: center;
     }
     .edit-profile-btn,
-    .profile-pm-btn {
-      font-size: 1.06rem;
-      background: #212132;
-      color: #babaff;
-      border: 1.1px solid #363672;
-      min-width: 132px;
-      margin-top: 13px;
-      margin-right: 8px;
-      padding: 10px 20px;
-      border-radius: var(--btn-radius);
-      display: inline-block;
-      transition: background 0.12s, color 0.11s;
-      cursor: pointer;
-      font-weight: 670;
-      letter-spacing: 0.045em;
-      box-sizing: border-box;
-    }
-    .profile-pm-btn {
-      background: #211c28;
-      color: #dbdafd;
-      border-color: #363672;
-      margin-top: 1.05rem;
-      margin-bottom: .7rem;
-    }
-    .error-msg {
-      color: var(--danger);
-      background: transparent;
-      font-size: 1rem;
-      margin-bottom: 7px;
-      margin-top: 0.5em;
-      text-align: center;
-      font-weight: 500;
-    }
-    .success-msg {
-      color: #6a66ff;
-      background: transparent;
-      font-size: 1rem;
-      margin-bottom: 13px;
-      text-align: center;
-      font-weight: 500;
-    }
+    .profile-pm-btn,
     .logout-btn {
-      background: #1a1a22;
-      color: #c17693;
-      border: 1.1px solid #292840;
-      margin-top: 0.9rem;
-      font-size: 1rem;
-      min-width: 116px;
+      background: none;
+      color: #ccc;
+      border: 1.2px solid #363636;
+      border-radius: var(--radius-sm);
+      padding: 8px 18px;
+      font-size: 1.03rem;
       font-weight: 600;
-      padding: 9px 17px;
-      border-radius: var(--btn-radius);
-      transition: color 0.11s, border-color 0.12s, background 0.13s;
-      margin-left: 5px;
+      cursor: pointer;
+      transition: background .11s, color .12s, border .12s;
     }
-    .logout-btn:hover {
-      background: var(--danger);
-      color: #fafafd;
-      border-color: var(--danger);
+    .edit-profile-btn:hover, .profile-pm-btn:hover, .logout-btn:hover {
+      background: #232324;
+      color: #fff;
+      border-color: #232324;
     }
-    .messages-area {
+    /* PM section styling */
+    #pm-tab-content .card {
+      max-width: 570px;
+      margin: 38px auto 0 auto;
+      min-height: 350px;
+      background: var(--pm-surface);
+      border: 1.6px solid #2c2c2c;
+    }
+    #pm-userlist {
+      margin-bottom: 1.6em;
+      margin-top: 0.8em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      justify-content: start;
+    }
+    #pm-userlist button {
+      font-size: 1.04rem;
+      background: #242424;
+      color: #c2c2c2;
+      border: 1px solid #303030;
+      border-radius: 12px;
+      padding: 10px 19px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .1s, color .12s;
+    }
+    #pm-userlist button:hover { background: #1b1b1d; color: #fff;}
+    #pm-thread-area {
+      margin-top: 10px;
+      min-height: 120px;
+    }
+    #pmthread-messages {
+      background: var(--pm-thread-bg);
+      border-radius: 15px;
+      padding: 18px 8px 12px 18px;
+      min-height: 86px;
+      margin-bottom: 1.4em;
+      max-height: 320px;
+      overflow-y: auto;
       width: 100%;
-      max-width: var(--card-max-width);
-      margin: 20px auto 0 auto;
-      min-height: 360px;
-      box-sizing: border-box;
     }
-    ::selection { background: #252547; color: #ededed;}
-    @media (max-width:1500px) {
-      .container {max-width: 99vw;padding: 0 2vw 18px 2vw;}
-      .card {max-width:99vw;}
-      .messages-area {max-width: 99vw;}
-      .header-bar {max-width: 99vw;}
+    #pmthread-messages .pm-message {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 7px;
     }
-    @media (max-width:850px) {
-      :root { --card-max-width: 99vw; }
-      .card, .messages-area, .header-bar { max-width: 99vw; padding-left: 2vw; padding-right: 2vw; }
-      .msg-text { font-size: 1.04rem; }
-      .avatar { width: 41px; height: 41px;}
+    #pmthread-messages .pm-author {
+      min-width: 57px;
+      font-weight: 700;
+      color: #bbbbbb;
+      font-size: 1.02em;
     }
-    @media (max-width:600px) {
-      .card, .messages-area, .header-bar { padding-left: 3.5vw; padding-right: 3.5vw; }
-      .msg-user, .msg-text { font-size: 1em; }
+    #pmthread-messages .pm-text {
+      background: #19191c;
+      color: #fafafd;
+      border-radius: 9px;
+      padding: 9px 19px 10px 14px;
+      display: inline-block;
+      font-size: 1.13em;
+      font-weight: 570;
     }
-    body.clean-mode .messages-area,
-    body.clean-mode .msg-list-title { display: none !important; }
-    body.clean-mode #guest-info { display: none !important; }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .feed-outer { flex-direction: column; gap: 0; }
+      .feed-col { min-width: 0; max-width: 99vw;}
+      .sidebar { min-width: 69px; width: 69px;}
+      .header-bar { padding-inline: 10px;}
+      .main-search-bar-wrapper { padding-inline: 7vw; }
+      .card, .auth-container { padding-left: 8vw; padding-right: 8vw;}
+    }
+    @media (max-width: 600px) {
+      .card, .auth-container { padding-left: 2vw; padding-right: 2vw;}
+      .header-bar { padding-inline: 2vw;}
+      .main-search-bar-wrapper { padding-inline: 2vw;}
+      .sidebar { display: none !important; }
+      .main-message-form input[type="text"] { height: 38px; }
+      .sidebar .logo { margin-left: 5px;}
+    }
   </style>
+  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-  <div class="container">
+<div id="app-shell">
+  <div class="sidebar">
+    <div class="logo">W</div>
+    <button class="nav-btn selected" id="tab-main" title="Főoldal"><i data-feather="message-square"></i></button>
+    <button class="nav-btn" id="tab-pm" title="Privát üzenetek"><i data-feather="send"></i></button>
+    <button class="nav-btn" id="tab-profile" title="Profilod"><i data-feather="user"></i></button>
+    <button class="nav-btn" id="tab-logout" title="Kijelentkezés"><i data-feather="log-out"></i></button>
+    <button class="nav-btn" id="tab-login" title="Belépés"><i data-feather="log-in"></i></button>
+    <button class="nav-btn" id="tab-register" title="Regisztráció"><i data-feather="user-plus"></i></button>
+  </div>
+  <main>
     <div class="header-bar">
-      <div class="header-title">Instawall</div>
-      <div class="header-tabs" id="header-tabs">
-        <button class="tab-btn selected" id="tab-main">Feed</button>
-        <button class="tab-btn" id="tab-pm">Üzenetek</button>
-        <button class="tab-btn" id="tab-profile">Profil</button>
-        <button class="tab-btn" id="tab-logout">Kijelentkezés</button>
-        <button class="tab-btn" id="tab-login">Belépés</button>
-        <button class="tab-btn" id="tab-register">Regisztráció</button>
+      <div class="header-title">Wall</div>
+    </div>
+    <!-- Keresőmező a feed fölé -->
+    <div class="main-search-bar-wrapper" id="main-search-bar-wrapper">
+      <form id="main-search-form" class="main-search-bar" autocomplete="off" onsubmit="return false;">
+        <span class="search-icon"><i data-feather="search"></i></span>
+        <input
+          type="text"
+          id="main-search-input"
+          placeholder="Keresés az üzenetekben..."
+          autocomplete="off"
+          maxlength="80"
+          style="border:none;box-shadow:none;"
+        />
+      </form>
+    </div>
+    <div class="tab-content active" id="main-tab-content">
+      <div class="feed-outer">
+        <div class="feed-col">
+          <div class="card">
+            <form id="msg-form" class="main-message-form" autocomplete="off">
+              <div id="main-profile-view" style="display:none;">
+                <img src="" id="user-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
+                <div class="user-meta">
+                  <div id="user-name-view"></div>
+                </div>
+              </div>
+              <div id="guest-main-form" style="display:none;">
+                <img src="https://i.pravatar.cc/110?u=guest" class="avatar avatar-large" alt="Guest Avatar" style="display:block">
+                <div class="user-meta">
+                  <div style="font-size:1.1rem;font-weight:700; color:#85849b;">Vendég</div>
+                </div>
+              </div>
+              <div class="message-input-container">
+                <input type="text" id="message" placeholder="Mit posztolsz?" maxlength="300" autocomplete="off" />
+                <button type="submit" class="send-btn" aria-label="Küldés" title="Küldés">
+                  <i data-feather="send" style="width: 24px; height: 24px; vertical-align:middle;"></i>
+                </button>
+              </div>
+            </form>
+            <div class="error-msg hide" id="msg-error"></div>
+            <div class="success-msg hide" id="msg-success"></div>
+          </div>
+          <div id="messages" class="messages-area"></div>
+        </div>
       </div>
     </div>
 
-    <div id="guest-info" class="card" style="margin-top:0.7rem; display:none;">
-      <b>Vendég módban posztolhatsz a falra.</b> Profil funkciók csak bejelentkezéssel elérhetőek.
-      <br>
-      <span style="color:#85849b; font-size:.99em;">Privát üzenetek csak regisztráltaknak.</span>
-    </div>
-    
-    <!-- TABS START-->
-    <!-- MAIN FEED -->
-    <div class="tab-content active" id="main-tab-content">
-      <div class="msg-list-title" style="margin-top:0; margin-bottom:7px;">
-        <h3 style="font-size:1.18rem; color:#bdbbf6; margin-bottom:.22em;">📝 Feed</h3>
-      </div>
-      <div class="card" id="main-card">
-        <!-- Main post entry (profile part displayed here if logged in only) -->
-        <div class="profile-view" id="main-profile-view" style="display:none;">
-          <img src="" id="user-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
-          <div style="font-size:1.11rem;margin-bottom:7px;" id="user-name-view"></div>
-        </div>
-        <form id="msg-form" style="margin-top:18px; width:100%; box-sizing:border-box;" autocomplete="off">
-          <textarea id="message" placeholder="Mit posztolsz?" rows="4" maxlength="300" style="width:100%"></textarea>
-          <button type="submit" style="margin-top:0; float:right;">Küldés</button>
-        </form>
-        <div class="error-msg hide" id="msg-error"></div>
-        <div class="success-msg hide" id="msg-success"></div>
-        <!-- Guest form -->
-        <div id="guest-main-form" style="margin-top:18px;">
-          <div class="profile-view">
-            <img src="https://i.pravatar.cc/110?u=guest" class="avatar avatar-large" alt="Guest Avatar" style="display:block">
-            <div style="font-size:1.11rem;margin-bottom:8px;">Vendég</div>
-          </div>
-          <form id="guest-msg-form" autocomplete="off" style="width:100%; box-sizing:border-box;">
-            <textarea id="guest-message" placeholder="Vendég poszt..." rows="4" maxlength="300" style="width:100%"></textarea>
-            <button type="submit" style="margin-top:0; float:right;">Küldés</button>
-          </form>
-          <div class="error-msg hide" id="guest-msg-error"></div>
-          <div class="success-msg hide" id="guest-msg-success"></div>
-        </div>
-      </div>
-      <div id="messages" class="messages-area"></div>
-    </div>
-    
     <!-- PROFILE TAB -->
     <div class="tab-content" id="profile-tab-content">
-      <div class="card auth-container" id="profile-tab-card">
+      <div class="auth-container" id="profile-tab-card">
         <div class="profile-view" id="profile-view-main">
           <img src="" id="profile-tab-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
-          <div style="font-size:1.09rem;margin-bottom:7px;" id="profile-tab-name"></div>
-          <button class="edit-profile-btn" id="edit-profile-btn">Profil szerk.</button>
+          <div id="profile-tab-name"></div>
+          <div class="profile-section-buttons">
+            <button class="edit-profile-btn" id="edit-profile-btn">Profil szerk.</button>
+          </div>
         </div>
         <div id="edit-profile-section" style="display:none;">
           <h3>Profil szerkesztés</h3>
           <form id="edit-profile-form" enctype="multipart/form-data">
+            <div class="input-group">
+              <label for="edit-username">Név módosítása</label>
+              <input type="text" id="edit-username" maxlength="18" placeholder="Új név">
+            </div>
             <div class="input-group">
               <label for="edit-avatar-file">Avatar feltöltése</label>
               <input type="file" id="edit-avatar-file" accept="image/*">
             </div>
             <button type="submit">Mentés</button>
           </form>
-          <button class="logout-btn" id="cancel-edit-btn" style="margin-top:0.7rem;">Mégse</button>
+          <div class="profile-section-buttons">
+            <button class="logout-btn" id="cancel-edit-btn" style="margin-top:0.7rem;">Mégse</button>
+          </div>
           <div class="success-msg hide" id="profile-success"></div>
           <div class="error-msg hide" id="profile-error"></div>
         </div>
@@ -503,7 +821,7 @@
     <!-- PM TAB -->
     <div class="tab-content" id="pm-tab-content">
       <div class="card" id="pm-card">
-        <div style="text-align:center;font-weight:bold;color:#bdbbf6;font-size:1.16em;margin-bottom:.7em;">Privát Üzenetek</div>
+        <div style="text-align:center;font-weight:bold;color:#b3b3b3;font-size:1.13em;margin-bottom:.7em;">Privát Üzenetek</div>
         <div id="pm-userlist"></div>
         <div id="pm-thread-area"></div>
         <div class="success-msg hide" id="pm-success"></div>
@@ -513,9 +831,9 @@
 
     <!-- REGISTRATION TAB -->
     <div class="tab-content" id="register-tab-content">
-      <div class="card auth-container" id="register-card">
+      <div class="auth-container" id="register-card">
         <h3>Regisztráció</h3>
-        <form id="register-form" autocomplete="off" enctype="multipart/form-data">
+        <form id="register-form" autocomplete="off">
           <div class="input-group">
             <label for="reg-username">Felhasználónév</label>
             <input type="text" id="reg-username" required maxlength="18" placeholder="Felhasználónév" autocomplete="off">
@@ -523,10 +841,6 @@
           <div class="input-group">
             <label for="reg-password">Jelszó</label>
             <input type="password" id="reg-password" required maxlength="48" placeholder="Jelszó" autocomplete="new-password">
-          </div>
-          <div class="input-group">
-            <label for="reg-avatar-file">Avatar kép</label>
-            <input type="file" id="reg-avatar-file" accept="image/*">
           </div>
           <button type="submit">Regisztráció</button>
           <div class="error-msg hide" id="reg-error"></div>
@@ -537,7 +851,7 @@
 
     <!-- LOGIN TAB -->
     <div class="tab-content" id="login-tab-content">
-      <div class="card auth-container" id="login-card">
+      <div class="auth-container" id="login-card">
         <h3>Belépés</h3>
         <form id="login-form" autocomplete="off">
           <div class="input-group">
@@ -553,261 +867,319 @@
         </form>
       </div>
     </div>
-    <!-- TABS END-->
-  </div>
-
+    <!-- Overlay for modal -->
+    <div id="overlay-blur" class="hide"></div>
+  </main>
+</div>
 <script type="module">
-// -- original javascript, UNCHANGED --
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, set, get, child, update }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+// -- original javascript, MODIFIED for delete and UI requirements --
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, set, get, child, update, remove }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  // --- Firebase config (unchanged, see original) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyC3Cgmy41qLWLy-HLVAyn1QFejdlflUnSY",
-    authDomain: "website-26acc.firebaseapp.com",
-    databaseURL: "https://website-26acc-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "website-26acc",
-    storageBucket: "website-26acc-firebasestorage.app",
-    messagingSenderId: "156168009563",
-    appId: "1:156168009563:web:e464ba2d56f32138190c7e",
-    measurementId: "G-P4XTEHXV4C"
-  };
+// --- Firebase config (unchanged, see original) ---
+const firebaseConfig = {
+  apiKey: "AIzaSyC3Cgmy41qLWLy-HLVAyn1QFejdlflUnSY",
+  authDomain: "website-26acc.firebaseapp.com",
+  databaseURL: "https://website-26acc-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "website-26acc",
+  storageBucket: "website-26acc-firebasestorage.app",
+  messagingSenderId: "156168009563",
+  appId: "1:156168009563:web:e464ba2d56f32138190c7e",
+  measurementId: "G-P4XTEHXV4C"
+};
 
-  // --- Simple hash ---
-  function hash(str) {
-    let hash = 0, i, chr;
-    if (str.length === 0) return hash;
-    for (i = 0; i < str.length; i++) {
-      chr = str.charCodeAt(i);
-      hash = ((hash<<5)-hash)+chr;
-      hash |= 0;
-    }
-    return Math.abs(hash).toString(36);
+// --- Simple hash ---
+function hash(str) {
+  let hash = 0, i, chr;
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr = str.charCodeAt(i);
+    hash = ((hash<<5)-hash)+chr;
+    hash |= 0;
   }
+  return Math.abs(hash).toString(36);
+}
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const usersRef = ref(db, "users");
-  const messagesRef = ref(db, "messages");
-  const pmRef = ref(db, "pm");
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const usersRef = ref(db, "users");
+const messagesRef = ref(db, "messages");
+const pmRef = ref(db, "pm");
 
-  let currentUser = null;
-  let currentAvatar = '';
-  let guestMode = true;
-  let currentTab = "main";
+let currentUser = null;
+let currentAvatar = '';
+let guestMode = true;
+let currentTab = "main";
 
-  // Tab selectors
-  const tabs = {
-    main: document.getElementById("main-tab-content"),
-    pm: document.getElementById("pm-tab-content"),
-    profile: document.getElementById("profile-tab-content"),
-    register: document.getElementById("register-tab-content"),
-    login: document.getElementById("login-tab-content")
-  };
-  const tabBtns = {
-    main: document.getElementById("tab-main"),
-    pm: document.getElementById("tab-pm"),
-    profile: document.getElementById("tab-profile"),
-    register: document.getElementById("tab-register"),
-    login: document.getElementById("tab-login"),
-    logout: document.getElementById("tab-logout")
-  };
+// Search term - filter for messages
+let searchTerm = "";
 
-  // Show only active tab content
-  function showTab(tabKey) {
-    for (let k in tabs) tabs[k].classList.remove("active");
-    tabs[tabKey].classList.add("active");
-    for (let k in tabBtns) tabBtns[k].classList.remove("selected");
-    if (tabBtns[tabKey]) tabBtns[tabKey].classList.add("selected");
-    currentTab = tabKey;
-    // Special: toggle profile view/edit sub-views
-    if (tabKey === "profile") {
-      showProfileMainView();
-    }
-    if(tabKey === "pm") {
-      loadPmUserList();
-    }
-    // Hide guest info except on main tab (and only if guest)
-    updateHeaderBtns();
-    updateMainMsgFormDisplay();
-  }
+// Sidebar tab selectors (no header tabs anymore)
+const tabs = {
+  main: document.getElementById("main-tab-content"),
+  pm: document.getElementById("pm-tab-content"),
+  profile: document.getElementById("profile-tab-content"),
+  register: document.getElementById("register-tab-content"),
+  login: document.getElementById("login-tab-content")
+};
+const tabBtns = {
+  main: document.getElementById("tab-main"),
+  pm: document.getElementById("tab-pm"),
+  profile: document.getElementById("tab-profile"),
+  register: document.getElementById("tab-register"),
+  login: document.getElementById("tab-login"),
+  logout: document.getElementById("tab-logout")
+};
 
-  // Tabs event listeners
-  tabBtns.main.onclick = () => showTab("main");
-  tabBtns.profile.onclick = () => showTab("profile");
-  tabBtns.pm.onclick = () => showTab("pm");
-  tabBtns.register.onclick = () => showTab("register");
-  tabBtns.login.onclick = () => showTab("login");
-  tabBtns.logout.onclick = () => {logout();};
-
-  // Username etc selectors
-  const userAvatarView = document.getElementById("user-avatar");
-  const userNameView = document.getElementById("user-name-view");
-  const profileTabAvatar = document.getElementById("profile-tab-avatar");
-  const profileTabName = document.getElementById("profile-tab-name");
-  const editProfileBtn = document.getElementById("edit-profile-btn");
-  const editProfileSection = document.getElementById("edit-profile-section");
-  const profileViewMain = document.getElementById("profile-view-main");
-  const guestInfo = document.getElementById('guest-info');
-  const mainProfileView = document.getElementById('main-profile-view');
-  const guestMainForm = document.getElementById('guest-main-form');
-  const messagesArea = document.getElementById("messages");
-  const pmUserlist = document.getElementById("pm-userlist");
-  const pmThreadArea = document.getElementById("pm-thread-area");
-
-  // Top bar Logout (tab-logout) is always visible only if logged in
-  function updateHeaderBtns() {
-    if (guestMode) {
-      tabBtns.main.style.display = "";
-      tabBtns.register.style.display = "";
-      tabBtns.login.style.display = "";
-      tabBtns.profile.style.display = "none";
-      tabBtns.pm.style.display = "none";
-      tabBtns.logout.style.display = "none";
-      guestInfo.style.display = (currentTab==="main") ? "" : "none";
-    } else {
-      tabBtns.main.style.display = "";
-      tabBtns.profile.style.display = "";
-      tabBtns.pm.style.display = "";
-      tabBtns.logout.style.display = "";
-      tabBtns.register.style.display = "none";
-      tabBtns.login.style.display = "none";
-      guestInfo.style.display = "none";
-    }
-  }
-
-  function updateMainMsgFormDisplay() {
-    // Main tab: show/hide between guest and user form/fields
-    const mainCard = document.getElementById("main-card");
-    const msgForm = document.getElementById("msg-form");
-    if (guestMode) {
-      msgForm.style.display = "none";
-      mainProfileView.style.display = "none";
-      guestMainForm.style.display = "";
-    } else {
-      msgForm.style.display = "";
-      mainProfileView.style.display = "";
-      guestMainForm.style.display = "none";
-      updateProfileBar();
-    }
-  }
-
-  // Update profile bar in main tab
-  function updateProfileBar() {
-    if (!guestMode) {
-      userNameView.textContent = currentUser;
-      if (currentAvatar && currentAvatar.length > 10) {
-        userAvatarView.src = currentAvatar;
-      } else {
-        userAvatarView.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
-      }
-      userAvatarView.style.display = 'block';
-    }
-  }
-
-  // Profile Tab main view
-  function showProfileMainView() {
-    if (!guestMode) {
-      editProfileSection.style.display = "none";
-      profileViewMain.style.display = "";
-      // profile info
-      profileTabName.textContent = currentUser;
-      if (currentAvatar && currentAvatar.length > 10) {
-        profileTabAvatar.src = currentAvatar;
-      } else {
-        profileTabAvatar.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
-      }
-      profileTabAvatar.style.display = 'block';
-    } else {
-      tabs.profile.innerHTML = `<div class="card auth-container"><div style="text-align:center; color:#85849b;">Bejelentkezés szükséges a profilhoz.</div></div>`;
-    }
-  }
-
-  // Edit profile
-  editProfileBtn.onclick = function() {
-    editProfileSection.style.display = "";
-    profileViewMain.style.display = "none";
-    document.getElementById('profile-error').classList.add('hide');
-    document.getElementById('profile-success').classList.add('hide');
-  };
-
-  document.getElementById('cancel-edit-btn').onclick = function() {
+function showTab(tabKey) {
+  for (let k in tabs) tabs[k].classList.remove("active");
+  tabs[tabKey].classList.add("active");
+  for (let k in tabBtns) tabBtns[k].classList.remove("selected");
+  if (tabBtns[tabKey]) tabBtns[tabKey].classList.add("selected");
+  currentTab = tabKey;
+  // Special: toggle profile view/edit sub-views
+  if (tabKey === "profile") {
     showProfileMainView();
-  };
+  }
+  if(tabKey === "pm") {
+    loadPmUserList();
+  }
+  updateHeaderBtns();
+  updateMainMsgFormDisplay();
+}
 
-  document.getElementById('edit-profile-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const avatarFile = document.getElementById('edit-avatar-file').files[0];
-    let newAvatar = "";
-    if (avatarFile) {
-      if (!avatarFile.type.startsWith('image/')) {
-        document.getElementById('profile-error').textContent = "Csak képet tölts fel!";
-        document.getElementById('profile-error').classList.remove('hide');
-        return;
-      }
-      newAvatar = await fileToBase64Square(avatarFile, 74);
-    }
-    try {
-      if (newAvatar) {
-        await update(child(usersRef, currentUser), { avatar: newAvatar });
-        currentAvatar = newAvatar;
-      }
-      document.getElementById('profile-success').textContent = "Elmentve!";
-      document.getElementById('profile-success').classList.remove('hide');
-      setTimeout(() => {
-        showProfileMainView();
-      }, 1000);
-    } catch (e) {
-      document.getElementById('profile-error').textContent = "Mentés sikertelen.";
-      document.getElementById('profile-error').classList.remove('hide');
-    }
-  };
+tabBtns.main.onclick = () => showTab("main");
+tabBtns.profile.onclick = () => showTab("profile");
+tabBtns.pm.onclick = () => showTab("pm");
+tabBtns.register.onclick = () => showTab("register");
+tabBtns.login.onclick = () => showTab("login");
+tabBtns.logout.onclick = () => {logout();};
 
-  // Main message sending logic
-  document.getElementById('msg-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const msg = document.getElementById('message').value.trim();
-    document.getElementById('msg-error').classList.add('hide');
-    document.getElementById('msg-success').classList.add('hide');
-    if (!msg) {
-      document.getElementById('msg-error').textContent = "Írj valamit!";
-      document.getElementById('msg-error').classList.remove('hide');
-      return;
-    }
-    if (!currentUser) {
-      document.getElementById('msg-error').textContent = "Előbb jelentkezz be!";
-      document.getElementById('msg-error').classList.remove('hide');
-      return;
-    }
+// Username etc selectors
+const userAvatarView = document.getElementById("user-avatar");
+const userNameView = document.getElementById("user-name-view");
+const profileTabAvatar = document.getElementById("profile-tab-avatar");
+const profileTabName = document.getElementById("profile-tab-name");
+const editProfileBtn = document.getElementById("edit-profile-btn");
+const editProfileSection = document.getElementById("edit-profile-section");
+const profileViewMain = document.getElementById("profile-view-main");
+const mainProfileView = document.getElementById('main-profile-view');
+const guestMainForm = document.getElementById('guest-main-form');
+const messagesArea = document.getElementById("messages");
+const pmUserlist = document.getElementById("pm-userlist");
+const pmThreadArea = document.getElementById("pm-thread-area");
+const overlayBlur = document.getElementById("overlay-blur");
+
+// ------ SEARCH BAR -----
+const mainSearchInput = document.getElementById("main-search-input");
+if (mainSearchInput) {
+  mainSearchInput.addEventListener("input", function() {
+    searchTerm = mainSearchInput.value.trim();
+    renderMessages(lastMsgArr); // lastMsgArr will be maintained in onValue
+  });
+}
+
+// Modal for confirm delete
+function showDeleteModal(messageId, contentText) {
+  overlayBlur.innerHTML = `
+    <div id="delete-modal">
+      <h4>Üzenet törlése</h4>
+      <div class="dm-msg">${contentText ? "Biztos törlöd ezt az üzenetet?<br><em style='color:#eee;'>" + contentText + "</em>" : "Biztos törlöd ezt az üzenetet?"}</div>
+      <div class="modal-btns">
+        <button class="modal-btn-cancel" id="modal-cancel-btn">Mégsem</button>
+        <button class="modal-btn-del" id="modal-delete-btn">Törlés</button>
+      </div>
+    </div>
+  `;
+  overlayBlur.classList.remove("hide");
+  // accessibility: focus first
+  setTimeout(()=>{ 
+    const cancelBtn = document.getElementById("modal-cancel-btn");
+    if(cancelBtn) cancelBtn.focus();
+  },60);
+  // Event
+  document.getElementById("modal-cancel-btn").onclick = hideDeleteModal;
+  document.getElementById("modal-delete-btn").onclick = async function() {
     try {
-      await push(messagesRef, {
-        name: currentUser,
-        msg,
-        avatar: currentAvatar || "",
-        ts: Date.now()
-      });
-      document.getElementById('message').value = "";
-      document.getElementById('msg-success').textContent = "Küldve!";
-      document.getElementById('msg-success').classList.remove('hide');
-      setTimeout(()=>{ document.getElementById('msg-success').classList.add('hide'); }, 900);
+      await remove(child(messagesRef, messageId));
+      hideDeleteModal();
     } catch(e) {
-      document.getElementById('msg-error').textContent = "Hiba küldéskor!";
-      document.getElementById('msg-error').classList.remove('hide');
+      alert("Nem sikerült törölni az üzenetet.");
+      hideDeleteModal();
     }
   };
+  // ESC to close
+  window.addEventListener("keydown", handleModalEsc);
+  // hide overlay click doesn’t close: modal only via buttons
+}
+function hideDeleteModal() {
+  overlayBlur.classList.add("hide");
+  overlayBlur.innerHTML = '';
+  window.removeEventListener("keydown", handleModalEsc);
+}
+function handleModalEsc(e) {
+  if(e.key === "Escape") {
+    hideDeleteModal();
+  }
+}
 
-  // Guest send message
-  document.getElementById('guest-msg-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const msg = document.getElementById('guest-message').value.trim();
-    document.getElementById('guest-msg-error').classList.add('hide');
-    document.getElementById('guest-msg-success').classList.add('hide');
-    if(!msg) {
-      document.getElementById('guest-msg-error').textContent = "Írj valamit!";
-      document.getElementById('guest-msg-error').classList.remove('hide');
+// Only sidebar navigation; header-bar reduced, no info banner
+function updateHeaderBtns() {
+  if (guestMode) {
+    tabBtns.main.style.display = "";
+    tabBtns.register.style.display = "";
+    tabBtns.login.style.display = "";
+    tabBtns.profile.style.display = "none";
+    tabBtns.pm.style.display = "none";
+    tabBtns.logout.style.display = "none";
+  } else {
+    tabBtns.main.style.display = "";
+    tabBtns.profile.style.display = "";
+    tabBtns.pm.style.display = "";
+    tabBtns.logout.style.display = "";
+    tabBtns.register.style.display = "none";
+    tabBtns.login.style.display = "none";
+  }
+}
+
+function updateMainMsgFormDisplay() {
+  // Main tab: show/hide between guest and user form/fields
+  const msgForm = document.getElementById("msg-form");
+  const msgInput = msgForm.querySelector('input[type="text"]');
+  if (guestMode) {
+    mainProfileView.style.display = "none";
+    guestMainForm.style.display = "";
+    msgInput.id = "guest-message";
+    userAvatarView.style.display = 'none';
+  } else {
+    mainProfileView.style.display = "";
+    guestMainForm.style.display = "none";
+    msgInput.id = "message";
+    updateProfileBar();
+  }
+}
+function updateProfileBar() {
+  if (!guestMode) {
+    userNameView.textContent = currentUser;
+    if (currentAvatar && currentAvatar.length > 10) {
+      userAvatarView.src = currentAvatar;
+    } else {
+      userAvatarView.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
+    }
+    userAvatarView.style.display = 'block';
+  }
+}
+// Profile Tab main view
+function showProfileMainView() {
+  if (!guestMode) {
+    editProfileSection.style.display = "none";
+    profileViewMain.style.display = "";
+    profileTabName.textContent = currentUser;
+    if (currentAvatar && currentAvatar.length > 10) {
+      profileTabAvatar.src = currentAvatar;
+    } else {
+      profileTabAvatar.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
+    }
+    profileTabAvatar.style.display = 'block';
+  } else {
+    tabs.profile.innerHTML = `<div class="auth-container"><div style="text-align:center; color:#ababab;">Bejelentkezés szükséges a profilhoz.</div></div>`;
+  }
+}
+
+editProfileBtn.onclick = function() {
+  editProfileSection.style.display = "";
+  profileViewMain.style.display = "none";
+  document.getElementById('profile-error').classList.add('hide');
+  document.getElementById('profile-success').classList.add('hide');
+  document.getElementById('edit-username').value = currentUser || "";
+};
+
+document.getElementById('cancel-edit-btn').onclick = function() {
+  showProfileMainView();
+};
+
+document.getElementById('edit-profile-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const avatarFile = document.getElementById('edit-avatar-file').files[0];
+  const newUsernameInput = document.getElementById('edit-username').value.trim();
+  let newAvatar = "";
+  const errorDiv = document.getElementById('profile-error');
+  const successDiv = document.getElementById('profile-success');
+  errorDiv.classList.add('hide');
+  successDiv.classList.add('hide');
+
+  // NÉV validáció (minimum 3 hossz, nem foglalt, stb.)
+  if (newUsernameInput.length < 3) {
+    errorDiv.textContent = "Minimum 3 karakter!";
+    errorDiv.classList.remove('hide');
+    return;
+  }
+  // Ha változtatni akar, ellenőrizzük, hogy nem foglalt más által
+  if (newUsernameInput !== currentUser) {
+    const usersSnap = await get(usersRef);
+    let userExists = false;
+    usersSnap.forEach(childSnap => {
+      if(childSnap.key.toLowerCase() === newUsernameInput.toLowerCase()) userExists = true;
+    });
+    if(userExists) {
+      errorDiv.textContent = "Ez a név foglalt!";
+      errorDiv.classList.remove('hide');
       return;
     }
+  }
+
+  if (avatarFile) {
+    if (!avatarFile.type.startsWith('image/')) {
+      errorDiv.textContent = "Csak képet tölts fel!";
+      errorDiv.classList.remove('hide');
+      return;
+    }
+    newAvatar = await fileToBase64Square(avatarFile, 74);
+  }
+  try {
+    let updates = {};
+    if (newAvatar) updates.avatar = newAvatar;
+    if (newUsernameInput && newUsernameInput !== currentUser) {
+      // username módosításához: hozzunk létre új bejegyzést az új névvel, töröljük a régit
+      const oldUserSnap = await get(child(usersRef, currentUser));
+      if (!oldUserSnap.exists()) throw new Error("Felhasználó nem található.");
+      const userData = oldUserSnap.val();
+      updates = { ...userData, ...updates, username: newUsernameInput };
+      await set(child(usersRef, newUsernameInput), updates);
+      await set(child(usersRef, currentUser), null); // töröld a régit
+      currentUser = newUsernameInput;
+      if (updates.avatar) currentAvatar = updates.avatar;
+    } else if (Object.keys(updates).length) {
+      await update(child(usersRef, currentUser), updates);
+      if (updates.avatar) currentAvatar = updates.avatar;
+    }
+    successDiv.textContent = "Elmentve!";
+    successDiv.classList.remove('hide');
+    setTimeout(() => {
+      showProfileMainView();
+    }, 1000);
+  } catch (e) {
+    errorDiv.textContent = "Mentés sikertelen.";
+    errorDiv.classList.remove('hide');
+  }
+};
+
+// Feed message send logic
+document.getElementById('msg-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const msgField = guestMode
+    ? document.getElementById('guest-message')
+    : document.getElementById('message');
+  const msg = msgField.value.trim();
+  document.getElementById('msg-error').classList.add('hide');
+  document.getElementById('msg-success').classList.add('hide');
+  if (!msg) {
+    document.getElementById('msg-error').textContent = "Írj valamit!";
+    document.getElementById('msg-error').classList.remove('hide');
+    return;
+  }
+  if (guestMode) {
     try {
       await push(messagesRef, {
         name: "Vendég",
@@ -816,284 +1188,388 @@
         avatar: "",
         ts: Date.now()
       });
-      document.getElementById('guest-message').value = "";
-      document.getElementById('guest-msg-success').textContent = "Küldve!";
-      document.getElementById('guest-msg-success').classList.remove('hide');
-      setTimeout(()=>{ document.getElementById('guest-msg-success').classList.add('hide'); }, 900);
+      msgField.value = "";
+      document.getElementById('msg-success').textContent = "Küldve!";
+      document.getElementById('msg-success').classList.remove('hide');
+      setTimeout(()=>{ document.getElementById('msg-success').classList.add('hide'); }, 900);
     } catch(e) {
-      document.getElementById('guest-msg-error').textContent = "Hiba küldéskor!";
-      document.getElementById('guest-msg-error').classList.remove('hide');
+      document.getElementById('msg-error').textContent = "Hiba küldéskor!";
+      document.getElementById('msg-error').classList.remove('hide');
     }
-  };
-
-  // Registration logic
-  document.getElementById('register-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const uname = document.getElementById('reg-username').value.trim();
-    const pwd = document.getElementById('reg-password').value.trim();
-    const avatarFile = document.getElementById('reg-avatar-file').files[0];
-    const regError = document.getElementById('reg-error');
-    const regSuccess = document.getElementById('reg-success');
-    regError.textContent = '';
-    regError.classList.add('hide');
-    regSuccess.textContent = '';
-    regSuccess.classList.add('hide');
-
-    if(uname.length < 3) {
-      regError.textContent = "Felhasználónév 3+ karakter!";
-      regError.classList.remove('hide');
-      return;
-    }
-    if(pwd.length < 5) {
-      regError.textContent = "Jelszó 5+ karakter!";
-      regError.classList.remove('hide');
-      return;
-    }
-    const usersSnap = await get(usersRef);
-    let userExists = false;
-    usersSnap.forEach(childSnap => {
-      if(childSnap.key.toLowerCase() === uname.toLowerCase()) userExists = true;
-    });
-    if(userExists) {
-      regError.textContent = "Felhasználónév foglalt!";
-      regError.classList.remove('hide');
-      return;
-    }
-    let avatarData = "";
-    if (avatarFile) {
-      if (!avatarFile.type.startsWith('image/')) {
-        regError.textContent = "Csak képet tölts fel!";
-        regError.classList.remove('hide');
-        return;
-      }
-      avatarData = await fileToBase64Square(avatarFile, 74);
-    }
-    await set(child(usersRef, uname), {
-      username: uname,
-      password: hash(pwd),
-      avatar: avatarData || ""
-    });
-    regSuccess.textContent = "Sikeres regisztráció! Most beléphetsz.";
-    regSuccess.classList.remove('hide');
-    setTimeout(() => {
-      regSuccess.classList.add('hide');
-      showTab("login");
-    }, 1100);
-    document.getElementById('register-form').reset();
-  };
-
-  // Login logic
-  document.getElementById('login-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const uname = document.getElementById('login-username').value.trim();
-    const pwd = document.getElementById('login-password').value.trim();
-    const loginError = document.getElementById('login-error');
-    loginError.textContent = '';
-    loginError.classList.add('hide');
-    const usersSnap = await get(usersRef);
-    let found = false;
-    usersSnap.forEach(childSnap => {
-      if(childSnap.key.toLowerCase() === uname.toLowerCase()) {
-        found = childSnap.val();
-      }
-    });
-    if(!found) {
-      loginError.textContent = "Hibás adat!";
-      loginError.classList.remove('hide');
-      return;
-    }
-    if(found.password !== hash(pwd)) {
-      loginError.textContent = "Hibás adat!";
-      loginError.classList.remove('hide');
-      return;
-    }
-    currentUser = found.username;
-    currentAvatar = found.avatar;
-    guestMode = false;
-    showTab("main");
-  };
-
-  function logout() {
-    currentUser = null;
-    currentAvatar = '';
-    guestMode = true;
-    showTab("main");
+    return;
   }
-
-  // Format time for messages
-  function formatTimeAgo(ts) {
-    if(!ts) return "";
-    const ms = Date.now() - ts;
-    const sec = Math.floor(ms/1000);
-    if(sec < 60) return 'most';
-    if(sec < 3600) return (sec/60|0)+'p';
-    if(sec < 86400) return (sec/3600|0)+'ó';
-    return (sec/86400|0)+' napja';
+  if (!currentUser) {
+    document.getElementById('msg-error').textContent = "Előbb jelentkezz be!";
+    document.getElementById('msg-error').classList.remove('hide');
+    return;
   }
+  try {
+    await push(messagesRef, {
+      name: currentUser,
+      msg,
+      avatar: currentAvatar || "",
+      ts: Date.now()
+    });
+    msgField.value = "";
+    document.getElementById('msg-success').textContent = "Küldve!";
+    document.getElementById('msg-success').classList.remove('hide');
+    setTimeout(()=>{ document.getElementById('msg-success').classList.add('hide'); }, 900);
+  } catch(e) {
+    document.getElementById('msg-error').textContent = "Hiba küldéskor!";
+    document.getElementById('msg-error').classList.remove('hide');
+  }
+};
 
-  // Main message listing
-  onValue(messagesRef, (snapshot) => {
-    messagesArea.innerHTML = "";
-    let msgArr = [];
-    snapshot.forEach((child) => {
-      msgArr.push({ id: child.key, ...child.val() });
-    });
-    // Sort: latest first
-    msgArr.sort((a,b)=> b.ts-a.ts);
-    msgArr.forEach(data => {
-      const div = document.createElement("div");
-      div.className = "message";
-      const avatar = document.createElement('img');
-      avatar.className = 'avatar';
-      if (data.avatar && data.avatar.length > 10) {
-        avatar.src = data.avatar;
-      } else {
-        avatar.src = data.guest ? "https://i.pravatar.cc/52?u=guest" : ("https://i.pravatar.cc/52?u=" + encodeURIComponent(data.name));
-      }
-      avatar.alt = "-";
-      const name = document.createElement('span');
-      name.className = 'msg-user';
-      if (data.guest || !data.name) {
-        name.textContent = data.name || "Vendég";
-        name.dataset.guest = "1";
-      } else {
-        name.textContent = data.name;
-        name.dataset.profile = data.name;
-      }
-      const time = document.createElement('span');
-      time.className = 'msg-time';
-      time.textContent = '• ' + formatTimeAgo(data.ts);
-      const msgElem = document.createElement('span');
-      msgElem.className = 'msg-text';
-      msgElem.textContent = data.msg;
-      div.appendChild(avatar);
-      div.appendChild(name);
-      div.appendChild(time);
-      div.appendChild(msgElem);
-      messagesArea.appendChild(div);
-    });
+// Registration logic
+document.getElementById('register-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const uname = document.getElementById('reg-username').value.trim();
+  const pwd = document.getElementById('reg-password').value.trim();
+  const regError = document.getElementById('reg-error');
+  const regSuccess = document.getElementById('reg-success');
+  regError.textContent = '';
+  regError.classList.add('hide');
+  regSuccess.textContent = '';
+  regSuccess.classList.add('hide');
+
+  if(uname.length < 3) {
+    regError.textContent = "Felhasználónév 3+ karakter!";
+    regError.classList.remove('hide');
+    return;
+  }
+  if(pwd.length < 5) {
+    regError.textContent = "Jelszó 5+ karakter!";
+    regError.classList.remove('hide');
+    return;
+  }
+  const usersSnap = await get(usersRef);
+  let userExists = false;
+  usersSnap.forEach(childSnap => {
+    if(childSnap.key.toLowerCase() === uname.toLowerCase()) userExists = true;
   });
-
-  // ---- PM SECTION ----
-  async function loadPmUserList() {
-    pmUserlist.innerHTML = "<div style='margin-bottom:.6em; color:#868686'>Kattints egy felhasználóra!</div>";
-    pmThreadArea.innerHTML = "";
-    if (!currentUser) {
-      pmUserlist.innerHTML += '<div style="color:#e05d82;text-align:center;">Lépj be!</div>';
-      return;
-    }
-    const usersSnap = await get(usersRef);
-    let userArr = [];
-    usersSnap.forEach(childSnap => {
-      const user = childSnap.val();
-      if (user.username && user.username !== currentUser) {
-        userArr.push(user.username);
-      }
-    });
-    if (userArr.length == 0) {
-      pmUserlist.innerHTML += "<div style='color:#777;text-align:center;'>Más regisztrált nincs.</div>";
-      return;
-    }
-    userArr.forEach(uname => {
-      const btn = document.createElement("button");
-      btn.className = "edit-profile-btn";
-      btn.style.marginRight = "0";
-      btn.textContent = uname;
-      btn.onclick = () => openPmThread(uname);
-      pmUserlist.appendChild(btn);
-    });
+  if(userExists) {
+    regError.textContent = "Felhasználónév foglalt!";
+    regError.classList.remove('hide');
+    return;
   }
+  await set(child(usersRef, uname), {
+    username: uname,
+    password: hash(pwd),
+    avatar: ""
+  });
+  regSuccess.textContent = "Sikeres regisztráció! Most beléphetsz.";
+  regSuccess.classList.remove('hide');
+  setTimeout(() => {
+    regSuccess.classList.add('hide');
+    showTab("login");
+  }, 1100);
+  document.getElementById('register-form').reset();
+};
 
-  async function openPmThread(targetName) {
-    pmThreadArea.innerHTML = `
-      <div style="text-align:center; font-size:1.04em; color:#9091c6;margin-bottom:0.5rem;">
-        Üzenet: <b>${currentUser}</b> — <b>${targetName}</b>
-      </div>
-      <div id="pmthread-messages" style="max-height:420px;overflow-y:auto;margin-bottom:13px;width:100%;"></div>
-      <form id="pmthread-form" style="background:none;width:100%;">
-        <input type="text" id="pmthread-input" placeholder="Írj valamit..." maxlength="300" style="width:84%;display:inline-block;" />
-        <button type="submit" style="width:15%;display:inline-block;margin-left:1%;">Küldés</button>
-      </form>
-      <button class="logout-btn" id="close-pmthread-btn" style="margin-top:0.6rem;">Vissza</button>
-    `;
-    const threadId = getPmThreadId(currentUser, targetName);
-    const threadRef = child(pmRef, threadId);
-    onValue(threadRef, snap => {
-      const threadMsgs = [];
-      snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
-      threadMsgs.sort((a,b)=>a.ts-b.ts);
-      const msgbox = pmThreadArea.querySelector('#pmthread-messages');
-      msgbox.innerHTML = '';
-      threadMsgs.forEach(data => {
-        const msgDiv = document.createElement("div");
-        msgDiv.style = "margin-bottom:6px; display:flex; align-items:center; gap: 12px;";
-        const who = document.createElement('span');
-        who.style = "color:#aaa;min-width:63px;font-weight:600;font-size:1.05em;";
-        who.textContent = data.from === currentUser ? "Te" : data.from;
-        const text = document.createElement('span');
-        text.textContent = data.msg;
-        text.style = "background:#23223b; color:#fafafd;border-radius:8px; padding:8px 20px;display:inline-block; font-size:1.12em;";
-        msgDiv.appendChild(who);
-        msgDiv.appendChild(text);
-        msgbox.appendChild(msgDiv);
-      });
-      msgbox.scrollTop = msgbox.scrollHeight;
-    });
-    pmThreadArea.querySelector('#pmthread-form').onsubmit = async function(e) {
-      e.preventDefault();
-      const msgInput = pmThreadArea.querySelector('#pmthread-input');
-      const msg = msgInput.value.trim();
-      if (!msg) return;
-      try {
-        await push(child(pmRef, threadId), {
-          from: currentUser,
-          msg,
-          ts: Date.now()
-        });
-        msgInput.value = '';
-      } catch (e) {
-        document.getElementById('pm-error').textContent = "Nem sikerült elküldeni!";
-        document.getElementById('pm-error').classList.remove('hide');
-      }
+// Login logic
+document.getElementById('login-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const uname = document.getElementById('login-username').value.trim();
+  const pwd = document.getElementById('login-password').value.trim();
+  const loginError = document.getElementById('login-error');
+  loginError.textContent = '';
+  loginError.classList.add('hide');
+  const usersSnap = await get(usersRef);
+  let found = false;
+  usersSnap.forEach(childSnap => {
+    if(childSnap.key.toLowerCase() === uname.toLowerCase()) {
+      found = childSnap.val();
     }
-    pmThreadArea.querySelector('#close-pmthread-btn').onclick = () => loadPmUserList();
+  });
+  if(!found) {
+    loginError.textContent = "Hibás adat!";
+    loginError.classList.remove('hide');
+    return;
   }
-  function getPmThreadId(user1, user2) {
-    return [user1, user2].sort().join('__pm__');
+  if(found.password !== hash(pwd)) {
+    loginError.textContent = "Hibás adat!";
+    loginError.classList.remove('hide');
+    return;
   }
+  currentUser = found.username;
+  currentAvatar = found.avatar;
+  guestMode = false;
+  showTab("main");
+};
 
-  // -- Image file to base64 helper, resize square
-  function fileToBase64Square(file, sz) {
-    return new Promise(function(resolve) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const img = new window.Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          canvas.width = sz;
-          canvas.height = sz;
-          const ctx = canvas.getContext('2d');
-          ctx.fillStyle = "#181821";
-          ctx.fillRect(0,0,sz,sz);
-          let size = Math.min(img.width, img.height);
-          let sx = (img.width-size)/2;
-          let sy = (img.height-size)/2;
-          ctx.drawImage(img, sx, sy, size, size, 0, 0, sz, sz);
-          resolve(canvas.toDataURL('image/png'));
-        };
-        img.src = evt.target.result;
+function logout() {
+  currentUser = null;
+  currentAvatar = '';
+  guestMode = true;
+  showTab("main");
+}
+
+// Format time for messages: show "YYYY-MM-DD  h:mm AM/PM"
+function formatTimeHM(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  let hours = d.getHours();
+  let mins = d.getMinutes();
+  let pm = '';
+  if (hours === 0) {
+    hours = 12; pm = "AM";
+  } else if (hours < 12) {
+    pm = "AM";
+  } else if (hours === 12) {
+    pm = "PM";
+  } else {
+    pm = "PM";
+    hours = hours % 12;
+  }
+  const sH = hours.toString();
+  const sM = mins < 10 ? "0" + mins : ""+mins;
+  // Optional: show date, but we keep just "h:mm AM/PM"
+  return sH + ":" + sM + " " + pm;
+}
+function formatTimeFull(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  const yyyy = d.getFullYear();
+  const mm = (d.getMonth()+1).toString().padStart(2,"0");
+  const dd = d.getDate().toString().padStart(2,"0");
+  return `${yyyy}.${mm}.${dd}.  ${formatTimeHM(ts)}`;
+}
+
+// -------- MESSAGE RENDERING WITH SEARCH SUPPORT ----------
+let lastMsgArr = [];
+function renderMessages(msgArrRaw) {
+  // Set (cache) lastMsgArr for live search filtering
+  lastMsgArr = Array.isArray(msgArrRaw) ? msgArrRaw : [];
+  messagesArea.innerHTML = "";
+  let filteredArr = lastMsgArr;
+  if (searchTerm) {
+    const q = searchTerm.toLowerCase();
+    // keresés: az üzenet szövegben (msg) vagy névben
+    filteredArr = lastMsgArr.filter(m =>
+      (m.msg && m.msg.toLowerCase().includes(q)) ||
+      (m.name && m.name.toLowerCase().includes(q))
+    );
+  }
+  if (filteredArr.length === 0) {
+    if (lastMsgArr.length === 0) {
+      // loading vagy nincs üzenet
+      messagesArea.innerHTML = `<div style="color:#909099;text-align:center;margin:1.6em 0;">Nincs üzenet.</div>`;
+    } else if (searchTerm && lastMsgArr.length > 0) {
+      messagesArea.innerHTML = `<div style="color:#909099;text-align:center;margin:1.5em 0;">Nincs találat a keresésre.</div>`;
+    }
+    if(window.feather) feather.replace();
+    return;
+  }
+  filteredArr.forEach(data => {
+    const div = document.createElement("div");
+    div.className = "message";
+    // AVATAR
+    const avatar = document.createElement('img');
+    avatar.className = 'avatar';
+    if (data.avatar && data.avatar.length > 10) {
+      avatar.src = data.avatar;
+    } else {
+      avatar.src = data.guest ? "https://i.pravatar.cc/52?u=guest" : ("https://i.pravatar.cc/52?u=" + encodeURIComponent(data.name));
+    }
+    avatar.alt = "-";
+    div.appendChild(avatar);
+
+    // Main info block (all except avatar, actions)
+    const inner = document.createElement("div");
+    inner.className = "msg-mainblock";
+    
+    // NAME + delete row
+    const headrow = document.createElement("div");
+    headrow.className = "msg-headerrow";
+    const name = document.createElement('span');
+    name.className = 'msg-user';
+    if (data.guest || !data.name) {
+      name.textContent = data.name || "Vendég";
+      name.dataset.guest = "1";
+    } else {
+      name.textContent = data.name;
+      name.dataset.profile = data.name;
+    }
+    headrow.appendChild(name);
+
+    // Right: show delete if owner
+    const actions = document.createElement("span");
+    actions.className = "msg-actions";
+    if (
+      (!data.guest && currentUser && data.name && data.name.toLowerCase() === currentUser.toLowerCase())
+      ||
+      (data.guest && currentUser === null && guestMode)
+    ) {
+      const delBtn = document.createElement('button');
+      delBtn.className = "msg-delete-btn";
+      delBtn.title = "Üzenet törlése";
+      delBtn.setAttribute("aria-label", "Üzenet törlése");
+      delBtn.style.display = "flex";
+      delBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 21 21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6V19.2c0 .44-.33.8-.77.8H5.77c-.44 0-.77-.36-.77-.8V6m3 0V4.8A2.8 2.8 0 0 1 10.8 2h1.4a2.8 2.8 0 0 1 2.8 2.8V6"></path><line x1="8" y1="10" x2="8" y2="16"></line><line x1="13" y1="10" x2="13" y2="16"></line></svg>`;
+      delBtn.onmouseover = function() { delBtn.style.color = "#e23c3b"; };
+      delBtn.onmouseout  = function() { delBtn.style.color = "#fff"; };
+      delBtn.onclick = (e) => {
+        e.preventDefault();
+        showDeleteModal(data.id, data.msg);
       };
-      reader.readAsDataURL(file);
-    });
-  }
+      actions.appendChild(delBtn);
+    }
+    headrow.appendChild(actions);
+    inner.appendChild(headrow);
 
-  // ------- INIT -------
-  function initTabDisplay() {
-    updateHeaderBtns();
-    updateMainMsgFormDisplay();
-    showTab("main");
+    // TIME under name
+    const time = document.createElement('span');
+    time.className = 'msg-time';
+    time.textContent = formatTimeFull(data.ts);
+    inner.appendChild(time);
+
+    // MSG text
+    const msgElem = document.createElement('span');
+    msgElem.className = 'msg-text';
+    msgElem.textContent = data.msg;
+    inner.appendChild(msgElem);
+
+    div.appendChild(inner);
+
+    messagesArea.appendChild(div);
+  });
+  if(window.feather) feather.replace(); // redraw icons after DOM change
+}
+
+// Main message listing -- with delete & times under name
+onValue(messagesRef, (snapshot) => {
+  let msgArr = [];
+  snapshot.forEach((child) => {
+    msgArr.push({ id: child.key, ...child.val() });
+  });
+  // Sort: latest first (=higher ts comes first at top)
+  msgArr.sort((a,b)=> b.ts-a.ts);
+  renderMessages(msgArr);
+});
+
+// ---- PM SECTION ----
+async function loadPmUserList() {
+  pmUserlist.innerHTML = "<div style='margin-bottom:.6em; color:#888'>Kattints egy felhasználóra!</div>";
+  pmThreadArea.innerHTML = "";
+  if (!currentUser) {
+    pmUserlist.innerHTML += '<div style="color:#b68686;text-align:center;">Lépj be!</div>';
+    return;
   }
-  initTabDisplay();
+  const usersSnap = await get(usersRef);
+  let userArr = [];
+  usersSnap.forEach(childSnap => {
+    const user = childSnap.val();
+    if (user.username && user.username !== currentUser) {
+      userArr.push(user.username);
+    }
+  });
+  if (userArr.length == 0) {
+    pmUserlist.innerHTML += "<div style='color:#888;text-align:center;'>Más regisztrált nincs.</div>";
+    return;
+  }
+  userArr.forEach(uname => {
+    const btn = document.createElement("button");
+    btn.className = "edit-profile-btn";
+    btn.style.marginRight = "0";
+    btn.textContent = uname;
+    btn.onclick = () => openPmThread(uname);
+    pmUserlist.appendChild(btn);
+  });
+}
+
+async function openPmThread(targetName) {
+  pmThreadArea.innerHTML = `
+    <div style="text-align:center; font-size:1.04em; color:#b7b7b7;margin-bottom:0.5rem;">
+      Üzenet: <b>${currentUser}</b> — <b>${targetName}</b>
+    </div>
+    <div id="pmthread-messages"></div>
+    <form id="pmthread-form" style="background:none;width:100%;">
+      <input type="text" id="pmthread-input" placeholder="Írj valamit..." maxlength="300" style="width:84%;display:inline-block;" />
+      <button type="submit" style="width:15%;display:inline-block;margin-left:1%;background:transparent;color:#d1d1d1;padding:0;font-size:1.34rem;border:none;vertical-align:middle;" aria-label="Küldés" title="Küldés">
+         <i data-feather="send"></i>
+      </button>
+    </form>
+    <button class="logout-btn" id="close-pmthread-btn" style="margin-top:0.6rem;">Vissza</button>
+  `;
+  const threadId = getPmThreadId(currentUser, targetName);
+  const threadRef = child(pmRef, threadId);
+  onValue(threadRef, snap => {
+    const threadMsgs = [];
+    snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
+    threadMsgs.sort((a,b)=>a.ts-b.ts);
+    const msgbox = pmThreadArea.querySelector('#pmthread-messages');
+    msgbox.innerHTML = '';
+    threadMsgs.forEach(data => {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = 'pm-message';
+      const who = document.createElement('span');
+      who.className = 'pm-author';
+      who.textContent = data.from === currentUser ? "Te" : data.from;
+      const text = document.createElement('span');
+      text.className = 'pm-text';
+      text.textContent = data.msg;
+      msgDiv.appendChild(who);
+      msgDiv.appendChild(text);
+      msgbox.appendChild(msgDiv);
+    });
+    msgbox.scrollTop = msgbox.scrollHeight;
+  });
+  pmThreadArea.querySelector('#pmthread-form').onsubmit = async function(e) {
+    e.preventDefault();
+    const msgInput = pmThreadArea.querySelector('#pmthread-input');
+    const msg = msgInput.value.trim();
+    if (!msg) return;
+    try {
+      await push(child(pmRef, threadId), {
+        from: currentUser,
+        msg,
+        ts: Date.now()
+      });
+      msgInput.value = '';
+    } catch (e) {
+      document.getElementById('pm-error').textContent = "Nem sikerült elküldeni!";
+      document.getElementById('pm-error').classList.remove('hide');
+    }
+  }
+  pmThreadArea.querySelector('#close-pmthread-btn').onclick = () => loadPmUserList();
+}
+function getPmThreadId(user1, user2) {
+  return [user1, user2].sort().join('__pm__');
+}
+
+// -- Image file to base64 helper, resize square
+function fileToBase64Square(file, sz) {
+  return new Promise(function(resolve) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const img = new window.Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = sz;
+        canvas.height = sz;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = "#181821";
+        ctx.fillRect(0,0,sz,sz);
+        let size = Math.min(img.width, img.height);
+        let sx = (img.width-size)/2;
+        let sy = (img.height-size)/2;
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, sz, sz);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ------- INIT -------
+function initTabDisplay() {
+  updateHeaderBtns();
+  updateMainMsgFormDisplay();
+  showTab("main");
+}
+initTabDisplay();
+if(window.feather) feather.replace();
 
 </script>
 </body>
