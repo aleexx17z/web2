@@ -31,6 +31,7 @@
       --error-color: #d96b6b;
       --modal-bg: rgba(20,20,24,0.93);
       --modal-blur: 4px;
+      --mobnav-height: 61px;
     }
     html, body {
       margin: 0;
@@ -705,7 +706,11 @@
       font-size: 1.13em;
       font-weight: 570;
     }
-    /* Responsive */
+
+    /* --- MOBILE NAVBAR --- */
+    .mobile-navbar {
+      display: none;
+    }
     @media (max-width: 900px) {
       .feed-outer { flex-direction: column; gap: 0; }
       .feed-col { min-width: 0; max-width: 99vw;}
@@ -721,6 +726,51 @@
       .sidebar { display: none !important; }
       .main-message-form input[type="text"] { height: 38px; }
       .sidebar .logo { margin-left: 5px;}
+      .mobile-navbar {
+        display: flex !important;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100vw;
+        height: var(--mobnav-height);
+        background: var(--surface-3);
+        border-top: 1.3px solid var(--border);
+        z-index: 1200;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0;
+        box-shadow: 0 0 12px #00000022;
+        padding: 0;
+      }
+      .mobile-navbar .nav-btn {
+        flex: 1 1 0;
+        min-width: 45px;
+        max-width: 80px;
+        height: 50px;
+        margin: 0 !important;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.35rem;
+        background: none;
+        border: none;
+        color: var(--primary-icon);
+        outline: none;
+        align-items: center;
+        display: flex;
+        transition: background var(--transition), color var(--transition);
+      }
+      .mobile-navbar .nav-btn.selected,
+      .mobile-navbar .nav-btn:focus {
+        background: var(--surface-2);
+        color: #dedede;
+      }
+      .mobile-navbar .nav-btn:hover:not(.selected) {
+        background: #232323;
+        color: #bbb;
+      }
+      body {
+        padding-bottom: var(--mobnav-height);
+      }
     }
   </style>
   <script src="https://unpkg.com/feather-icons"></script>
@@ -736,6 +786,15 @@
     <button class="nav-btn" id="tab-login" title="Belépés"><i data-feather="log-in"></i></button>
     <button class="nav-btn" id="tab-register" title="Regisztráció"><i data-feather="user-plus"></i></button>
   </div>
+  <!-- MOBILE NAV FOR PHONES -->
+  <nav class="mobile-navbar" id="mobile-navbar">
+    <button class="nav-btn selected" id="tab-main-mobile" title="Főoldal"><i data-feather="message-square"></i></button>
+    <button class="nav-btn" id="tab-pm-mobile" title="Privát üzenetek"><i data-feather="send"></i></button>
+    <button class="nav-btn" id="tab-profile-mobile" title="Profilod"><i data-feather="user"></i></button>
+    <button class="nav-btn" id="tab-logout-mobile" title="Kijelentkezés"><i data-feather="log-out"></i></button>
+    <button class="nav-btn" id="tab-login-mobile" title="Belépés"><i data-feather="log-in"></i></button>
+    <button class="nav-btn" id="tab-register-mobile" title="Regisztráció"><i data-feather="user-plus"></i></button>
+  </nav>
   <main>
     <div class="header-bar">
       <div class="header-title">Wall</div>
@@ -931,12 +990,23 @@ const tabBtns = {
   login: document.getElementById("tab-login"),
   logout: document.getElementById("tab-logout")
 };
+// --------- MOBILE NAV HANDLING ---------
+const mobBtns = {
+  main: document.getElementById("tab-main-mobile"),
+  pm: document.getElementById("tab-pm-mobile"),
+  profile: document.getElementById("tab-profile-mobile"),
+  register: document.getElementById("tab-register-mobile"),
+  login: document.getElementById("tab-login-mobile"),
+  logout: document.getElementById("tab-logout-mobile")
+};
 
 function showTab(tabKey) {
   for (let k in tabs) tabs[k].classList.remove("active");
   tabs[tabKey].classList.add("active");
   for (let k in tabBtns) tabBtns[k].classList.remove("selected");
+  for (let k in mobBtns) mobBtns[k].classList.remove("selected");
   if (tabBtns[tabKey]) tabBtns[tabKey].classList.add("selected");
+  if (mobBtns[tabKey]) mobBtns[tabKey].classList.add("selected");
   currentTab = tabKey;
   // Special: toggle profile view/edit sub-views
   if (tabKey === "profile") {
@@ -946,15 +1016,25 @@ function showTab(tabKey) {
     loadPmUserList();
   }
   updateHeaderBtns();
+  updateMobileNavBtns();
   updateMainMsgFormDisplay();
 }
 
+// Desktop sidebar events
 tabBtns.main.onclick = () => showTab("main");
 tabBtns.profile.onclick = () => showTab("profile");
 tabBtns.pm.onclick = () => showTab("pm");
 tabBtns.register.onclick = () => showTab("register");
 tabBtns.login.onclick = () => showTab("login");
 tabBtns.logout.onclick = () => {logout();};
+
+// Mobile nav events
+mobBtns.main.onclick = () => showTab("main");
+mobBtns.profile.onclick = () => showTab("profile");
+mobBtns.pm.onclick = () => showTab("pm");
+mobBtns.register.onclick = () => showTab("register");
+mobBtns.login.onclick = () => showTab("login");
+mobBtns.logout.onclick = () => {logout();};
 
 // Username etc selectors
 const userAvatarView = document.getElementById("user-avatar");
@@ -1040,6 +1120,25 @@ function updateHeaderBtns() {
     tabBtns.logout.style.display = "";
     tabBtns.register.style.display = "none";
     tabBtns.login.style.display = "none";
+  }
+}
+
+// Update mobile nav button visibility based on auth state
+function updateMobileNavBtns() {
+  if (guestMode) {
+    mobBtns.main.style.display = "";
+    mobBtns.register.style.display = "";
+    mobBtns.login.style.display = "";
+    mobBtns.profile.style.display = "none";
+    mobBtns.pm.style.display = "none";
+    mobBtns.logout.style.display = "none";
+  } else {
+    mobBtns.main.style.display = "";
+    mobBtns.profile.style.display = "";
+    mobBtns.pm.style.display = "";
+    mobBtns.logout.style.display = "";
+    mobBtns.register.style.display = "none";
+    mobBtns.login.style.display = "none";
   }
 }
 
@@ -1565,6 +1664,7 @@ function fileToBase64Square(file, sz) {
 // ------- INIT -------
 function initTabDisplay() {
   updateHeaderBtns();
+  updateMobileNavBtns();
   updateMainMsgFormDisplay();
   showTab("main");
 }
