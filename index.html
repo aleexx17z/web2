@@ -84,10 +84,9 @@
       text-transform: uppercase;
       font-style: normal;
       text-shadow: 0 2.5px 12px #11111136, 0 1px 0 #151515;
-      /* Move logo right to align with icons - fine-tuned for sidebar icon alignment */
-      margin-left: 9px;
+      /* Logo "W" jobbrább -- hogy sorban legyen az ikonokkal! */
+      margin-left: 22px;
       align-self: flex-start;
-      /* These values can be tuned further */
       line-height: 52px;
       height: 52px;
       display: flex;
@@ -725,7 +724,7 @@
       .main-search-bar-wrapper { padding-inline: 2vw;}
       .sidebar { display: none !important; }
       .main-message-form input[type="text"] { height: 38px; }
-      .sidebar .logo { margin-left: 5px;}
+      .sidebar .logo { margin-left: 18px;}
       .mobile-navbar {
         display: flex !important;
         position: fixed;
@@ -782,6 +781,7 @@
     <button class="nav-btn selected" id="tab-main" title="Főoldal"><i data-feather="message-square"></i></button>
     <button class="nav-btn" id="tab-pm" title="Privát üzenetek"><i data-feather="send"></i></button>
     <button class="nav-btn" id="tab-profile" title="Profilod"><i data-feather="user"></i></button>
+    <button class="nav-btn" id="tab-settings" title="Beállítások"><i data-feather="settings"></i></button>
     <button class="nav-btn" id="tab-logout" title="Kijelentkezés"><i data-feather="log-out"></i></button>
     <button class="nav-btn" id="tab-login" title="Belépés"><i data-feather="log-in"></i></button>
     <button class="nav-btn" id="tab-register" title="Regisztráció"><i data-feather="user-plus"></i></button>
@@ -791,6 +791,7 @@
     <button class="nav-btn selected" id="tab-main-mobile" title="Főoldal"><i data-feather="message-square"></i></button>
     <button class="nav-btn" id="tab-pm-mobile" title="Privát üzenetek"><i data-feather="send"></i></button>
     <button class="nav-btn" id="tab-profile-mobile" title="Profilod"><i data-feather="user"></i></button>
+    <button class="nav-btn" id="tab-settings-mobile" title="Beállítások"><i data-feather="settings"></i></button>
     <button class="nav-btn" id="tab-logout-mobile" title="Kijelentkezés"><i data-feather="log-out"></i></button>
     <button class="nav-btn" id="tab-login-mobile" title="Belépés"><i data-feather="log-in"></i></button>
     <button class="nav-btn" id="tab-register-mobile" title="Regisztráció"><i data-feather="user-plus"></i></button>
@@ -799,8 +800,8 @@
     <div class="header-bar">
       <div class="header-title">Wall</div>
     </div>
-    <!-- Keresőmező a feed fölé -->
-    <div class="main-search-bar-wrapper" id="main-search-bar-wrapper">
+    <!-- SEARCH BAR ONLY ON MAIN TAB -->
+    <div class="main-search-bar-wrapper" id="main-search-bar-wrapper" style="">
       <form id="main-search-form" class="main-search-bar" autocomplete="off" onsubmit="return false;">
         <span class="search-icon"><i data-feather="search"></i></span>
         <input
@@ -819,13 +820,17 @@
           <div class="card">
             <form id="msg-form" class="main-message-form" autocomplete="off">
               <div id="main-profile-view" style="display:none;">
-                <img src="" id="user-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
+                <span id="user-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;">
+                  <!-- User/Guest avatar/image -- JS will handle -->
+                </span>
                 <div class="user-meta">
                   <div id="user-name-view"></div>
                 </div>
               </div>
               <div id="guest-main-form" style="display:none;">
-                <img src="https://i.pravatar.cc/110?u=guest" class="avatar avatar-large" alt="Guest Avatar" style="display:block">
+                <span class="avatar avatar-large" style="display:flex;justify-content:center;align-items:center;background:#13131b; color:#777;">
+                  <i data-feather="user" style="width:32px; height:32px;"></i>
+                </span>
                 <div class="user-meta">
                   <div style="font-size:1.1rem;font-weight:700; color:#85849b;">Vendég</div>
                 </div>
@@ -849,7 +854,9 @@
     <div class="tab-content" id="profile-tab-content">
       <div class="auth-container" id="profile-tab-card">
         <div class="profile-view" id="profile-view-main">
-          <img src="" id="profile-tab-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
+          <span id="profile-tab-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;">
+            <!-- User/Guest avatar/image -- JS will handle -->
+          </span>
           <div id="profile-tab-name"></div>
           <div class="profile-section-buttons">
             <button class="edit-profile-btn" id="edit-profile-btn">Profil szerk.</button>
@@ -885,6 +892,16 @@
         <div id="pm-thread-area"></div>
         <div class="success-msg hide" id="pm-success"></div>
         <div class="error-msg hide" id="pm-error"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="settings-tab-content">
+      <div class="auth-container" id="settings-card">
+        <h3>Beállítások</h3>
+        <div style="color:#b5b5b5; text-align:center;">
+          <em>Beállítások tartalom ide jön majd...</em>
+        </div>
       </div>
     </div>
 
@@ -931,7 +948,7 @@
   </main>
 </div>
 <script type="module">
-// -- original javascript, MODIFIED for delete and UI requirements --
+// -- original javascript, MODIFIED for delete and UI/guest requirements --
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, get, child, update, remove }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -974,11 +991,12 @@ let currentTab = "main";
 // Search term - filter for messages
 let searchTerm = "";
 
-// Sidebar tab selectors (no header tabs anymore)
+// Sidebar tab selectors (now with settings tab)
 const tabs = {
   main: document.getElementById("main-tab-content"),
   pm: document.getElementById("pm-tab-content"),
   profile: document.getElementById("profile-tab-content"),
+  settings: document.getElementById("settings-tab-content"),
   register: document.getElementById("register-tab-content"),
   login: document.getElementById("login-tab-content")
 };
@@ -986,6 +1004,7 @@ const tabBtns = {
   main: document.getElementById("tab-main"),
   pm: document.getElementById("tab-pm"),
   profile: document.getElementById("tab-profile"),
+  settings: document.getElementById("tab-settings"),
   register: document.getElementById("tab-register"),
   login: document.getElementById("tab-login"),
   logout: document.getElementById("tab-logout")
@@ -995,6 +1014,7 @@ const mobBtns = {
   main: document.getElementById("tab-main-mobile"),
   pm: document.getElementById("tab-pm-mobile"),
   profile: document.getElementById("tab-profile-mobile"),
+  settings: document.getElementById("tab-settings-mobile"),
   register: document.getElementById("tab-register-mobile"),
   login: document.getElementById("tab-login-mobile"),
   logout: document.getElementById("tab-logout-mobile")
@@ -1008,6 +1028,15 @@ function showTab(tabKey) {
   if (tabBtns[tabKey]) tabBtns[tabKey].classList.add("selected");
   if (mobBtns[tabKey]) mobBtns[tabKey].classList.add("selected");
   currentTab = tabKey;
+  // Show/hide the kereső a főlap felett: only on main tab!
+  const searchBarWrap = document.getElementById("main-search-bar-wrapper");
+  if (searchBarWrap) {
+    if(tabKey === "main") {
+      searchBarWrap.style.display = "";
+    } else {
+      searchBarWrap.style.display = "none";
+    }
+  }
   // Special: toggle profile view/edit sub-views
   if (tabKey === "profile") {
     showProfileMainView();
@@ -1024,6 +1053,7 @@ function showTab(tabKey) {
 tabBtns.main.onclick = () => showTab("main");
 tabBtns.profile.onclick = () => showTab("profile");
 tabBtns.pm.onclick = () => showTab("pm");
+tabBtns.settings.onclick = () => showTab("settings");
 tabBtns.register.onclick = () => showTab("register");
 tabBtns.login.onclick = () => showTab("login");
 tabBtns.logout.onclick = () => {logout();};
@@ -1032,6 +1062,7 @@ tabBtns.logout.onclick = () => {logout();};
 mobBtns.main.onclick = () => showTab("main");
 mobBtns.profile.onclick = () => showTab("profile");
 mobBtns.pm.onclick = () => showTab("pm");
+mobBtns.settings.onclick = () => showTab("settings");
 mobBtns.register.onclick = () => showTab("register");
 mobBtns.login.onclick = () => showTab("login");
 mobBtns.logout.onclick = () => {logout();};
@@ -1073,12 +1104,10 @@ function showDeleteModal(messageId, contentText) {
     </div>
   `;
   overlayBlur.classList.remove("hide");
-  // accessibility: focus first
   setTimeout(()=>{ 
     const cancelBtn = document.getElementById("modal-cancel-btn");
     if(cancelBtn) cancelBtn.focus();
   },60);
-  // Event
   document.getElementById("modal-cancel-btn").onclick = hideDeleteModal;
   document.getElementById("modal-delete-btn").onclick = async function() {
     try {
@@ -1089,9 +1118,7 @@ function showDeleteModal(messageId, contentText) {
       hideDeleteModal();
     }
   };
-  // ESC to close
   window.addEventListener("keydown", handleModalEsc);
-  // hide overlay click doesn’t close: modal only via buttons
 }
 function hideDeleteModal() {
   overlayBlur.classList.add("hide");
@@ -1104,7 +1131,6 @@ function handleModalEsc(e) {
   }
 }
 
-// Only sidebar navigation; header-bar reduced, no info banner
 function updateHeaderBtns() {
   if (guestMode) {
     tabBtns.main.style.display = "";
@@ -1112,18 +1138,18 @@ function updateHeaderBtns() {
     tabBtns.login.style.display = "";
     tabBtns.profile.style.display = "none";
     tabBtns.pm.style.display = "none";
+    tabBtns.settings.style.display = "";
     tabBtns.logout.style.display = "none";
   } else {
     tabBtns.main.style.display = "";
     tabBtns.profile.style.display = "";
     tabBtns.pm.style.display = "";
+    tabBtns.settings.style.display = "";
     tabBtns.logout.style.display = "";
     tabBtns.register.style.display = "none";
     tabBtns.login.style.display = "none";
   }
 }
-
-// Update mobile nav button visibility based on auth state
 function updateMobileNavBtns() {
   if (guestMode) {
     mobBtns.main.style.display = "";
@@ -1131,11 +1157,13 @@ function updateMobileNavBtns() {
     mobBtns.login.style.display = "";
     mobBtns.profile.style.display = "none";
     mobBtns.pm.style.display = "none";
+    mobBtns.settings.style.display = "";
     mobBtns.logout.style.display = "none";
   } else {
     mobBtns.main.style.display = "";
     mobBtns.profile.style.display = "";
     mobBtns.pm.style.display = "";
+    mobBtns.settings.style.display = "";
     mobBtns.logout.style.display = "";
     mobBtns.register.style.display = "none";
     mobBtns.login.style.display = "none";
@@ -1150,6 +1178,7 @@ function updateMainMsgFormDisplay() {
     mainProfileView.style.display = "none";
     guestMainForm.style.display = "";
     msgInput.id = "guest-message";
+    // Guesteknek nincs profilkép! Avatar div/display eltűnik a user helyen
     userAvatarView.style.display = 'none';
   } else {
     mainProfileView.style.display = "";
@@ -1158,29 +1187,61 @@ function updateMainMsgFormDisplay() {
     updateProfileBar();
   }
 }
+function showUserOrGuestAvatar(avatarElem, name, avatarStr, isGuest) {
+  // avatarElem is a <span>
+  avatarElem.innerHTML = '';
+  if (isGuest) {
+    // Feather user icon for guest - grayish
+    avatarElem.style.background = "#15141b";
+    avatarElem.style.display = "flex";
+    const icon = document.createElement('i');
+    icon.setAttribute('data-feather','user');
+    icon.style.width = "32px";
+    icon.style.height = "32px";
+    icon.style.margin = "auto";
+    icon.style.color = "#868698";
+    avatarElem.appendChild(icon);
+    if(window.feather) feather.replace({ elements: [avatarElem] });
+  } else if (avatarStr && avatarStr.length > 10) {
+    avatarElem.style.background = "#111";
+    const img = document.createElement('img');
+    img.src = avatarStr;
+    img.alt = '-';
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.borderRadius = "50%";
+    img.style.objectFit = "cover";
+    avatarElem.appendChild(img);
+  } else {
+    // New users also get "user" feather icon!
+    avatarElem.style.background = "#181824";
+    avatarElem.style.display = "flex";
+    const icon = document.createElement('i');
+    icon.setAttribute('data-feather','user');
+    icon.style.width = "32px";
+    icon.style.height = "32px";
+    icon.style.margin = "auto";
+    icon.style.color = "#868698";
+    avatarElem.appendChild(icon);
+    if(window.feather) feather.replace({ elements: [avatarElem] });
+  }
+}
 function updateProfileBar() {
   if (!guestMode) {
     userNameView.textContent = currentUser;
-    if (currentAvatar && currentAvatar.length > 10) {
-      userAvatarView.src = currentAvatar;
-    } else {
-      userAvatarView.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
-    }
-    userAvatarView.style.display = 'block';
+    showUserOrGuestAvatar(userAvatarView, currentUser, currentAvatar, false);
+    userAvatarView.style.display = "flex";
   }
 }
+
 // Profile Tab main view
 function showProfileMainView() {
   if (!guestMode) {
     editProfileSection.style.display = "none";
     profileViewMain.style.display = "";
     profileTabName.textContent = currentUser;
-    if (currentAvatar && currentAvatar.length > 10) {
-      profileTabAvatar.src = currentAvatar;
-    } else {
-      profileTabAvatar.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
-    }
-    profileTabAvatar.style.display = 'block';
+    showUserOrGuestAvatar(profileTabAvatar, currentUser, currentAvatar, false);
+    profileTabAvatar.style.display = "flex";
   } else {
     tabs.profile.innerHTML = `<div class="auth-container"><div style="text-align:center; color:#ababab;">Bejelentkezés szükséges a profilhoz.</div></div>`;
   }
@@ -1240,13 +1301,12 @@ document.getElementById('edit-profile-form').onsubmit = async function(e) {
     let updates = {};
     if (newAvatar) updates.avatar = newAvatar;
     if (newUsernameInput && newUsernameInput !== currentUser) {
-      // username módosításához: hozzunk létre új bejegyzést az új névvel, töröljük a régit
       const oldUserSnap = await get(child(usersRef, currentUser));
       if (!oldUserSnap.exists()) throw new Error("Felhasználó nem található.");
       const userData = oldUserSnap.val();
       updates = { ...userData, ...updates, username: newUsernameInput };
       await set(child(usersRef, newUsernameInput), updates);
-      await set(child(usersRef, currentUser), null); // töröld a régit
+      await set(child(usersRef, currentUser), null);
       currentUser = newUsernameInput;
       if (updates.avatar) currentAvatar = updates.avatar;
     } else if (Object.keys(updates).length) {
@@ -1264,7 +1324,6 @@ document.getElementById('edit-profile-form').onsubmit = async function(e) {
   }
 };
 
-// Feed message send logic
 document.getElementById('msg-form').onsubmit = async function(e) {
   e.preventDefault();
   const msgField = guestMode
@@ -1319,7 +1378,6 @@ document.getElementById('msg-form').onsubmit = async function(e) {
   }
 };
 
-// Registration logic
 document.getElementById('register-form').onsubmit = async function(e) {
   e.preventDefault();
   const uname = document.getElementById('reg-username').value.trim();
@@ -1365,7 +1423,6 @@ document.getElementById('register-form').onsubmit = async function(e) {
   document.getElementById('register-form').reset();
 };
 
-// Login logic
 document.getElementById('login-form').onsubmit = async function(e) {
   e.preventDefault();
   const uname = document.getElementById('login-username').value.trim();
@@ -1403,7 +1460,6 @@ function logout() {
   showTab("main");
 }
 
-// Format time for messages: show "YYYY-MM-DD  h:mm AM/PM"
 function formatTimeHM(ts) {
   if (!ts) return "";
   const d = new Date(ts);
@@ -1422,7 +1478,6 @@ function formatTimeHM(ts) {
   }
   const sH = hours.toString();
   const sM = mins < 10 ? "0" + mins : ""+mins;
-  // Optional: show date, but we keep just "h:mm AM/PM"
   return sH + ":" + sM + " " + pm;
 }
 function formatTimeFull(ts) {
@@ -1437,13 +1492,11 @@ function formatTimeFull(ts) {
 // -------- MESSAGE RENDERING WITH SEARCH SUPPORT ----------
 let lastMsgArr = [];
 function renderMessages(msgArrRaw) {
-  // Set (cache) lastMsgArr for live search filtering
   lastMsgArr = Array.isArray(msgArrRaw) ? msgArrRaw : [];
   messagesArea.innerHTML = "";
   let filteredArr = lastMsgArr;
   if (searchTerm) {
     const q = searchTerm.toLowerCase();
-    // keresés: az üzenet szövegben (msg) vagy névben
     filteredArr = lastMsgArr.filter(m =>
       (m.msg && m.msg.toLowerCase().includes(q)) ||
       (m.name && m.name.toLowerCase().includes(q))
@@ -1451,7 +1504,6 @@ function renderMessages(msgArrRaw) {
   }
   if (filteredArr.length === 0) {
     if (lastMsgArr.length === 0) {
-      // loading vagy nincs üzenet
       messagesArea.innerHTML = `<div style="color:#909099;text-align:center;margin:1.6em 0;">Nincs üzenet.</div>`;
     } else if (searchTerm && lastMsgArr.length > 0) {
       messagesArea.innerHTML = `<div style="color:#909099;text-align:center;margin:1.5em 0;">Nincs találat a keresésre.</div>`;
@@ -1463,15 +1515,32 @@ function renderMessages(msgArrRaw) {
     const div = document.createElement("div");
     div.className = "message";
     // AVATAR
-    const avatar = document.createElement('img');
-    avatar.className = 'avatar';
-    if (data.avatar && data.avatar.length > 10) {
-      avatar.src = data.avatar;
+    const avatarWrap = document.createElement('span');
+    avatarWrap.className = 'avatar';
+    avatarWrap.style.display = "flex";
+    if (data.guest || !data.name || (!data.avatar || data.avatar.length <= 10)) {
+      // Guesteknek ÉS ÚJ felhasználóknak: feather user ikon (gray)
+      avatarWrap.style.background = "#13131b";
+      const icon = document.createElement('i');
+      icon.setAttribute('data-feather','user');
+      icon.style.width = "24px";
+      icon.style.height = "24px";
+      icon.style.margin = "auto";
+      icon.style.color = "#868698";
+      avatarWrap.appendChild(icon);
     } else {
-      avatar.src = data.guest ? "https://i.pravatar.cc/52?u=guest" : ("https://i.pravatar.cc/52?u=" + encodeURIComponent(data.name));
+      // Saját kép, ha be van állítva, legalább 10 hosszú (hiszen base64 vagy url)
+      avatarWrap.style.background = "#111111";
+      const img = document.createElement('img');
+      img.src = data.avatar;
+      img.alt = "-";
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.borderRadius = "50%";
+      img.style.objectFit = "cover";
+      avatarWrap.appendChild(img);
     }
-    avatar.alt = "-";
-    div.appendChild(avatar);
+    div.appendChild(avatarWrap);
 
     // Main info block (all except avatar, actions)
     const inner = document.createElement("div");
@@ -1531,22 +1600,23 @@ function renderMessages(msgArrRaw) {
     div.appendChild(inner);
 
     messagesArea.appendChild(div);
+    // After appending to DOM, render feather icon if guest/new
+    if((data.guest || !data.avatar || data.avatar.length <= 10) && window.feather) {
+      feather.replace({ elements: [avatarWrap] });
+    }
   });
-  if(window.feather) feather.replace(); // redraw icons after DOM change
+  if(window.feather) feather.replace();
 }
 
-// Main message listing -- with delete & times under name
 onValue(messagesRef, (snapshot) => {
   let msgArr = [];
   snapshot.forEach((child) => {
     msgArr.push({ id: child.key, ...child.val() });
   });
-  // Sort: latest first (=higher ts comes first at top)
   msgArr.sort((a,b)=> b.ts-a.ts);
   renderMessages(msgArr);
 });
 
-// ---- PM SECTION ----
 async function loadPmUserList() {
   pmUserlist.innerHTML = "<div style='margin-bottom:.6em; color:#888'>Kattints egy felhasználóra!</div>";
   pmThreadArea.innerHTML = "";
@@ -1636,7 +1706,6 @@ function getPmThreadId(user1, user2) {
   return [user1, user2].sort().join('__pm__');
 }
 
-// -- Image file to base64 helper, resize square
 function fileToBase64Square(file, sz) {
   return new Promise(function(resolve) {
     const reader = new FileReader();
@@ -1661,7 +1730,6 @@ function fileToBase64Square(file, sz) {
   });
 }
 
-// ------- INIT -------
 function initTabDisplay() {
   updateHeaderBtns();
   updateMobileNavBtns();
@@ -1670,7 +1738,6 @@ function initTabDisplay() {
 }
 initTabDisplay();
 if(window.feather) feather.replace();
-
 </script>
 </body>
 </html>
