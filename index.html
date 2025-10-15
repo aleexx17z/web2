@@ -14,20 +14,45 @@
       min-height: 100vh;
       margin: 0;
       padding: 0;
-      cursor: url('https://cur.cursors-4u.net/symbols/sym-6/sym591.cur'), auto;
       transition: background 0.3s;
     }
 
     body {
-      max-width: 425px;
+      max-width: 540px;
       margin: 40px auto;
       box-shadow: 0 0 0.5rem #0008;
       border-radius: 14px;
       padding: 25px 18px 20px 18px;
       background: #191c20;
       min-height: 82vh;
+      position: relative;
     }
-
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      margin-top: 16px;
+    }
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .top-btn {
+      background: #29293b;
+      color: #fff;
+      border: 1px solid #36e49133;
+      border-radius: 8px;
+      font-size: 1rem;
+      padding: 7px 15px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.17s, color 0.17s;
+    }
+    .top-btn:hover, .logout-btn:hover {
+      background: #36e491;
+      color: #151516;
+    }
     h2,h3 { text-align: center; font-weight: 700; letter-spacing: 1px;}
     h2 { font-size: 1.7rem; margin-top: 0;}
     h3 { font-size: 1.1rem; margin-bottom: 0.5rem; margin-top:2.6rem; letter-spacing:0.5px;}
@@ -110,6 +135,13 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .msg-user[data-guest="1"], .msg-user[data-profile="-"] {
+      color:#bbb;
+      cursor: default;
+      text-decoration:none;
     }
     .msg-text {
       font-size: 1.01rem;
@@ -126,18 +158,28 @@
       border: 1.5px solid #36e49144;
       flex-shrink: 0;
     }
-    .edit-profile-btn {
+    .edit-profile-btn, .profile-pm-btn {
       font-size:0.97rem;
       margin-top:0.8rem;
       background: #29293b;
       color:#90ffcb;
       border:1px solid #36e49133;
+      width:auto;
+      margin-right:8px;
+      display:inline-block;
+      padding:8px 16px;
     }
-    .edit-profile-btn:hover {
+    .profile-pm-btn {
+      background:#293a2b;
+      color:#56ff7f;
+      margin-top:1.2rem;
+      margin-bottom:.7rem;
+    }
+    .edit-profile-btn:hover, .profile-pm-btn:hover {
       background: #23232b;
       color:#36e491;
     }
-    .profile-view {
+    .profile-view, .profile-other-view {
       text-align: center;
       padding: 4px 0 10px 0;
     }
@@ -147,7 +189,6 @@
       margin: 0 auto 1.2rem auto;
       display: block;
     }
-
     .flex-center {
       display: flex;
       align-items: center;
@@ -177,24 +218,37 @@
       font-size: 0.99rem;
     }
     ::selection { background: #36e49132; color: #fff;}
-    @media (max-width:600px) { body { max-width:100vw; padding:0 3vw;} }
+    @media (max-width:700px) { body { max-width:100vw; padding:0 3vw;} }
   </style>
 </head>
 <body>
-  <h2>CS2 Üzenőfal</h2>
-  <div class="card auth-container" id="register-card">
+  <div class="header-bar">
+    <h2>CS2 Üzenőfal</h2>
+    <div class="header-btns" id="header-btns">
+      <button class="top-btn" id="btnLogin">Bejelentkezés</button>
+      <button class="top-btn" id="btnRegister">Regisztráció</button>
+      <button class="top-btn hide" id="btnProfile">Profilom</button>
+      <button class="top-btn hide" id="btnLogout">Kijelentkezés</button>
+    </div>
+  </div>
+  
+  <div id="guest-info" class="card" style="margin-top:0.7rem; display:none;">
+      <b>Vendég módban üzenhetsz a falra.</b> Profil funkciók új regisztráció után elérhetők.<br>
+     <span style="color:#aaa; font-size:.98em;">Profilok, PM csak regisztráltaknak!</span>
+  </div>
+  <div class="card auth-container hide" id="register-card">
     <h3>Regisztráció</h3>
-    <form id="register-form" autocomplete="off">
+    <form id="register-form" autocomplete="off" enctype="multipart/form-data">
       <input type="text" id="reg-username" required maxlength="18" placeholder="Felhasználónév" autocomplete="off">
       <input type="password" id="reg-password" required maxlength="48" placeholder="Jelszó" autocomplete="new-password">
-      <input type="text" id="reg-avatar" maxlength="210" placeholder="Avatar kép URL (opcionális) 📸" autocomplete="off">
+      <div style="margin-bottom:12px;">
+        <input type="file" id="reg-avatar-file" accept="image/*">
+        <label for="reg-avatar-file" style="color:#aaa; font-size:.98em; margin:0 0 0 9px;">Avatar kép feltöltése (opcionális)</label>
+      </div>
       <button type="submit">Regisztrálok</button>
       <div class="error-msg hide" id="reg-error"></div>
       <div class="success-msg hide" id="reg-success"></div>
     </form>
-    <div style="margin-top:11px; text-align:center;">Már van felhasználód?<br>
-      <a href="#" id="switch-to-login" style="color:#36e491;">Bejelentkezés</a>
-    </div>
   </div>
   <div class="card auth-container hide" id="login-card">
     <h3>Bejelentkezés</h3>
@@ -204,9 +258,6 @@
       <button type="submit">Belépek</button>
       <div class="error-msg hide" id="login-error"></div>
     </form>
-    <div style="margin-top:11px; text-align:center;">Nincs fiókod?<br>
-      <a href="#" id="switch-to-register" style="color:#36e491;">Regisztrálj</a>
-    </div>
   </div>
   <div class="card hide" id="main-card">
     <div class="profile-view">
@@ -222,15 +273,43 @@
     <div class="error-msg hide" id="msg-error"></div>
     <div class="success-msg hide" id="msg-success"></div>
   </div>
+  <div class="card hide" id="guest-main-card">
+    <div class="profile-view">
+      <img src="https://i.pravatar.cc/110?u=guest" class="avatar avatar-large" alt="Guest Avatar" style="display:block">
+      <div style="font-size:1.13rem;margin-bottom:9px;" >Vendég</div>
+    </div>
+    <form id="guest-msg-form" style="margin-top:24px;">
+      <textarea id="guest-message" placeholder="Vendég üzeneted..." rows="3" maxlength="300"></textarea>
+      <button type="submit" style="margin-top:0;">Üzenet küldése</button>
+    </form>
+    <div class="error-msg hide" id="guest-msg-error"></div>
+    <div class="success-msg hide" id="guest-msg-success"></div>
+  </div>
   <div class="card hide" id="edit-profile-card">
     <h3>Profil szerkesztése</h3>
-    <form id="edit-profile-form">
-      <input type="text" id="edit-avatar" maxlength="210" placeholder="Új avatar URL">
+    <form id="edit-profile-form" enctype="multipart/form-data">
+      <div style="margin-bottom:12px;">
+        <input type="file" id="edit-avatar-file" accept="image/*">
+        <label for="edit-avatar-file" style="color:#aaa; font-size:.98em; margin:0 0 0 9px;">Új avatar feltöltése</label>
+      </div>
       <button type="submit">Mentés</button>
     </form>
     <button class="logout-btn" id="cancel-edit-btn" style="margin-top:0.8rem;">Mégse</button>
     <div class="success-msg hide" id="profile-success"></div>
     <div class="error-msg hide" id="profile-error"></div>
+  </div>
+  <div class="card hide" id="profile-other-card">
+    <div class="profile-other-view">
+      <img src="" id="other-user-avatar" class="avatar avatar-large" alt="Avatar" style="display:none">
+      <div style="font-size:1.13rem;margin-bottom:9px;" id="other-user-name-view"></div>
+      <button class="profile-pm-btn" id="pm-btn">Privát üzenet indítása 💬</button>
+      <button class="logout-btn" id="close-other-profile-btn" style="margin-top:0.8rem;">Bezár</button>
+    </div>
+    <div style="margin-top:1.2rem;">
+      <div class="success-msg hide" id="pm-success"></div>
+      <div class="error-msg hide" id="pm-error"></div>
+    </div>
+    <div id="pm-thread-area" style="margin-top:1.1rem;"></div>
   </div>
   <h3 style="margin-top:13px;">📜 Üzenetek:</h3>
   <div id="messages"></div>
@@ -240,6 +319,7 @@
     import { getDatabase, ref, push, onValue, set, get, child, update } 
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+    // --- Firebase config (no storage, so we'll keep avatars as base64, small) ---
     const firebaseConfig = {
       apiKey: "AIzaSyC3Cgmy41qLWLy-HLVAyn1QFejdlflUnSY",
       authDomain: "website-26acc.firebaseapp.com",
@@ -251,13 +331,13 @@
       measurementId: "G-P4XTEHXV4C"
     };
 
+    // --- Simple hash ---
     function hash(str) {
-      // a simple hash to avoid storing passwords in plain text (not cryptographically secure!)
       let hash = 0, i, chr;
       if (str.length === 0) return hash;
       for (i = 0; i < str.length; i++) {
-        chr   = str.charCodeAt(i);
-        hash  = ((hash<<5)-hash)+chr;
+        chr = str.charCodeAt(i);
+        hash = ((hash<<5)-hash)+chr;
         hash |= 0;
       }
       return Math.abs(hash).toString(36);
@@ -267,43 +347,108 @@
     const db = getDatabase(app);
     const usersRef = ref(db, "users");
     const messagesRef = ref(db, "messages");
+    const pmRef = ref(db, "pm");
 
     let currentUser = null;
     let currentAvatar = '';
+    let guestMode = true;
 
-    //--- UI SELECTORS
+    //-- UI SELECTORS
     const registerCard = document.getElementById('register-card');
     const loginCard = document.getElementById('login-card');
     const mainCard = document.getElementById('main-card');
+    const guestMainCard = document.getElementById('guest-main-card');
     const editProfileCard = document.getElementById('edit-profile-card');
+    const profileOtherCard = document.getElementById('profile-other-card');
     const msgTextarea = document.getElementById('message');
+    const guestMsgTextarea = document.getElementById('guest-message');
     const profileView = document.getElementById('user-name-view');
     const avatarView = document.getElementById('user-avatar');
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const logoutBtn = document.getElementById('logout-btn');
+    const headerBtns = document.getElementById('header-btns');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnRegister = document.getElementById('btnRegister');
+    const btnProfile = document.getElementById('btnProfile');
+    const btnLogout = document.getElementById('btnLogout');
+    const guestInfo = document.getElementById('guest-info');
 
-    //-- CARDS switching
-    document.getElementById('switch-to-login').onclick = e => {
-      e.preventDefault();
-      registerCard.classList.add('hide');
-      loginCard.classList.remove('hide');
-    };
-    document.getElementById('switch-to-register').onclick = e => {
-      e.preventDefault();
-      loginCard.classList.add('hide');
+    // --- Top bar button actions
+    function showRegister() {
+      hideAllCards();
       registerCard.classList.remove('hide');
+    }
+    function showLogin() {
+      hideAllCards();
+      loginCard.classList.remove('hide');
+    }
+    function showMain() {
+      hideAllCards();
+      mainCard.classList.remove('hide');
+    }
+    function showGuestMain() {
+      hideAllCards();
+      guestMainCard.classList.remove('hide');
+    }
+    function hideAllCards() {
+      registerCard.classList.add('hide');
+      loginCard.classList.add('hide');
+      mainCard.classList.add('hide');
+      guestMainCard.classList.add('hide');
+      editProfileCard.classList.add('hide');
+      profileOtherCard.classList.add('hide');
+      guestInfo.style.display='none';
+    }
+    function updateHeaderBtns() {
+      if (guestMode) {
+        btnLogin.classList.remove('hide');
+        btnRegister.classList.remove('hide');
+        btnProfile.classList.add('hide');
+        btnLogout.classList.add('hide');
+        guestInfo.style.display = '';
+      } else {
+        btnLogin.classList.add('hide');
+        btnRegister.classList.add('hide');
+        btnProfile.classList.remove('hide');
+        btnLogout.classList.remove('hide');
+        guestInfo.style.display = 'none';
+      }
+    }
+
+    btnLogin.onclick = () => {
+      showLogin();
+    };
+    btnRegister.onclick = () => {
+      showRegister();
+    };
+    btnProfile.onclick = () => {
+      openMainView();
+    };
+    btnLogout.onclick = () => {
+      logout();
     };
 
-    //-- Registration
+    // --- Startup: Guest mode by default ---
+    function setGuestMode() {
+      guestMode = true;
+      hideAllCards();
+      showGuestMain();
+      updateHeaderBtns();
+    }
+    setGuestMode();
+
+    // -- Registration with file upload avatar
     document.getElementById('register-form').onsubmit = async function(e) {
       e.preventDefault();
       const uname = document.getElementById('reg-username').value.trim();
       const pwd = document.getElementById('reg-password').value.trim();
-      let avatar = document.getElementById('reg-avatar').value.trim();
+      const avatarFile = document.getElementById('reg-avatar-file').files[0];
       const regError = document.getElementById('reg-error');
       const regSuccess = document.getElementById('reg-success');
       regError.textContent = '';
+      regError.classList.add('hide');
       regSuccess.textContent = '';
+      regSuccess.classList.add('hide');
 
       if(uname.length < 3) {
         regError.textContent = "Felhasználónév legalább 3 karakter!";
@@ -315,14 +460,6 @@
         regError.classList.remove('hide');
         return;
       }
-      if(avatar && (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i.test(avatar))) {
-        regError.textContent = "Avatar URL formátuma nem megfelelő!";
-        regError.classList.remove('hide');
-        return;
-      }
-      regError.classList.add('hide');
-
-      // Check if user exists
       const usersSnap = await get(usersRef);
       let userExists = false;
       usersSnap.forEach(childSnap => {
@@ -333,24 +470,34 @@
         regError.classList.remove('hide');
         return;
       }
-      // Save user
-      avatar = avatar || "https://i.pravatar.cc/110?u=" + encodeURIComponent(uname);
+      let avatarData = "";
+      if (avatarFile) {
+        if (!avatarFile.type.startsWith('image/')) {
+          regError.textContent = "Csak képet tölts fel!";
+          regError.classList.remove('hide');
+          return;
+        }
+        // resize to square and base64 encode
+        avatarData = await fileToBase64Square(avatarFile, 74);
+      }
+      if (!avatarData) {
+        avatarData = "";
+      }
       await set(child(usersRef, uname), {
         username: uname,
         password: hash(pwd),
-        avatar
+        avatar: avatarData
       });
       regSuccess.textContent = "Sikeres regisztráció! Most bejelentkezhetsz.";
       regSuccess.classList.remove('hide');
       setTimeout(() => {
         regSuccess.classList.add('hide');
-        registerCard.classList.add('hide');
-        loginCard.classList.remove('hide');
+        showLogin();
       }, 1200);
       document.getElementById('register-form').reset();
     };
 
-    //-- Login
+    // -- Login
     document.getElementById('login-form').onsubmit = async function(e) {
       e.preventDefault();
       const uname = document.getElementById('login-username').value.trim();
@@ -359,7 +506,7 @@
       loginError.textContent = '';
       loginError.classList.add('hide');
       const usersSnap = await get(usersRef);
-      let found = false, avatar = '';
+      let found = false;
       usersSnap.forEach(childSnap => {
         if(childSnap.key.toLowerCase() === uname.toLowerCase()) {
           found = childSnap.val();
@@ -378,60 +525,65 @@
       // Login ok!
       currentUser = found.username;
       currentAvatar = found.avatar;
+      guestMode = false;
       openMainView();
     };
 
+    function logout() {
+      currentUser = null;
+      currentAvatar = '';
+      setGuestMode();
+    }
+
+    // Show main view for logged user
     function openMainView() {
-      loginCard.classList.add('hide');
-      registerCard.classList.add('hide');
-      mainCard.classList.remove('hide');
-      editProfileCard.classList.add('hide');
+      hideAllCards();
       updateProfileBar();
+      mainCard.classList.remove('hide');
+      updateHeaderBtns();
     }
     function updateProfileBar() {
       profileView.textContent = currentUser;
-      avatarView.src = currentAvatar;
+      if (currentAvatar && currentAvatar.length > 10) {
+        avatarView.src = currentAvatar;
+      } else {
+        avatarView.src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
+      }
       avatarView.style.display = 'block';
     }
-    //-- Logout
-    logoutBtn.onclick = function() {
-      currentUser = null; currentAvatar = '';
-      mainCard.classList.add('hide');
-      loginCard.classList.remove('hide');
-    };
 
-    //-- Edit Profile
     editProfileBtn.onclick = function() {
-      mainCard.classList.add('hide');
+      hideAllCards();
       editProfileCard.classList.remove('hide');
-      document.getElementById('edit-avatar').value = currentAvatar;
       document.getElementById('profile-error').classList.add('hide');
       document.getElementById('profile-success').classList.add('hide');
     };
+
     document.getElementById('cancel-edit-btn').onclick = function() {
-      editProfileCard.classList.add('hide');
-      mainCard.classList.remove('hide');
+      openMainView();
     };
+
     document.getElementById('edit-profile-form').onsubmit = async function(e) {
       e.preventDefault();
-      let newAvatar = document.getElementById('edit-avatar').value.trim();
-      if(!newAvatar) {
-        newAvatar = "https://i.pravatar.cc/110?u=" + encodeURIComponent(currentUser);
-      }
-      if(newAvatar && (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i.test(newAvatar))) {
-        document.getElementById('profile-error').textContent = "Hibás avatar URL!";
-        document.getElementById('profile-error').classList.remove('hide');
-        return;
+      const avatarFile = document.getElementById('edit-avatar-file').files[0];
+      let newAvatar = "";
+      if (avatarFile) {
+        if (!avatarFile.type.startsWith('image/')) {
+          document.getElementById('profile-error').textContent = "Csak képet tölts fel!";
+          document.getElementById('profile-error').classList.remove('hide');
+          return;
+        }
+        newAvatar = await fileToBase64Square(avatarFile, 74);
       }
       try {
-        await update(child(usersRef, currentUser), { avatar: newAvatar });
-        currentAvatar = newAvatar;
+        if(newAvatar) {
+          await update(child(usersRef, currentUser), { avatar: newAvatar });
+          currentAvatar = newAvatar;
+        }
         document.getElementById('profile-success').textContent = "Avatar mentve!";
         document.getElementById('profile-success').classList.remove('hide');
         setTimeout(() => {
-          editProfileCard.classList.add('hide');
-          mainCard.classList.remove('hide');
-          updateProfileBar();
+          openMainView();
         }, 1000);
       } catch (e) {
         document.getElementById('profile-error').textContent = "Mentés sikertelen.";
@@ -439,18 +591,47 @@
       }
     };
 
-    // --- Send Message
+    // --- Guest send message
+    document.getElementById('guest-msg-form').onsubmit = async function(e) {
+      e.preventDefault();
+      const msg = guestMsgTextarea.value.trim();
+      document.getElementById('guest-msg-error').classList.add('hide');
+      document.getElementById('guest-msg-success').classList.add('hide');
+      if(!msg) {
+        document.getElementById('guest-msg-error').textContent = "Írj üzenetet!";
+        document.getElementById('guest-msg-error').classList.remove('hide');
+        return;
+      }
+      try {
+        await push(messagesRef, {
+          name: "Vendég",
+          guest: true,
+          msg,
+          avatar: "",
+          ts: Date.now()
+        });
+        guestMsgTextarea.value = "";
+        document.getElementById('guest-msg-success').textContent = "Elküldve!";
+        document.getElementById('guest-msg-success').classList.remove('hide');
+        setTimeout(()=>{ document.getElementById('guest-msg-success').classList.add('hide'); }, 900);
+      } catch(e) {
+        document.getElementById('guest-msg-error').textContent = "Hiba küldéskor!";
+        document.getElementById('guest-msg-error').classList.remove('hide');
+      }
+    };
+
+    // --- Registered user send message
     document.getElementById('msg-form').onsubmit = async function(e) {
       e.preventDefault();
       const msg = msgTextarea.value.trim();
       document.getElementById('msg-error').classList.add('hide');
       document.getElementById('msg-success').classList.add('hide');
-      if(!msg) {
-        document.getElementById('msg-error').textContent = "Üzenetet írj!";
+      if (!msg) {
+        document.getElementById('msg-error').textContent = "Írj üzenetet!";
         document.getElementById('msg-error').classList.remove('hide');
         return;
       }
-      if(!currentUser) {
+      if (!currentUser) {
         document.getElementById('msg-error').textContent = "Előbb jelentkezz be!";
         document.getElementById('msg-error').classList.remove('hide');
         return;
@@ -472,7 +653,7 @@
       }
     };
 
-    //-- Show/refresh messages
+    // --- Format time for messages
     function formatTimeAgo(ts) {
       if(!ts) return "";
       const ms = Date.now() - ts;
@@ -482,6 +663,8 @@
       if(sec < 86400) return (sec/3600|0)+'ó';
       return (sec/86400|0)+' napja';
     }
+
+    // --- Show/refresh messages, add click to user for profile/pm! ---
     onValue(messagesRef, (snapshot) => {
       const list = document.getElementById("messages");
       list.innerHTML = "";
@@ -496,11 +679,28 @@
         div.className = "message";
         const avatar = document.createElement('img');
         avatar.className = 'avatar';
-        avatar.src = data.avatar || "https://i.pravatar.cc/52?u=" + encodeURIComponent(data.name);
+        if (data.avatar && data.avatar.length > 10) {
+          avatar.src = data.avatar;
+        } else {
+          avatar.src = data.guest ? "https://i.pravatar.cc/52?u=guest" : ("https://i.pravatar.cc/52?u=" + encodeURIComponent(data.name));
+        }
         avatar.alt = "-";
         const name = document.createElement('span');
         name.className = 'msg-user';
-        name.textContent = data.name;
+        // Guest cannot be viewed
+        if (data.guest || !data.name) {
+          name.textContent = data.name || "Vendég";
+          name.dataset.guest = "1";
+        } else {
+          name.textContent = data.name;
+          name.onclick = function() {
+            if (currentUser && data.name !== currentUser) {
+                openOtherProfile(data.name);
+            }
+          };
+          name.title = "Profil megtekintése";
+          name.dataset.profile = data.name;
+        }
         const time = document.createElement('span');
         time.style = 'color:#44f2a925; margin-left:7px; font-size:.92em;';
         time.textContent = '• ' + formatTimeAgo(data.ts);
@@ -514,6 +714,140 @@
         list.appendChild(div);
       });
     });
+
+    // --- Profile viewing and PM ---
+    async function openOtherProfile(username) {
+      hideAllCards();
+      profileOtherCard.classList.remove('hide');
+      document.getElementById('pm-error').classList.add('hide');
+      document.getElementById('pm-success').classList.add('hide');
+      document.getElementById('other-user-avatar').style.display = 'none';
+      document.getElementById('pm-thread-area').innerHTML="";
+      if (!username) return;
+      // Show loading
+      document.getElementById('other-user-name-view').textContent = "Betöltés...";
+      const usersSnap = await get(usersRef);
+      let found = false;
+      usersSnap.forEach(childSnap => {
+        if(childSnap.key.toLowerCase() === username.toLowerCase()) {
+          found = childSnap.val();
+        }
+      });
+      if (!found) {
+        document.getElementById('other-user-name-view').textContent = "Nem található felhasználó.";
+        document.getElementById('other-user-avatar').src="";
+        return;
+      }
+      document.getElementById('other-user-name-view').textContent = found.username;
+      // Show avatar
+      if (found.avatar && found.avatar.length > 10) {
+        document.getElementById('other-user-avatar').src = found.avatar;
+      } else {
+        document.getElementById('other-user-avatar').src = "https://i.pravatar.cc/110?u=" + encodeURIComponent(found.username);
+      }
+      document.getElementById('other-user-avatar').style.display = "block";
+      // Show PM button if not self
+      const pmBtn = document.getElementById('pm-btn');
+      if (currentUser && found.username !== currentUser) {
+        pmBtn.classList.remove('hide');
+        pmBtn.onclick = function() {
+          openPmThread(found.username);
+        };
+      } else {
+        pmBtn.classList.add('hide');
+      }
+    }
+    // -- Close profile popup
+    document.getElementById('close-other-profile-btn').onclick = function() {
+      openMainView();
+    };
+
+    // --- PM THREAD area setup ---
+    async function openPmThread(targetName) {
+      // Show simple thread view
+      const threadId = getPmThreadId(currentUser, targetName);
+      const pmThreadArea = document.getElementById('pm-thread-area');
+      pmThreadArea.innerHTML = `
+        <div style="text-align:center; font-size:1.05em; color:#44f2a8;margin-bottom:0.5rem;">
+          Privát üzenet: <b>${currentUser}</b> &mdash; <b>${targetName}</b>
+        </div>
+        <div id="pmthread-messages" style="max-height:260px;overflow-y:auto;margin-bottom:13px;"></div>
+        <form id="pmthread-form">
+          <input type="text" id="pmthread-input" placeholder="Írd be az üzenetet..." maxlength="300" />
+          <button type="submit">Küldés</button>
+        </form>
+      `;
+      // Listen for new PMs
+      const threadRef = child(pmRef, threadId);
+      onValue(threadRef, snap => {
+        const threadMsgs = [];
+        snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
+        threadMsgs.sort((a,b)=>a.ts-b.ts);
+        const msgbox = pmThreadArea.querySelector('#pmthread-messages');
+        msgbox.innerHTML = '';
+        threadMsgs.forEach(data => {
+          const msgDiv = document.createElement("div");
+          msgDiv.style = "margin-bottom:5px; display:flex; align-items:center; gap: 8px;";
+          const who = document.createElement('span');
+          who.style = "color:#36e491;min-width:80px;";
+          who.textContent = data.from === currentUser ? "Te" : data.from;
+          const text = document.createElement('span');
+          text.textContent = data.msg;
+          text.style = "background:#232;e0e0e0; border-radius:6px; padding:3px 8px;display:inline-block;";
+          msgDiv.appendChild(who);
+          msgDiv.appendChild(text);
+          msgbox.appendChild(msgDiv);
+        });
+        msgbox.scrollTop = msgbox.scrollHeight;
+      });
+      pmThreadArea.querySelector('#pmthread-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const msgInput = pmThreadArea.querySelector('#pmthread-input');
+        const msg = msgInput.value.trim();
+        if (!msg) return;
+        try {
+          await push(child(pmRef, threadId), {
+            from: currentUser,
+            msg,
+            ts: Date.now()
+          });
+          msgInput.value = '';
+        } catch (e) {
+          document.getElementById('pm-error').textContent = "Nem sikerült elküldeni a privát üzenetet!";
+          document.getElementById('pm-error').classList.remove('hide');
+        }
+      }
+    }
+    function getPmThreadId(user1, user2) {
+      // Lexical, so 'a-b' === 'b-a'
+      return [user1, user2].sort().join('__pm__');
+    }
+
+    // -- Image file to base64 helper, resize square
+    function fileToBase64Square(file, sz) {
+      return new Promise(function(resolve) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new window.Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = sz;
+            canvas.height = sz;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#212127";
+            ctx.fillRect(0,0,sz,sz);
+            // center crop square
+            let size = Math.min(img.width, img.height);
+            let sx = (img.width-size)/2;
+            let sy = (img.height-size)/2;
+            ctx.drawImage(img, sx, sy, size, size, 0, 0, sz, sz);
+            resolve(canvas.toDataURL('image/png'));
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   </script>
 </body>
 </html>
