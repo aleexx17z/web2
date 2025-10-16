@@ -971,7 +971,21 @@ const firebaseConfig = {
   measurementId: "G-P4XTEHXV4C"
 };
 
-// -- Simple hash --
+// --- MOBILE FRIENDLY VIEWPORT SETUP: ---
+// Hozzáadjuk a meta viewport taget, ha hiányzik (JS-ből automatikusan a <head>-hez)
+(function ensureMobileViewport() {
+  if (typeof document !== "undefined") {
+    let hasViewport = !!document.querySelector('meta[name="viewport"]');
+    if (!hasViewport) {
+      let m = document.createElement("meta");
+      m.setAttribute("name", "viewport");
+      m.setAttribute("content", "width=device-width, initial-scale=1.0");
+      if (document.head) document.head.appendChild(m);
+    }
+  }
+})();
+
+// --- Simple hash ---
 function hash(str) {
   let hash = 0, i, chr;
   if (str.length === 0) return hash;
@@ -993,7 +1007,7 @@ let currentUser = null;
 let currentAvatar = '';
 let guestMode = true;
 let currentTab = "main";
-let rememberMe = true;
+let rememberMe = true; // default true
 
 function tryRestoreLogin() {
   let userObj = null;
@@ -1016,6 +1030,7 @@ tryRestoreLogin();
 
 let searchTerm = "";
 
+// --- Sidebar, Tabs, Nav ---
 const tabs = {
   main: document.getElementById("main-tab-content"),
   pm: document.getElementById("pm-tab-content"),
@@ -1033,6 +1048,7 @@ const tabBtns = {
   login: document.getElementById("tab-login"),
   logout: document.getElementById("tab-logout")
 };
+
 const mobBtns = {
   main: document.getElementById("tab-main-mobile"),
   pm: document.getElementById("tab-pm-mobile"),
@@ -1108,45 +1124,6 @@ if (mainSearchInput) {
   });
 }
 
-function updateHeaderBtns() {
-  if (guestMode) {
-    tabBtns.main.style.display = "";
-    tabBtns.register.style.display = "";
-    tabBtns.login.style.display = "";
-    tabBtns.profile.style.display = "none";
-    tabBtns.pm.style.display = "none";
-    tabBtns.settings.style.display = "";
-    tabBtns.logout.style.display = "none";
-  } else {
-    tabBtns.main.style.display = "";
-    tabBtns.profile.style.display = "";
-    tabBtns.pm.style.display = "";
-    tabBtns.settings.style.display = "";
-    tabBtns.logout.style.display = "";
-    tabBtns.register.style.display = "none";
-    tabBtns.login.style.display = "none";
-  }
-}
-function updateMobileNavBtns() {
-  if (guestMode) {
-    mobBtns.main.style.display = "";
-    mobBtns.register.style.display = "";
-    mobBtns.login.style.display = "";
-    mobBtns.profile.style.display = "none";
-    mobBtns.pm.style.display = "none";
-    mobBtns.settings.style.display = "";
-    mobBtns.logout.style.display = "none";
-  } else {
-    mobBtns.main.style.display = "";
-    mobBtns.profile.style.display = "";
-    mobBtns.pm.style.display = "";
-    mobBtns.settings.style.display = "";
-    mobBtns.logout.style.display = "";
-    mobBtns.register.style.display = "none";
-    mobBtns.login.style.display = "none";
-  }
-}
-
 // --- Modal for confirm delete (unchanged) ---
 function showDeleteModal(messageId, contentText) {
   overlayBlur.innerHTML = `
@@ -1184,6 +1161,45 @@ function hideDeleteModal() {
 function handleModalEsc(e) {
   if (e.key === "Escape") {
     hideDeleteModal();
+  }
+}
+
+function updateHeaderBtns() {
+  if (guestMode) {
+    tabBtns.main.style.display = "";
+    tabBtns.register.style.display = "";
+    tabBtns.login.style.display = "";
+    tabBtns.profile.style.display = "none";
+    tabBtns.pm.style.display = "none";
+    tabBtns.settings.style.display = "";
+    tabBtns.logout.style.display = "none";
+  } else {
+    tabBtns.main.style.display = "";
+    tabBtns.profile.style.display = "";
+    tabBtns.pm.style.display = "";
+    tabBtns.settings.style.display = "";
+    tabBtns.logout.style.display = "";
+    tabBtns.register.style.display = "none";
+    tabBtns.login.style.display = "none";
+  }
+}
+function updateMobileNavBtns() {
+  if (guestMode) {
+    mobBtns.main.style.display = "";
+    mobBtns.register.style.display = "";
+    mobBtns.login.style.display = "";
+    mobBtns.profile.style.display = "none";
+    mobBtns.pm.style.display = "none";
+    mobBtns.settings.style.display = "";
+    mobBtns.logout.style.display = "none";
+  } else {
+    mobBtns.main.style.display = "";
+    mobBtns.profile.style.display = "";
+    mobBtns.pm.style.display = "";
+    mobBtns.settings.style.display = "";
+    mobBtns.logout.style.display = "";
+    mobBtns.register.style.display = "none";
+    mobBtns.login.style.display = "none";
   }
 }
 
@@ -1256,6 +1272,7 @@ function showProfileMainView() {
     tabs.profile.innerHTML = `<div class="auth-container"><div style="text-align:center; color:#ababab;">Bejelentkezés szükséges a profilhoz.</div></div>`;
   }
 }
+
 editProfileBtn.onclick = function () {
   editProfileSection.style.display = "";
   profileViewMain.style.display = "none";
@@ -1263,6 +1280,7 @@ editProfileBtn.onclick = function () {
   document.getElementById('profile-success').classList.add('hide');
   document.getElementById('edit-username').value = currentUser || "";
 };
+
 document.getElementById('cancel-edit-btn').onclick = function () {
   showProfileMainView();
 };
@@ -1276,6 +1294,7 @@ document.getElementById('edit-profile-form').onsubmit = async function (e) {
   const successDiv = document.getElementById('profile-success');
   errorDiv.classList.add('hide');
   successDiv.classList.add('hide');
+
   if (newUsernameInput.length < 3) {
     errorDiv.textContent = "Minimum 3 karakter!";
     errorDiv.classList.remove('hide');
@@ -1293,6 +1312,7 @@ document.getElementById('edit-profile-form').onsubmit = async function (e) {
       return;
     }
   }
+
   if (avatarFile) {
     if (!avatarFile.type.startsWith('image/')) {
       errorDiv.textContent = "Csak képet tölts fel!";
@@ -1394,6 +1414,7 @@ document.getElementById('register-form').onsubmit = async function (e) {
   regError.classList.add('hide');
   regSuccess.textContent = '';
   regSuccess.classList.add('hide');
+
   if (uname.length < 3) {
     regError.textContent = "Felhasználónév 3+ karakter!";
     regError.classList.remove('hide');
@@ -1670,109 +1691,15 @@ onValue(messagesRef, (snapshot) => {
   renderMessages(msgArr);
 });
 
-// --- INSTAGRAM DM SYSTEM NO SCROLL (fullscreen, overflows hidden, works on all viewports) ---
-function injectPmFullscreenNoScrollStyles() {
-  if (document.getElementById('igdm-fullscreen-noscr-style')) return;
-  const css = `
-    html, body {
-      height: 100%;
-      max-height: 100vh;
-      overflow: hidden !important;
-    }
-    #pm-tab-content,
-    #igdm-wrap,
-    #igdm-center,
-    #igdm-sidenav,
-    #igdm-threadview-empty,
-    #igdm-threadview-real {
-      min-height: 0 !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
-      box-sizing: border-box;
-      overflow: hidden !important;
-      flex: 1 1 0 !important;
-    }
-    #igdm-thread-messages {
-      overflow-y: auto !important;
-      flex: 1 1 auto !important;
-      max-height: unset !important;
-      min-height: 0 !important;
-      background: transparent !important;
-      padding-bottom: 76px !important;
-    }
-    #igdm-form-wrap {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      z-index: 2;
-      width: 100vw !important;
-      max-width: 100vw !important;
-      border-radius: 0 !important;
-      padding: .35em .45em !important;
-      box-sizing: border-box !important;
-      background: #191923 !important;
-    }
-    @media (max-width: 700px) {
-      html, body {
-        height: 100dvh;
-        max-height: 100dvh !important;
-        overflow: hidden !important;
-      }
-      #pm-tab-content,
-      #igdm-wrap,
-      #igdm-center,
-      #igdm-sidenav,
-      #igdm-threadview-empty,
-      #igdm-threadview-real {
-        min-height: 0 !important;
-        height: 100dvh !important;
-        max-height: 100dvh !important;
-        box-sizing: border-box !important;
-      }
-      #igdm-form-wrap {
-        padding: .3em 0.4em !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100vw !important;
-        min-width: 0 !important;
-        max-width: 100vw !important;
-      }
-      #igdm-thread-messages {
-        padding-left: 0.15em !important;
-        padding-right: 0.15em !important;
-      }
-    }
-  `;
-  const style = document.createElement("style");
-  style.id = "igdm-fullscreen-noscr-style";
-  style.textContent = css;
-  document.head.appendChild(style);
-}
-
-function injectDmResponsiveStyle() {
-  injectPmFullscreenNoScrollStyles();
-}
+// ---------------------- INSTAGRAM DM SYSTEM (PM) 1:1 ---------------------------
 
 let dmListenerRefs = {};
 let dmActiveUser = null;
-let liveThreadList = [];
 
-function isPmMobileView() {
-  return window.matchMedia("(max-width: 700px)").matches;
-}
-
-function setPmSidebarHidden(hide) {
-  const sidenav = document.getElementById("igdm-sidenav");
-  if (!sidenav) return;
-  if (hide) {
-    sidenav.classList.add("igdm-hide-sidebar");
-  } else {
-    sidenav.classList.remove("igdm-hide-sidebar");
-  }
-}
+// Real-time DM thread list & highlight
+let liveThreadList = []; // List of {threadId, user, last, lastId}
 
 async function loadInstagramDM(preselectThreadUser = null) {
-  injectDmResponsiveStyle();
-
   if (!currentUser) {
     tabs.pm.innerHTML = `
       <div style="color:#b68686;text-align:center;padding:2em 0;">
@@ -1783,8 +1710,8 @@ async function loadInstagramDM(preselectThreadUser = null) {
   }
 
   tabs.pm.innerHTML = `
-      <div id="igdm-wrap" style="display:flex;flex-direction:row;height:100vh;width:100vw;background:#18181f;overflow:hidden;">
-        <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;transition:transform 0.28s cubic-bezier(.22,1,.36,1), opacity 0.20s cubic-bezier(.22,1,.36,1); will-change:transform,opacity;overflow:hidden;">
+      <div id="igdm-wrap" style="display:flex;flex-direction:row;height:100%;background:#18181f;">
+        <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;">
           <div style="padding:1.1em 1em 0.6em 1em;border-bottom:1px solid #262631;display:flex;align-items:center;">
             <span style="font-size:1.16em;font-weight:800;color:#ededed;letter-spacing:.02em;margin-right:.4em;">${currentUser}</span>
             <span id="igdm-user-avatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;display:inline-block;"></span>
@@ -1798,7 +1725,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
             <button id="igdm-create-msg-btn" style="border:none;background:#31314a;color:#e3e3ee;padding:.44em 1.1em;border-radius:7px;font-size:.98em;font-weight:500;cursor:pointer;">Új üzenet</button>
           </div>
         </div>
-        <div id="igdm-center" style="flex:1 1 0;min-width:0;background:#17171a;display:flex;flex-direction:column;height:100vh;overflow:hidden;">
+        <div id="igdm-center" style="flex:1 1 0;min-width:0;background:#17171a;display:flex;flex-direction:column;height:100%;">
             <div id="igdm-threadview-empty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 1 0;height:100%;text-align:center;">
               <div style="font-size:2.9em;color:#797994;padding:1.2em 0;">
                 <i data-feather="mail"></i>
@@ -1810,16 +1737,25 @@ async function loadInstagramDM(preselectThreadUser = null) {
         </div>
       </div>
   `;
+  // Avatar
   showUserOrGuestAvatar(document.getElementById("igdm-user-avatar"), currentUser, currentAvatar, false);
+
   if (window.feather) feather.replace({ elements: [tabs.pm] });
 
+  // Setup threadlist UI
   const threadListDiv = document.getElementById("igdm-threadlist");
   const searchInput = document.getElementById("igdm-search");
   const createMsgBtn = document.getElementById("igdm-create-msg-btn");
+  let threadviewEmpty, threadviewReal;
 
+  function getPmThreadElements() {
+    threadviewEmpty = document.getElementById("igdm-threadview-empty");
+    threadviewReal = document.getElementById("igdm-threadview-real");
+  }
+
+  // --- Real-time update for always synced threadlist ---
   let pmThreadsUnsub = null;
   let lastSearchValue = "";
-
   function syncThreadListRealtime() {
     if (pmThreadsUnsub) pmThreadsUnsub();
     pmThreadsUnsub = onValue(pmRef, (snap) => {
@@ -1841,7 +1777,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
           threads.push({
             threadId: key,
             user: otherUser,
-            last: latest ? { ...latest, _lastId: latestMsgKey } : null,
+            last: latest ? {...latest, _lastId: latestMsgKey} : null,
             lastId: latestMsgKey
           });
         }
@@ -1852,6 +1788,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
     });
   }
 
+  // --- DM Conversation Threads List (sorted by last msg ts) ---
   function refreshThreadsList(searchTermText = "") {
     lastSearchValue = searchTermText;
     let threads = liveThreadList || [];
@@ -1878,8 +1815,11 @@ async function loadInstagramDM(preselectThreadUser = null) {
       cdiv.style.borderBottom = "1px solid #1d1d23";
       cdiv.onmouseenter = () => cdiv.style.background = "#222231";
       cdiv.onmouseleave = () => cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
-      cdiv.onclick = () => { openInstagramThread(t.user); };
+      cdiv.onclick = () => {
+        openInstagramThread(t.user);
+      };
 
+      // Avatar
       const av = document.createElement("span");
       av.style.width = '38px';
       av.style.height = '38px';
@@ -1902,10 +1842,12 @@ async function loadInstagramDM(preselectThreadUser = null) {
       });
       cdiv.appendChild(av);
 
+      // Middle: Name, last msg.
       const info = document.createElement("div");
       info.style.flex = "1 1 0";
       info.style.overflow = "hidden";
 
+      // Name (user)
       const nameSpan = document.createElement("div");
       nameSpan.textContent = t.user;
       nameSpan.style.fontWeight = 700;
@@ -1913,6 +1855,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
       nameSpan.style.color = "#e7e7ee";
       info.appendChild(nameSpan);
 
+      // Last message
       if (t.last) {
         const msgRow = document.createElement("div");
         msgRow.style.fontSize = "0.97em";
@@ -1927,6 +1870,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
       }
       cdiv.appendChild(info);
 
+      // Time (right)
       if (t.last) {
         const timeDiv = document.createElement("div");
         timeDiv.style.fontSize = ".92em";
@@ -1936,11 +1880,13 @@ async function loadInstagramDM(preselectThreadUser = null) {
       } else {
         cdiv.appendChild(document.createElement("div"));
       }
+
       threadListDiv.appendChild(cdiv);
     });
     if (window.feather) feather.replace({ elements: [threadListDiv] });
   }
 
+  // --- Search field events ---
   searchInput.addEventListener("input", function () {
     refreshThreadsList(searchInput.value.trim());
   });
@@ -1963,37 +1909,37 @@ async function loadInstagramDM(preselectThreadUser = null) {
     }
   };
 
+  // Start realtime threadlist
   syncThreadListRealtime();
 
+  // Show placeholder at startup
+  getPmThreadElements();
   if (preselectThreadUser)
     showInstagramDmThread(preselectThreadUser);
   else
     showInstagramDmThread(null);
 
+  // Reset previous listeners
   for (let k in dmListenerRefs) {
     if (typeof dmListenerRefs[k] === "function") dmListenerRefs[k]();
   }
   dmListenerRefs = {};
   dmActiveUser = preselectThreadUser || null;
+
+  function updateDmThreadViewRefs() {
+    threadviewEmpty = document.getElementById("igdm-threadview-empty");
+    threadviewReal = document.getElementById("igdm-threadview-real");
+  }
+  window._updateDmThreadViewRefs = updateDmThreadViewRefs;
 }
 
+// Show a DM thread - PATCHED: now displays all messages, not just the first!
 function showInstagramDmThread(targetUser) {
+  if (typeof window._updateDmThreadViewRefs === "function") window._updateDmThreadViewRefs();
   const threadviewEmpty = document.getElementById("igdm-threadview-empty");
   const threadviewReal = document.getElementById("igdm-threadview-real");
   if (!threadviewEmpty || !threadviewReal) return;
 
-  if (isPmMobileView()) {
-    setPmSidebarHidden(!!targetUser);
-  } else {
-    setPmSidebarHidden(false);
-  }
-
-  if (!targetUser && isPmMobileView()) {
-    setTimeout(() => {
-      let search = document.getElementById("igdm-search");
-      if (search) search.focus();
-    }, 190);
-  }
   if (!targetUser) {
     threadviewEmpty.style.display = "";
     threadviewReal.style.display = "none";
@@ -2007,11 +1953,15 @@ function showInstagramDmThread(targetUser) {
   threadviewReal.style.position = "relative";
   threadviewReal.style.height = "100%";
   threadviewReal.style.minHeight = "0";
+
+  // Get user data for target
   get(child(usersRef, targetUser)).then(snap => {
     const val = snap.exists() ? snap.val() : { username: targetUser, avatar: "" };
+
     threadviewReal.innerHTML = `
-      <div id="igdm-thread-messages" style="flex:1 1 0; min-height:0; overflow-y:auto; padding: 1em 1.2em; margin-bottom: 0;"></div>
-      <div id="igdm-form-wrap">
+      <div id="igdm-thread-messages" style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 1em 1.2em; margin-bottom: 0;"></div>
+      <div id="igdm-form-wrap"
+           style="border-top:1px solid #27273b;background:#17171e;position:absolute;left:0;right:0;bottom:0;z-index:2;width:100%;">
         <form id="igdm-msg-form" style="display:flex;gap:.7em;align-items:center;padding:.30em 1em;flex:1;">
           <input type="text" id="igdm-msg-input" placeholder="Üzenet..." maxlength="400"
             style="flex:1 1 0;margin:0 0.3em;border:none;outline:none;padding:.44em 1em;border-radius:28px;font-size:1em;background:#23233a;color:#e7e7ef;">
@@ -2019,36 +1969,51 @@ function showInstagramDmThread(targetUser) {
         </form>
       </div>
     `;
+
     renderInstagramThreadTopBar(targetUser, val.avatar);
     const topBar = document.getElementById("igdm-thread-topbar");
     if (topBar && threadviewReal.firstChild !== topBar) {
       threadviewReal.insertBefore(topBar, threadviewReal.firstChild);
     }
+
     const msgDiv = document.getElementById("igdm-thread-messages");
-    setTimeout(() => {
-      let formWrap = document.getElementById("igdm-form-wrap");
-      let extra = formWrap ? formWrap.offsetHeight : 56;
-      msgDiv.style.paddingBottom = (extra + 8) + "px";
-    }, 0);
+    const formWrap = document.getElementById("igdm-form-wrap");
+    if (msgDiv && formWrap) {
+      setTimeout(() => {
+        let extra = formWrap.offsetHeight || 56;
+        msgDiv.style.paddingBottom = (extra + 8) + "px";
+      }, 0);
+    }
+
     const threadId = getPmThreadId(currentUser, targetUser);
 
-    if (dmListenerRefs[targetUser]) dmListenerRefs[targetUser]();
+    if (dmListenerRefs[targetUser]) {
+      dmListenerRefs[targetUser](); // unsubscribe previous
+    }
 
+    // *** PATCH: Most már minden üzenetet rendesen kirakunk, nemcsak az elsőt! ***
     dmListenerRefs[targetUser] = onValue(child(pmRef, threadId), snap => {
       const msgDiv = document.getElementById("igdm-thread-messages");
       if (!msgDiv) return;
       let threadMsgs = [];
       snap.forEach(childSnap => {
+        // Firebase .forEach végigmegy minden üzeneten!
         threadMsgs.push(childSnap.val());
       });
+      // Az üzenetek időrendben (régi elől, új hátul)
       threadMsgs.sort((a, b) => a.ts - b.ts);
+
+      // TÖRLÉS
       msgDiv.innerHTML = "";
+
+      // VÉGRE: minden üzenetet bejárunk -- nem csak az elsőt!
       threadMsgs.forEach(data => {
         const bubble = document.createElement("div");
         bubble.style.display = "flex";
         bubble.style.marginBottom = ".32em";
         bubble.style.justifyContent = data.from === currentUser ? "flex-end" : "flex-start";
         bubble.style.alignItems = "flex-end";
+        // Bubble inner
         const bubbleInner = document.createElement("div");
         bubbleInner.style.maxWidth = "70%";
         bubbleInner.style.minWidth = "1px";
@@ -2062,6 +2027,7 @@ function showInstagramDmThread(targetUser) {
         bubbleInner.style.marginRight = data.from === currentUser ? "0" : "12px";
         bubbleInner.textContent = data.msg;
         bubble.appendChild(bubbleInner);
+
         const meta = document.createElement("div");
         meta.style.fontSize = ".86em";
         meta.style.opacity = "0.45";
@@ -2070,12 +2036,17 @@ function showInstagramDmThread(targetUser) {
         meta.textContent = formatTimeHM(data.ts);
         bubbleInner.appendChild(document.createElement('br'));
         bubbleInner.appendChild(meta);
+
         msgDiv.appendChild(bubble);
       });
       setTimeout(() => {
         msgDiv.scrollTop = msgDiv.scrollHeight;
       }, 10);
-      refreshThreadsList();
+
+      // Patch: After PM change, force-refresh sidebar so that new thread appears instantly & is at top
+      refreshThreadsList(lastSearchValue);
+
+      // Patch: ensure selected user stays highlighted
       setTimeout(() => {
         const cards = document.querySelectorAll(".igdm-threadcard");
         for (let c of cards) {
@@ -2088,6 +2059,7 @@ function showInstagramDmThread(targetUser) {
       }, 10);
     });
 
+    // PM form submit handler, do NOT leave current chat tab
     const form = document.getElementById("igdm-msg-form");
     const input = document.getElementById("igdm-msg-input");
     let sending = false;
@@ -2114,15 +2086,23 @@ function showInstagramDmThread(targetUser) {
           const msgDiv = document.getElementById("igdm-thread-messages");
           if (msgDiv) msgDiv.scrollTop = msgDiv.scrollHeight;
         }, 10);
-        refreshThreadsList();
+
+        // PATCH: After sending, force-ensure sidebar updates NOW and the thread is scrolled into view
+        refreshThreadsList(lastSearchValue);
+        // Optionally, put this thread at TOP after sending (handled by sorting of liveThreadList + refreshThreadsList)
       } catch (e) {
+        // Don't show error popup anymore, silent fail (disable alert), unlock UI.
         input.disabled = false;
         form.querySelector('button[type="submit"]').disabled = false;
         sending = false;
+        // You may want to log error for debug:
+        // console.error("Üzenet küldése sikertelen (PM):", e);
       }
     };
   });
+
   dmActiveUser = targetUser;
+  // Update threads list selection
   setTimeout(() => {
     const cards = document.querySelectorAll(".igdm-threadcard");
     for (let c of cards) {
@@ -2166,15 +2146,18 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
   document.getElementById("igdm-thread-back").onclick = function () {
     dmActiveUser = null;
     showInstagramDmThread(null);
-    if (isPmMobileView()) setPmSidebarHidden(false);
   };
   if (window.feather) feather.replace({ elements: [top] });
 }
 
+// Handles clicking on a user to open thread
 function openInstagramThread(targetUser, alwaysOpen = false) {
   if (!targetUser) return;
+  // Do NOT call showTab("main") -- just show thread, stay in PM tab
+  // PATCH: When clicking or creating, if not already visible, show the DM tab and select this thread
   if (currentTab !== "pm") {
     showTab("pm");
+    // loadInstagramDM will call showInstagramDmThread by its param if we pass it as preselect
     setTimeout(() => {
       showInstagramDmThread(targetUser);
     }, 100);
@@ -2182,10 +2165,13 @@ function openInstagramThread(targetUser, alwaysOpen = false) {
     showInstagramDmThread(targetUser);
   }
 }
+
+// Given 2 users, get thread ID (same canonicalization as before)
 function getPmThreadId(user1, user2) {
   return [user1, user2].sort().join('__pm__');
 }
 
+// --- fileToBase64Square, unchanged ---
 function fileToBase64Square(file, sz) {
   return new Promise(function (resolve) {
     const reader = new FileReader();
@@ -2216,76 +2202,8 @@ function initTabDisplay() {
   updateMainMsgFormDisplay();
   showTab("main");
 }
-
-// Szüntesd meg a scrolt az egész oldalon PM közben
-function injectMainResponsiveStyle() {
-  if (document.getElementById('mainarea-responsive-style')) return;
-  const css = `
-    @media (max-width: 700px) {
-      .tab-content.active {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        min-width: 0 !important;
-        width: 100vw !important;
-      }
-      #messages {
-        padding-left: 0.1em !important;
-        padding-right: 0.1em !important;
-        width: 100vw !important;
-        min-width: 0 !important;
-        box-sizing: border-box !important;
-      }
-      .message {
-        border-radius: 12px !important;
-        padding: 0.15em .33em !important;
-        margin: .35em .1em !important;
-        font-size: 1em !important;
-        min-width: 0 !important;
-        word-break: break-word;
-      }
-      .msg-mainblock {
-        font-size: 1em !important;
-      }
-      .msg-headerrow {
-        flex-direction: column;
-        gap: 3px;
-        font-size: 1em !important;
-      }
-      .msg-actions button {
-        font-size: 1.1em !important;
-      }
-      .input-group input,
-      .input-group label {
-        font-size: 1em !important;
-      }
-      #msg-form > div,
-      #guest-main-form > div {
-        width: 100vw !important;
-        min-width: 0 !important;
-      }
-    }
-  `;
-  const style = document.createElement("style");
-  style.id = "mainarea-responsive-style";
-  style.textContent = css;
-  document.head.appendChild(style);
-}
-
-injectMainResponsiveStyle();
-injectPmFullscreenNoScrollStyles();
-
 initTabDisplay();
 if (window.feather) feather.replace();
-
-window.addEventListener('resize', function() {
-  if (tabs.pm && tabs.pm.classList.contains('active')) {
-    if (isPmMobileView()) {
-      setPmSidebarHidden(!!dmActiveUser);
-    } else {
-      setPmSidebarHidden(false);
-    }
-  }
-});
 </script>
 </body>
 </html>
