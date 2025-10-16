@@ -761,7 +761,7 @@
           </div>
           <div class="input-group" style="margin-bottom:10px;">
             <label>
-              <input type="checkbox" id="settings-notif-sound" style="width:1.1em; height:1.1em;margin-right:8px;">
+              <input type="checkbox" id="settings-notif-sound" style="width:1.1em; height:1.1em;margin-right:8px;" disabled>
               <span style="font-weight:500;color:#b5b5b5;font-size:1em;">Device értesítés új üzenetnél</span>
             </label>
           </div>
@@ -886,7 +886,10 @@ function applySettings(reRenderMessages = false) {
   const g = document.getElementById('settings-hide-guest-group');
   if (chHideGuest && g) { g.style.display = "none"; } // Always hidden
   const chNotif = document.getElementById("settings-notif-sound");
-  if (chNotif) chNotif.checked = !!wallSettings.notifSound;
+  if (chNotif) {
+    chNotif.checked = false;
+    chNotif.disabled = true;
+  }
 }
 // Run at load/init:
 wallSettings = getSettings();
@@ -900,7 +903,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     settingsForm.onsubmit = function(e){
       e.preventDefault();
       wallSettings.theme = document.getElementById("theme-select").value;
-      wallSettings.notifSound = !!document.getElementById("settings-notif-sound").checked;
+      // Prevent enabling notification sound setting; always keep false and disabled.
+      wallSettings.notifSound = false;
       saveSettings();
       applySettings(true);
       document.getElementById("settings-success").textContent = "Elmentve!";
@@ -1438,7 +1442,7 @@ function formatTimeFull(ts) {
   return `${yyyy}.${mm}.${dd}.  ${formatTimeHM(ts)}`;
 }
 
-// --- MESSAGE RENDERING + DEVICE NOTIFICATIONS ---
+// --- MESSAGE RENDERING, NO DEVICE NOTIFICATIONS ---
 let lastMsgArr = [];
 let lastMessageTsForNotif = 0;
 function renderMessages(msgArrRaw) {
@@ -1539,35 +1543,21 @@ function renderMessages(msgArrRaw) {
     if((data.guest || !data.avatar || data.avatar.length <= 10) && window.feather) {
       feather.replace({ elements: [avatarWrap] });
     }
-    // DEVICE NOTIFICATION SUPPORT
-    if(wallSettings && wallSettings.notifSound && window.enableDeviceNotification && !msgElem._notif) {
-      if (data.ts > lastMessageTsForNotif && data.ts >= Date.now()-1500) {
-        window.enableDeviceNotification(data);
-        msgElem._notif = true;
-      }
-    }
+    // DEVICE NOTIFICATION SUPPORT REMOVED (sound and push notification suppressed)
+    // Previously here:
+    // if(wallSettings && wallSettings.notifSound && window.enableDeviceNotification && !msgElem._notif) {
+    //   if (data.ts > lastMessageTsForNotif && data.ts >= Date.now()-1500) {
+    //     window.enableDeviceNotification(data);
+    //     msgElem._notif = true;
+    //   }
+    // }
   });
   if(window.feather) feather.replace();
 }
 // --- Show push notification ---
+// REMOVE/SUPPRESS Device notification and sound entirely.
 window.enableDeviceNotification = function(msgObj) {
-  // Ask permission if needed
-  if ("Notification" in window) {
-    if (Notification.permission === "granted") {
-      const title = msgObj.guest ? "Vendég üzenet" : msgObj.name || "Új üzenet";
-      let body = (msgObj.msg || "").slice(0, 80);
-      const n = new Notification(title, {
-        body,
-        icon: "/favicon.ico"
-      });
-      // Optionally add click handler
-      setTimeout(()=>{n.close && n.close()}, 4500);
-    } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(function(permission){
-        if(permission==="granted") window.enableDeviceNotification(msgObj);
-      });
-    }
-  }
+  // Notifications are disabled (sound removed)
 };
 
 onValue(messagesRef, (snapshot) => {
