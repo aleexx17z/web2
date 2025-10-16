@@ -1679,17 +1679,13 @@ onValue(messagesRef, (snapshot) => {
 
 // ---------------------- INSTAGRAM DM SYSTEM (PM) 1:1 ---------------------------
 
-/*
-Instagram-ihletésű DM layout:
-- Bal oszlop: kereső ("Keresés"), üzenetlista (utolsó beszélgetések), egy új DM gomb
-- Közép: üzenet thread (kinyitva), vagy "Válassz beszélgetést" üres view
-- Felül: profil név, gombok, stb.
-*/
-
 let dmListenerRefs = {};
 let dmActiveUser = null;
 
-async function loadInstagramDM() {
+// Real-time DM thread list & highlight
+let liveThreadList = []; // List of {threadId, user, last, lastId}
+
+async function loadInstagramDM(preselectThreadUser = null) {
   if (!currentUser) {
     tabs.pm.innerHTML = `
       <div style="color:#b68686;text-align:center;padding:2em 0;">
@@ -1699,7 +1695,6 @@ async function loadInstagramDM() {
     return;
   }
 
-  // Setup Instagram DM layout
   tabs.pm.innerHTML = `
       <div id="igdm-wrap" style="display:flex;flex-direction:row;height:100%;background:#18181f;">
         <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;">
@@ -1716,15 +1711,15 @@ async function loadInstagramDM() {
             <button id="igdm-create-msg-btn" style="border:none;background:#31314a;color:#e3e3ee;padding:.44em 1.1em;border-radius:7px;font-size:.98em;font-weight:500;cursor:pointer;">Új üzenet</button>
           </div>
         </div>
-        <div id="igdm-center" style="flex:1 1 0;min-width:0;background:#17171a;">
-            <div id="igdm-threadview-empty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;">
+        <div id="igdm-center" style="flex:1 1 0;min-width:0;background:#17171a;display:flex;flex-direction:column;height:100%;">
+            <div id="igdm-threadview-empty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 1 0;height:100%;text-align:center;">
               <div style="font-size:2.9em;color:#797994;padding:1.2em 0;">
                 <i data-feather="mail"></i>
               </div>
               <div style="font-size:1.25em;color:#cbcbe7;padding-bottom:.4em;">Üdvözöljük a privát üzenetben</div>
               <div style="color:#8686a0;font-size:.98em;">Válassz vagy kezdj egy beszélgetést.</div>
             </div>
-            <div id="igdm-threadview-real" style="display:none;height:100%;"></div>
+            <div id="igdm-threadview-real" style="display:none;flex:1 1 0;position:relative;height:100%;min-height:0;"></div>
         </div>
       </div>
   `;
@@ -1733,136 +1728,148 @@ async function loadInstagramDM() {
 
   if (window.feather) feather.replace({ elements: [tabs.pm] });
 
-  // Load conversation list (threads)
+  // Setup threadlist UI
   const threadListDiv = document.getElementById("igdm-threadlist");
   const searchInput = document.getElementById("igdm-search");
   const createMsgBtn = document.getElementById("igdm-create-msg-btn");
-  const threadviewEmpty = document.getElementById("igdm-threadview-empty");
-  const threadviewReal = document.getElementById("igdm-threadview-real");
+  let threadviewEmpty, threadviewReal;
 
-  let currentQuery = '';
-  let userListCache = [];
-  let threadsMetaCache = [];
+  function getPmThreadElements() {
+    threadviewEmpty = document.getElementById("igdm-threadview-empty");
+    threadviewReal = document.getElementById("igdm-threadview-real");
+  }
 
-  // --- DM Conversation Threads List (sorted by last msg ts) ---
-  function refreshThreadsList(searchTermText = "") {
-    // gets user's DM threads directly from DB
-    get(pmRef).then(snap => {
+  // --- Real-time update for always synced threadlist ---
+  let pmThreadsUnsub = null;
+  let lastSearchValue = "";
+  function syncThreadListRealtime() {
+    if (pmThreadsUnsub) pmThreadsUnsub();
+    pmThreadsUnsub = onValue(pmRef, (snap) => {
       let threads = [];
       snap.forEach(threadSnap => {
         const key = threadSnap.key;
+        if (!key.includes("__pm__")) return;
         const [u1, u2] = key.split('__pm__');
         if (u1 === currentUser || u2 === currentUser) {
-          // Who's the other
           const otherUser = u1 === currentUser ? u2 : u1;
-          let latest = null;
+          let latest = null, latestMsgKey = null;
           threadSnap.forEach(msgSnap => {
             const v = msgSnap.val();
-            if (!latest || (v.ts > latest.ts)) latest = v;
+            if (!latest || (v.ts > latest.ts)) {
+              latest = v;
+              latestMsgKey = msgSnap.key;
+            }
           });
           threads.push({
             threadId: key,
             user: otherUser,
-            last: latest ? latest : null
+            last: latest ? {...latest, _lastId: latestMsgKey} : null,
+            lastId: latestMsgKey
           });
         }
       });
-      // Order: latest activity first
       threads.sort((a, b) => ((b.last ? b.last.ts : 0) - (a.last ? a.last.ts : 0)));
-      threadsMetaCache = threads;
-      // Optionally filter
-      let filtered = threads;
-      if (searchTermText) {
-        filtered = threads.filter(t =>
-          t.user.toLowerCase().includes(searchTermText.toLowerCase())
-        );
-      }
-      threadListDiv.innerHTML = "";
-      if (filtered.length === 0) {
-        threadListDiv.innerHTML = `<div style="text-align:center;color:#8686a3;padding:1.6em 0;">Nincs beszélgetés.</div>`;
-        return;
-      }
-      filtered.forEach(t => {
-        const cdiv = document.createElement("div");
-        cdiv.className = "igdm-threadcard";
-        cdiv.style.display = "flex";
-        cdiv.style.alignItems = "center";
-        cdiv.style.gap = "0.8em";
-        cdiv.style.padding = "0.6em 1em";
-        cdiv.style.cursor = "pointer";
-        cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
-        cdiv.style.borderBottom = "1px solid #1d1d23";
-        cdiv.onmouseenter = () => cdiv.style.background = "#222231";
-        cdiv.onmouseleave = () => cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
-        cdiv.onclick = () => {
-          openInstagramThread(t.user);
-        };
-
-        // Avatar
-        const av = document.createElement("span");
-        av.style.width = '38px';
-        av.style.height = '38px';
-        av.style.borderRadius = "50%";
-        av.style.background = "#22223b";
-        av.style.overflow = "hidden";
-        av.style.display = "inline-block";
-        get(child(usersRef, t.user)).then(snap => {
-          if (snap.exists() && snap.val().avatar && snap.val().avatar.length > 10) {
-            let img = document.createElement("img");
-            img.src = snap.val().avatar;
-            img.style.width = "100%";
-            img.style.height = "100%";
-            img.style.objectFit = "cover";
-            av.appendChild(img);
-          } else {
-            av.innerHTML = '<i data-feather="user"></i>';
-            if (window.feather) feather.replace({ elements: [av] });
-          }
-        });
-        cdiv.appendChild(av);
-
-        // Middle: Name, last msg.
-        const info = document.createElement("div");
-        info.style.flex = "1 1 0";
-        info.style.overflow = "hidden";
-
-        // Name (user)
-        const nameSpan = document.createElement("div");
-        nameSpan.textContent = t.user;
-        nameSpan.style.fontWeight = 700;
-        nameSpan.style.fontSize = "1em";
-        nameSpan.style.color = "#e7e7ee";
-        info.appendChild(nameSpan);
-
-        // Last message (from who, short and faded)
-        if (t.last) {
-          const msgRow = document.createElement("div");
-          msgRow.style.fontSize = "0.97em";
-          msgRow.style.color = "#ababc2";
-          msgRow.style.whiteSpace = "nowrap";
-          msgRow.style.overflow = "hidden";
-          msgRow.style.textOverflow = "ellipsis";
-          msgRow.innerHTML =
-            (t.last.from === currentUser ? "Te: " : "") +
-            (t.last.msg.length > 34 ? t.last.msg.substring(0, 33) + "…" : t.last.msg);
-          info.appendChild(msgRow);
-        }
-        cdiv.appendChild(info);
-
-        // Time (right)
-        if (t.last) {
-          const timeDiv = document.createElement("div");
-          timeDiv.style.fontSize = ".92em";
-          timeDiv.style.color = "#85859d";
-          timeDiv.textContent = formatTimeHM(t.last.ts);
-          cdiv.appendChild(timeDiv);
-        } else {
-          cdiv.appendChild(document.createElement("div"));
-        }
-
-        threadListDiv.appendChild(cdiv);
-      });
+      liveThreadList = threads;
+      refreshThreadsList(lastSearchValue);
     });
+  }
+
+  // --- DM Conversation Threads List (sorted by last msg ts) ---
+  function refreshThreadsList(searchTermText = "") {
+    lastSearchValue = searchTermText;
+    let threads = liveThreadList || [];
+    let filtered = threads;
+    if (searchTermText) {
+      filtered = threads.filter(t =>
+        t.user.toLowerCase().includes(searchTermText.toLowerCase())
+      );
+    }
+    threadListDiv.innerHTML = "";
+    if (filtered.length === 0) {
+      threadListDiv.innerHTML = `<div style="text-align:center;color:#8686a3;padding:1.6em 0;">Nincs beszélgetés.</div>`;
+      return;
+    }
+    filtered.forEach(t => {
+      const cdiv = document.createElement("div");
+      cdiv.className = "igdm-threadcard";
+      cdiv.style.display = "flex";
+      cdiv.style.alignItems = "center";
+      cdiv.style.gap = "0.8em";
+      cdiv.style.padding = "0.6em 1em";
+      cdiv.style.cursor = "pointer";
+      cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
+      cdiv.style.borderBottom = "1px solid #1d1d23";
+      cdiv.onmouseenter = () => cdiv.style.background = "#222231";
+      cdiv.onmouseleave = () => cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
+      cdiv.onclick = () => {
+        openInstagramThread(t.user);
+      };
+
+      // Avatar
+      const av = document.createElement("span");
+      av.style.width = '38px';
+      av.style.height = '38px';
+      av.style.borderRadius = "50%";
+      av.style.background = "#22223b";
+      av.style.overflow = "hidden";
+      av.style.display = "inline-block";
+      get(child(usersRef, t.user)).then(snap => {
+        if (snap.exists() && snap.val().avatar && snap.val().avatar.length > 10) {
+          let img = document.createElement("img");
+          img.src = snap.val().avatar;
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          av.appendChild(img);
+        } else {
+          av.innerHTML = '<i data-feather="user"></i>';
+          if (window.feather) feather.replace({ elements: [av] });
+        }
+      });
+      cdiv.appendChild(av);
+
+      // Middle: Name, last msg.
+      const info = document.createElement("div");
+      info.style.flex = "1 1 0";
+      info.style.overflow = "hidden";
+
+      // Name (user)
+      const nameSpan = document.createElement("div");
+      nameSpan.textContent = t.user;
+      nameSpan.style.fontWeight = 700;
+      nameSpan.style.fontSize = "1em";
+      nameSpan.style.color = "#e7e7ee";
+      info.appendChild(nameSpan);
+
+      // Last message
+      if (t.last) {
+        const msgRow = document.createElement("div");
+        msgRow.style.fontSize = "0.97em";
+        msgRow.style.color = "#ababc2";
+        msgRow.style.whiteSpace = "nowrap";
+        msgRow.style.overflow = "hidden";
+        msgRow.style.textOverflow = "ellipsis";
+        msgRow.innerHTML =
+          (t.last.from === currentUser ? "Te: " : "") +
+          (t.last.msg && t.last.msg.length > 34 ? t.last.msg.substring(0, 33) + "…" : (t.last.msg || ""));
+        info.appendChild(msgRow);
+      }
+      cdiv.appendChild(info);
+
+      // Time (right)
+      if (t.last) {
+        const timeDiv = document.createElement("div");
+        timeDiv.style.fontSize = ".92em";
+        timeDiv.style.color = "#85859d";
+        timeDiv.textContent = formatTimeHM(t.last.ts);
+        cdiv.appendChild(timeDiv);
+      } else {
+        cdiv.appendChild(document.createElement("div"));
+      }
+
+      threadListDiv.appendChild(cdiv);
+    });
+    if (window.feather) feather.replace({ elements: [threadListDiv] });
   }
 
   // --- Search field events ---
@@ -1870,10 +1877,9 @@ async function loadInstagramDM() {
     refreshThreadsList(searchInput.value.trim());
   });
 
-  // --- "Új üzenet" (new DM) button ---
+  let userListCache = [];
   createMsgBtn.onclick = async function () {
     if (!userListCache.length) {
-      // Cache all known usernames
       userListCache = [];
       const usersSnap = await get(usersRef);
       usersSnap.forEach(childSnap => {
@@ -1881,7 +1887,6 @@ async function loadInstagramDM() {
           userListCache.push(childSnap.key);
       });
     }
-    // Simple modal to select user to DM
     const selectUser = prompt("Írd be a felhasználó nevét akinek írni akarsz:", "");
     if (selectUser && userListCache.includes(selectUser)) {
       openInstagramThread(selectUser, true);
@@ -1890,35 +1895,37 @@ async function loadInstagramDM() {
     }
   };
 
-  // Show thread list
-  refreshThreadsList();
+  // Start realtime threadlist
+  syncThreadListRealtime();
 
   // Show placeholder at startup
-  showInstagramDmThread(null);
+  getPmThreadElements();
+  if (preselectThreadUser)
+    showInstagramDmThread(preselectThreadUser);
+  else
+    showInstagramDmThread(null);
 
   // Reset previous listeners
   for (let k in dmListenerRefs) {
     if (typeof dmListenerRefs[k] === "function") dmListenerRefs[k]();
   }
   dmListenerRefs = {};
-  dmActiveUser = null;
-}
+  dmActiveUser = preselectThreadUser || null;
 
-// ---- Open/Display a 1:1 thread Insta-style ----
-
-// UTILITY: Find and keep the topbar if any; the render should keep it on top, not be blown away.
-function ensureInstagramThreadTopBar(threadviewReal, targetUser, avatar) {
-  let top = document.getElementById("igdm-thread-topbar");
-  if (!top) {
-    renderInstagramThreadTopBar(targetUser, avatar);
+  function updateDmThreadViewRefs() {
+    threadviewEmpty = document.getElementById("igdm-threadview-empty");
+    threadviewReal = document.getElementById("igdm-threadview-real");
   }
-  // return bar
-  return document.getElementById("igdm-thread-topbar");
+  window._updateDmThreadViewRefs = updateDmThreadViewRefs;
 }
 
+// Show a DM thread - PATCHED: now displays all messages, not just the first!
 function showInstagramDmThread(targetUser) {
+  if (typeof window._updateDmThreadViewRefs === "function") window._updateDmThreadViewRefs();
   const threadviewEmpty = document.getElementById("igdm-threadview-empty");
   const threadviewReal = document.getElementById("igdm-threadview-real");
+  if (!threadviewEmpty || !threadviewReal) return;
+
   if (!targetUser) {
     threadviewEmpty.style.display = "";
     threadviewReal.style.display = "none";
@@ -1927,19 +1934,21 @@ function showInstagramDmThread(targetUser) {
     return;
   }
   threadviewEmpty.style.display = "none";
-  threadviewReal.style.display = "";
+  threadviewReal.style.display = "flex";
+  threadviewReal.style.flexDirection = "column";
+  threadviewReal.style.position = "relative";
+  threadviewReal.style.height = "100%";
+  threadviewReal.style.minHeight = "0";
 
   // Get user data for target
   get(child(usersRef, targetUser)).then(snap => {
     const val = snap.exists() ? snap.val() : { username: targetUser, avatar: "" };
 
-    // We render the top bar **outside** the bubble/message holder, so that it stays on top
-    // MOD: Lower vertical padding on form, padding: .30em 1em;
-    // MOD: Lower input field padding top-bottom (.44em 1em), and font-size:1em to keep placeholder visually lower
     threadviewReal.innerHTML = `
-      <div id="igdm-thread-messages" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:1em 1.2em;"></div>
-      <div style="border-top:1px solid #27273b;background:#17171e;">
-        <form id="igdm-msg-form" style="display:flex;gap:.7em;align-items:center;padding:.30em 1em;">
+      <div id="igdm-thread-messages" style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 1em 1.2em; margin-bottom: 0;"></div>
+      <div id="igdm-form-wrap"
+           style="border-top:1px solid #27273b;background:#17171e;position:absolute;left:0;right:0;bottom:0;z-index:2;width:100%;">
+        <form id="igdm-msg-form" style="display:flex;gap:.7em;align-items:center;padding:.30em 1em;flex:1;">
           <input type="text" id="igdm-msg-input" placeholder="Üzenet..." maxlength="400"
             style="flex:1 1 0;margin:0 0.3em;border:none;outline:none;padding:.44em 1em;border-radius:28px;font-size:1em;background:#23233a;color:#e7e7ef;">
           <button type="submit" style="border:none;background:#39395e;color:#fff;padding:.6em 1.5em;border-radius:28px;font-weight:500;cursor:pointer;">Küldés</button>
@@ -1947,33 +1956,43 @@ function showInstagramDmThread(targetUser) {
       </div>
     `;
 
-    // Insert the topbar **before** the message list (stay at top)
     renderInstagramThreadTopBar(targetUser, val.avatar);
-
-    // Move the topbar as the very first child, always (overwrites if already exists)
     const topBar = document.getElementById("igdm-thread-topbar");
     if (topBar && threadviewReal.firstChild !== topBar) {
       threadviewReal.insertBefore(topBar, threadviewReal.firstChild);
     }
-  });
 
-  // Realtime thread listener (unsubscribe previous)
-  if (dmListenerRefs[targetUser]) {
-    dmListenerRefs[targetUser](); // unsubscribe previous
-  }
-  const threadId = getPmThreadId(currentUser, targetUser);
-
-  // We need to get handles after we have created the HTML (not async section above)
-  setTimeout(() => {
     const msgDiv = document.getElementById("igdm-thread-messages");
-    // Listen for updates
+    const formWrap = document.getElementById("igdm-form-wrap");
+    if (msgDiv && formWrap) {
+      setTimeout(() => {
+        let extra = formWrap.offsetHeight || 56;
+        msgDiv.style.paddingBottom = (extra + 8) + "px";
+      }, 0);
+    }
+
+    const threadId = getPmThreadId(currentUser, targetUser);
+
+    if (dmListenerRefs[targetUser]) {
+      dmListenerRefs[targetUser](); // unsubscribe previous
+    }
+
+    // *** PATCH: Most már minden üzenetet rendesen kirakunk, nemcsak az elsőt! ***
     dmListenerRefs[targetUser] = onValue(child(pmRef, threadId), snap => {
+      const msgDiv = document.getElementById("igdm-thread-messages");
+      if (!msgDiv) return;
       let threadMsgs = [];
-      snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
+      snap.forEach(childSnap => {
+        // Firebase .forEach végigmegy minden üzeneten!
+        threadMsgs.push(childSnap.val());
+      });
+      // Az üzenetek időrendben (régi elől, új hátul)
       threadMsgs.sort((a, b) => a.ts - b.ts);
 
-      // Render Insta-style chat bubbles
+      // TÖRLÉS
       msgDiv.innerHTML = "";
+
+      // VÉGRE: minden üzenetet bejárunk -- nem csak az elsőt!
       threadMsgs.forEach(data => {
         const bubble = document.createElement("div");
         bubble.style.display = "flex";
@@ -1995,7 +2014,6 @@ function showInstagramDmThread(targetUser) {
         bubbleInner.textContent = data.msg;
         bubble.appendChild(bubbleInner);
 
-        // Optionally small timestamp (below each msg - Instagram usually via tooltip, here inline)
         const meta = document.createElement("div");
         meta.style.fontSize = ".86em";
         meta.style.opacity = "0.45";
@@ -2007,18 +2025,30 @@ function showInstagramDmThread(targetUser) {
 
         msgDiv.appendChild(bubble);
       });
-      // Always scroll to bottom (after a new msg arrives)
       setTimeout(() => {
         msgDiv.scrollTop = msgDiv.scrollHeight;
       }, 10);
+
+      // Patch: After PM change, force-refresh sidebar so that new thread appears instantly & is at top
+      refreshThreadsList(lastSearchValue);
+
+      // Patch: ensure selected user stays highlighted
+      setTimeout(() => {
+        const cards = document.querySelectorAll(".igdm-threadcard");
+        for (let c of cards) {
+          if (c.querySelector("div") && c.querySelector("div").textContent === targetUser) {
+            c.style.background = "#222231";
+          } else {
+            c.style.background = "transparent";
+          }
+        }
+      }, 10);
     });
 
-    // Handle multi-message sending
+    // PM form submit handler, do NOT leave current chat tab
     const form = document.getElementById("igdm-msg-form");
     const input = document.getElementById("igdm-msg-input");
     let sending = false;
-
-    // Fix: sending lockout addressed (disable button/input only during push)
     form.onsubmit = async function (e) {
       e.preventDefault();
       if (sending) return;
@@ -2034,20 +2064,28 @@ function showInstagramDmThread(targetUser) {
           ts: Date.now()
         });
         input.value = "";
-        // After sending, immediate re-enable
         input.disabled = false;
         form.querySelector('button[type="submit"]').disabled = false;
         sending = false;
-        // Scroll to bottom (again for safety)
-        setTimeout(() => { msgDiv.scrollTop = msgDiv.scrollHeight; }, 10);
+        setTimeout(() => {
+          input.focus();
+          const msgDiv = document.getElementById("igdm-thread-messages");
+          if (msgDiv) msgDiv.scrollTop = msgDiv.scrollHeight;
+        }, 10);
+
+        // PATCH: After sending, force-ensure sidebar updates NOW and the thread is scrolled into view
+        refreshThreadsList(lastSearchValue);
+        // Optionally, put this thread at TOP after sending (handled by sorting of liveThreadList + refreshThreadsList)
       } catch (e) {
+        // Don't show error popup anymore, silent fail (disable alert), unlock UI.
         input.disabled = false;
         form.querySelector('button[type="submit"]').disabled = false;
         sending = false;
-        alert("Nem sikerült elküldeni az üzenetet!");
+        // You may want to log error for debug:
+        // console.error("Üzenet küldése sikertelen (PM):", e);
       }
     };
-  }, 0);
+  });
 
   dmActiveUser = targetUser;
   // Update threads list selection
@@ -2063,7 +2101,6 @@ function showInstagramDmThread(targetUser) {
   }, 30);
 }
 
-// Top bar for Insta DM view
 function renderInstagramThreadTopBar(targetUser, avatar) {
   const threadviewReal = document.getElementById("igdm-threadview-real");
   if (!threadviewReal) return;
@@ -2078,7 +2115,6 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
     top.style.borderBottom = "1px solid #23233a";
     threadviewReal.insertBefore(top, threadviewReal.firstChild);
   }
-  // Left: back button for mobile
   top.innerHTML = `
     <button id="igdm-thread-back" style="border:none;background:transparent;outline:none;font-size:1.18em;color:#8aaedd;display:inline-block;margin-right:.6em;cursor:pointer;">
       <i data-feather="arrow-left"></i>
@@ -2086,7 +2122,6 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
     <span id="igdm-top-avatar" style="width:34px;height:34px;border-radius:50%;overflow:hidden;display:inline-block;background:#202033;"></span>
     <span id="igdm-top-username" style="font-size:1.1em;font-weight:600;color:#f4f4fb">${targetUser}</span>
   `;
-  // Show avatar
   const av = document.getElementById("igdm-top-avatar");
   if (avatar && avatar.length > 10) {
     av.innerHTML = `<img src="${avatar}" alt="-" style="width:100%;height:100%;object-fit:cover;">`;
@@ -2094,7 +2129,6 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
     av.innerHTML = `<i data-feather="user"></i>`;
     if (window.feather) feather.replace({ elements: [av] });
   }
-  // Back button only works on small screen
   document.getElementById("igdm-thread-back").onclick = function () {
     dmActiveUser = null;
     showInstagramDmThread(null);
@@ -2105,8 +2139,17 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
 // Handles clicking on a user to open thread
 function openInstagramThread(targetUser, alwaysOpen = false) {
   if (!targetUser) return;
-  // Fix: Don't switch tab, just open thread. (Old code never did showTab("main"), so this is safe)
-  showInstagramDmThread(targetUser);
+  // Do NOT call showTab("main") -- just show thread, stay in PM tab
+  // PATCH: When clicking or creating, if not already visible, show the DM tab and select this thread
+  if (currentTab !== "pm") {
+    showTab("pm");
+    // loadInstagramDM will call showInstagramDmThread by its param if we pass it as preselect
+    setTimeout(() => {
+      showInstagramDmThread(targetUser);
+    }, 100);
+  } else {
+    showInstagramDmThread(targetUser);
+  }
 }
 
 // Given 2 users, get thread ID (same canonicalization as before)
