@@ -1705,13 +1705,12 @@ function injectDmResponsiveStyle() {
       overflow-y: visible;
       background: #16161b !important;
       z-index: 15;
+      transition: transform 0.28s cubic-bezier(.22,1,.36,1), opacity 0.20s cubic-bezier(.22,1,.36,1);
     }
-    #igdm-threadlist {
-      max-height: 320px;
-      overflow-y: auto;
-      width: 100vw;
-      min-width: 0;
-      padding-bottom: 0.5em;
+    #igdm-sidenav.igdm-hide-sidebar {
+      transform: translateX(-100vw);
+      opacity: 0;
+      pointer-events: none;
     }
     #igdm-center {
       min-width: 0 !important;
@@ -1720,6 +1719,14 @@ function injectDmResponsiveStyle() {
       display: flex;
       flex-direction: column;
       height: 100%;
+      /* No left offset, full width on open */
+    }
+    #igdm-threadlist {
+      max-height: 320px;
+      overflow-y: auto;
+      width: 100vw;
+      min-width: 0;
+      padding-bottom: 0.5em;
     }
     #igdm-sidenav > div, #igdm-sidenav > button {
       min-width: 0 !important;
@@ -1790,6 +1797,21 @@ let dmActiveUser = null;
 // Real-time DM thread list & highlight
 let liveThreadList = []; // List of {threadId, user, last, lastId}
 
+// UTILITY: check if on mobile view (700px, as in CSS)
+function isPmMobileView() {
+  return window.matchMedia("(max-width: 700px)").matches;
+}
+
+function setPmSidebarHidden(hide) {
+  const sidenav = document.getElementById("igdm-sidenav");
+  if (!sidenav) return;
+  if (hide) {
+    sidenav.classList.add("igdm-hide-sidebar");
+  } else {
+    sidenav.classList.remove("igdm-hide-sidebar");
+  }
+}
+
 async function loadInstagramDM(preselectThreadUser = null) {
   injectDmResponsiveStyle();
 
@@ -1804,7 +1826,7 @@ async function loadInstagramDM(preselectThreadUser = null) {
 
   tabs.pm.innerHTML = `
       <div id="igdm-wrap" style="display:flex;flex-direction:row;height:100%;background:#18181f;width:100%;">
-        <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;">
+        <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;transition:transform 0.28s cubic-bezier(.22,1,.36,1), opacity 0.20s cubic-bezier(.22,1,.36,1); will-change:transform,opacity;">
           <div style="padding:1.1em 1em 0.6em 1em;border-bottom:1px solid #262631;display:flex;align-items:center;">
             <span style="font-size:1.16em;font-weight:800;color:#ededed;letter-spacing:.02em;margin-right:.4em;">${currentUser}</span>
             <span id="igdm-user-avatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;display:inline-block;"></span>
@@ -1840,6 +1862,9 @@ async function loadInstagramDM(preselectThreadUser = null) {
   const searchInput = document.getElementById("igdm-search");
   const createMsgBtn = document.getElementById("igdm-create-msg-btn");
   let threadviewEmpty, threadviewReal;
+
+  // Store last openDmUser for responsive logic
+  window._lastPmSidebarForceShow = false;
 
   function getPmThreadElements() {
     threadviewEmpty = document.getElementById("igdm-threadview-empty");
@@ -2033,6 +2058,22 @@ function showInstagramDmThread(targetUser) {
   const threadviewReal = document.getElementById("igdm-threadview-real");
   if (!threadviewEmpty || !threadviewReal) return;
 
+  // ---- RESPONSIVE: Hide sidebar on mobile when entering a thread ----
+  if (isPmMobileView()) {
+    setPmSidebarHidden(!!targetUser);
+  } else {
+    setPmSidebarHidden(false);
+  }
+
+  // Optionally refocus search if closing
+  if (!targetUser && isPmMobileView()) {
+    // Focus threadlist search for usability
+    setTimeout(() => {
+      let search = document.getElementById("igdm-search");
+      if (search) search.focus();
+    }, 190);
+  }
+
   if (!targetUser) {
     threadviewEmpty.style.display = "";
     threadviewReal.style.display = "none";
@@ -2182,14 +2223,11 @@ function showInstagramDmThread(targetUser) {
 
         // PATCH: After sending, force-ensure sidebar updates NOW and the thread is scrolled into view
         refreshThreadsList(lastSearchValue);
-        // Optionally, put this thread at TOP after sending (handled by sorting of liveThreadList + refreshThreadsList)
       } catch (e) {
         // Don't show error popup anymore, silent fail (disable alert), unlock UI.
         input.disabled = false;
         form.querySelector('button[type="submit"]').disabled = false;
         sending = false;
-        // You may want to log error for debug:
-        // console.error("Üzenet küldése sikertelen (PM):", e);
       }
     };
   });
@@ -2239,6 +2277,10 @@ function renderInstagramThreadTopBar(targetUser, avatar) {
   document.getElementById("igdm-thread-back").onclick = function () {
     dmActiveUser = null;
     showInstagramDmThread(null);
+    // --- Show sidebar again on mobile when backing out of conversation
+    if (isPmMobileView()) {
+      setPmSidebarHidden(false);
+    }
   };
   if (window.feather) feather.replace({ elements: [top] });
 }
@@ -2354,6 +2396,21 @@ injectMainResponsiveStyle();
 
 initTabDisplay();
 if (window.feather) feather.replace();
+
+// --- EVENT: Adjust PM sidebar visibility on resize ---
+window.addEventListener('resize', function() {
+  // When resizing window, show/hide PM sidebar as needed
+  if (tabs.pm && tabs.pm.classList.contains('active')) {
+    // Only if the DM tab is present/rendered
+    if (isPmMobileView()) {
+      // If a thread is active, hide sidebar
+      setPmSidebarHidden(!!dmActiveUser);
+    } else {
+      // Always show sidebar in desktop/tablet view
+      setPmSidebarHidden(false);
+    }
+  }
+});
 </script>
 </body>
 </html>
