@@ -52,7 +52,12 @@
       justify-content: flex-start;
       background: var(--surface);
     }
-    #app-shell { display: flex; flex-direction: row; min-height: 100vh; width: 100vw;}
+    #app-shell {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      width: 100vw;
+    }
     .sidebar {
       width: var(--sidebar-width);
       min-width: var(--sidebar-width);
@@ -199,6 +204,8 @@
     }
     .tab-content { display: none; }
     .tab-content.active { display: flex; flex-direction: column; flex: 1 1 0%; }
+
+    /* Main Feed / Messages List */
     .feed-outer {
       display: flex;
       gap: 0;
@@ -227,6 +234,8 @@
       width: 100%;
       box-sizing: border-box;
     }
+
+    /* New message form */
     .main-message-form {
       display: flex;
       align-items: center;
@@ -260,6 +269,7 @@
     }
     .avatar-large { width: 48px; height: 48px; }
     .avatar { width: 47px; height: 47px; }
+
     .user-meta {
       display: flex;
       flex-direction: column;
@@ -327,7 +337,12 @@
       min-height: 38px;
       height: 44px;
     }
-    .main-message-form .send-btn:hover { background: #232324; color: #efefef;}
+    .main-message-form .send-btn:hover {
+      background: #232324;
+      color: #efefef;
+    }
+
+    /* Message list */
     .messages-area {
       margin-top: 18px;
       padding-bottom: 48px;
@@ -350,7 +365,12 @@
       box-shadow: 0 0.5px 6px #15151508;
       border: 1px solid #222224;
     }
-    .msg-mainblock { display: flex; flex-direction: column; flex: 1 1 0%; min-width: 0;}
+    .msg-mainblock {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0%;
+      min-width: 0;
+    }
     .msg-headerrow {
       display: flex;
       align-items: flex-start;
@@ -358,10 +378,27 @@
       width: 100%;
       min-width: 0;
     }
-    .msg-user { font-weight: 800; color: #cecece; font-size: 1.08rem; letter-spacing: 0.06em; user-select: text; text-transform: capitalize; margin-right: 7px; margin-top: 5px; margin-bottom: 0; display: block;}
+    .msg-user {
+      font-weight: 800;
+      color: #cecece;
+      font-size: 1.08rem;
+      letter-spacing: 0.06em;
+      user-select: text;
+      text-transform: capitalize;
+      margin-right: 7px;
+      margin-top: 5px;
+      margin-bottom: 0;
+      display: block;
+    }
     .msg-user[data-guest="1"] { color: #aaaaaa; font-weight: 500;}
     .msg-user:hover:not([data-guest="1"]) { text-decoration: underline; }
-    .msg-actions { display: flex; align-items: flex-start; gap: 0.5em; margin-left: 0.8em; margin-top: 4px;}
+    .msg-actions {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5em;
+      margin-left: 0.8em;
+      margin-top: 4px;
+    }
     .msg-delete-btn {
       background: none;
       border: none;
@@ -382,8 +419,28 @@
       background: rgba(60,20,20,0.06);
       opacity: 1;
     }
-    .msg-time { color: #767676; font-size: .98em; font-weight: 480; letter-spacing: .01em; text-align: left; margin: 2px 0 0 0; font-variant-numeric: tabular-nums; display: block;}
-    .msg-text { font-size: 1.11rem; color: #ededed; font-weight: 500; letter-spacing: 0.01em; line-height: 1.62; word-break: break-word; margin-left: 0; margin-top: 2px; flex: 1 1 0%;}
+    .msg-time {
+      color: #767676;
+      font-size: .98em;
+      font-weight: 480;
+      letter-spacing: .01em;
+      text-align: left;
+      margin: 2px 0 0 0;
+      font-variant-numeric: tabular-nums;
+      display: block;
+    }
+    .msg-text {
+      font-size: 1.11rem;
+      color: #ededed;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.62;
+      word-break: break-word;
+      margin-left: 0;
+      margin-top: 2px;
+      flex: 1 1 0%;
+    }
+
     .error-msg, .success-msg {
       font-size: 1rem;
       padding: 10px 16px;
@@ -395,9 +452,11 @@
       display: block;
       width: 100%;
     }
-    .error-msg { color: var(--error-color); background: var(--error-bg);}
-    .success-msg { color: var(--success-color); background: var(--success-bg);}
+    .error-msg { color: var(--error-color); background: var(--error-bg); }
+    .success-msg { color: var(--success-color); background: var(--success-bg); }
     .hide { display: none !important; }
+
+    /* Modal */
     #overlay-blur {
       position: fixed;
       z-index: 99;
@@ -410,8 +469,10 @@
       display: flex;
       align-items: center; justify-content: center;
     }
-    #overlay-blur.hide { display: none !important;}
-    #delete-modal, #logout-modal, #settings-modal {
+    #overlay-blur.hide {
+      display: none !important;
+    }
+    #delete-modal {
       min-width: 312px;
       background: #19191a;
       color: #ececec;
@@ -430,31 +491,27 @@
       from { transform: translateY(28px) scale(.92); opacity: 0.3;}
       to   { transform: none; opacity: 1;}
     }
-    #delete-modal h4, #logout-modal h4, #settings-modal h4 {
+    #delete-modal h4 {
       color: #ffcfcf;
       font-size: 1.16em;
       margin: 0 0 14px 0;
       font-weight: bold;
       letter-spacing: .02em;
     }
-    #delete-modal .dm-msg, #logout-modal .dm-msg {
+    #delete-modal .dm-msg {
       color: #beb1b1;
       font-size: 1.07em;
       margin-bottom: 21px;
       margin-top: 5px;
       line-height: 1.55;
     }
-    #delete-modal .modal-btns,
-    #logout-modal .modal-btns,
-    #settings-modal .modal-btns {
+    #delete-modal .modal-btns {
       display: flex;
       justify-content: center;
       gap: 18px;
       margin: 0; padding: 0;
     }
-    #delete-modal button,
-    #logout-modal button,
-    #settings-modal button {
+    #delete-modal button {
       min-width: 92px;
       font-size: 1.04em;
       border: none;
@@ -465,12 +522,41 @@
       margin: 0 2px;
       transition: background .12s, color .13s;
     }
-    #delete-modal .modal-btn-cancel, #logout-modal .modal-btn-cancel, #settings-modal .modal-btn-cancel { background: #232325; color: #dfdfdf; border: 1.3px solid #343;}
-    #delete-modal .modal-btn-cancel:hover, #logout-modal .modal-btn-cancel:hover, #settings-modal .modal-btn-cancel:hover { color: #fff; background: #2c2c2c;}
-    #delete-modal .modal-btn-del, #logout-modal .modal-btn-del { background: #970606; color: #fff7f7; border: 1.6px solid #b14d4d;}
-    #delete-modal .modal-btn-del:hover, #logout-modal .modal-btn-del:hover { background: #d21d1d; color: #fff; border-color: #a81a1a;}
-    .auth-container { background: var(--surface-2); border-radius: var(--radius); border: 1.5px solid #232323; padding: 32px 38px 24px 38px; margin: 48px auto 0 auto; box-shadow: 0 1px 20px -8px #16161613; max-width: 410px; width: 97vw; min-width: 0;}
-    .input-group { display: flex; flex-direction: column; margin-bottom: 17px; gap: 3px;}
+    #delete-modal .modal-btn-cancel {
+      background: #232325;
+      color: #dfdfdf;
+      border: 1.3px solid #343;
+    }
+    #delete-modal .modal-btn-cancel:hover { color: #fff; background: #2c2c2c;}
+    #delete-modal .modal-btn-del {
+      background: #970606;
+      color: #fff7f7;
+      border: 1.6px solid #b14d4d;
+    }
+    #delete-modal .modal-btn-del:hover {
+      background: #d21d1d;
+      color: #fff;
+      border-color: #a81a1a;
+    }
+
+    /* Auth / Profile, Forms */
+    .auth-container {
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      border: 1.5px solid #232323;
+      padding: 32px 38px 24px 38px;
+      margin: 48px auto 0 auto;
+      box-shadow: 0 1px 20px -8px #16161613;
+      max-width: 410px;
+      width: 97vw;
+      min-width: 0;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 17px;
+      gap: 3px;
+    }
     .input-group label {
       font-size: .97em;
       font-weight: 540;
@@ -478,7 +564,10 @@
       margin-bottom: 2.5px;
       letter-spacing: 0.005em;
     }
-    .input-group input[type="text"], .input-group input[type="file"], .input-group input[type="password"], .input-group textarea {
+    .input-group input[type="text"],
+    .input-group input[type="file"],
+    .input-group input[type="password"],
+    .input-group textarea {
       width: 100%;
       border: 1.2px solid var(--input-border);
       background: var(--input-bg);
@@ -492,7 +581,8 @@
       font-family: inherit;
       box-sizing: border-box;
     }
-    .input-group input:focus, .input-group textarea:focus {
+    .input-group input:focus,
+    .input-group textarea:focus {
       border-color: #333;
       background: #191919;
       box-shadow: 0 0.5px 8px #20202033;
@@ -524,14 +614,19 @@
       letter-spacing: .09em;
       transition: background .12s, color .13s;
     }
-    .auth-container button:hover { background: #303032; color: #fff;}
+    .auth-container button:hover {
+      background: #303032;
+      color: #fff;
+    }
     .profile-section-buttons {
       display: flex;
       gap: 12px;
       margin-top: 18px;
       justify-content: center;
     }
-    .edit-profile-btn, .profile-pm-btn, .logout-btn {
+    .edit-profile-btn,
+    .profile-pm-btn,
+    .logout-btn {
       background: none;
       color: #ccc;
       border: 1.2px solid #363636;
@@ -547,6 +642,7 @@
       color: #fff;
       border-color: #232324;
     }
+    /* PM section styling */
     #pm-tab-content .card {
       max-width: 570px;
       margin: 38px auto 0 auto;
@@ -554,15 +650,66 @@
       background: var(--pm-surface);
       border: 1.6px solid #2c2c2c;
     }
-    #pm-userlist { margin-bottom: 1.6em; margin-top: 0.8em; display: flex; flex-wrap: wrap; gap: 11px; justify-content: start;}
-    #pm-userlist button { font-size: 1.04rem; background: #242424; color: #c2c2c2; border: 1px solid #303030; border-radius: 12px; padding: 10px 19px; font-weight: 600; cursor: pointer; transition: background .1s, color .12s;}
+    #pm-userlist {
+      margin-bottom: 1.6em;
+      margin-top: 0.8em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      justify-content: start;
+    }
+    #pm-userlist button {
+      font-size: 1.04rem;
+      background: #242424;
+      color: #c2c2c2;
+      border: 1px solid #303030;
+      border-radius: 12px;
+      padding: 10px 19px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .1s, color .12s;
+    }
     #pm-userlist button:hover { background: #1b1b1d; color: #fff;}
-    #pm-thread-area { margin-top: 10px; min-height: 120px; }
-    #pmthread-messages { background: var(--pm-thread-bg); border-radius: 15px; padding: 18px 8px 12px 18px; min-height: 86px; margin-bottom: 1.4em; max-height: 320px; overflow-y: auto; width: 100%;}
-    #pmthread-messages .pm-message { display: flex; gap: 8px; align-items: center; margin-bottom: 7px;}
-    #pmthread-messages .pm-author { min-width: 57px; font-weight: 700; color: #bbbbbb; font-size: 1.02em;}
-    #pmthread-messages .pm-text { background: #19191c; color: #fafafd; border-radius: 9px; padding: 9px 19px 10px 14px; display: inline-block; font-size: 1.13em; font-weight: 570;}
-    .mobile-navbar { display: none;}
+    #pm-thread-area {
+      margin-top: 10px;
+      min-height: 120px;
+    }
+    #pmthread-messages {
+      background: var(--pm-thread-bg);
+      border-radius: 15px;
+      padding: 18px 8px 12px 18px;
+      min-height: 86px;
+      margin-bottom: 1.4em;
+      max-height: 320px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    #pmthread-messages .pm-message {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    #pmthread-messages .pm-author {
+      min-width: 57px;
+      font-weight: 700;
+      color: #bbbbbb;
+      font-size: 1.02em;
+    }
+    #pmthread-messages .pm-text {
+      background: #19191c;
+      color: #fafafd;
+      border-radius: 9px;
+      padding: 9px 19px 10px 14px;
+      display: inline-block;
+      font-size: 1.13em;
+      font-weight: 570;
+    }
+
+    /* --- MOBILE NAVBAR --- */
+    .mobile-navbar {
+      display: none;
+    }
     @media (max-width: 900px) {
       .feed-outer { flex-direction: column; gap: 0; }
       .feed-col { min-width: 0; max-width: 99vw;}
@@ -620,7 +767,9 @@
         background: #232323;
         color: #bbb;
       }
-      body { padding-bottom: var(--mobnav-height);}
+      body {
+        padding-bottom: var(--mobnav-height);
+      }
     }
   </style>
   <script src="https://unpkg.com/feather-icons"></script>
@@ -637,6 +786,7 @@
     <button class="nav-btn" id="tab-login" title="Belépés"><i data-feather="log-in"></i></button>
     <button class="nav-btn" id="tab-register" title="Regisztráció"><i data-feather="user-plus"></i></button>
   </div>
+  <!-- MOBILE NAV FOR PHONES -->
   <nav class="mobile-navbar" id="mobile-navbar">
     <button class="nav-btn selected" id="tab-main-mobile" title="Főoldal"><i data-feather="message-square"></i></button>
     <button class="nav-btn" id="tab-pm-mobile" title="Privát üzenetek"><i data-feather="send"></i></button>
@@ -650,6 +800,7 @@
     <div class="header-bar">
       <div class="header-title">Wall</div>
     </div>
+    <!-- SEARCH BAR ONLY ON MAIN TAB -->
     <div class="main-search-bar-wrapper" id="main-search-bar-wrapper" style="">
       <form id="main-search-form" class="main-search-bar" autocomplete="off" onsubmit="return false;">
         <span class="search-icon"><i data-feather="search"></i></span>
@@ -669,7 +820,9 @@
           <div class="card">
             <form id="msg-form" class="main-message-form" autocomplete="off">
               <div id="main-profile-view" style="display:none;">
-                <span id="user-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;"></span>
+                <span id="user-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;">
+                  <!-- User/Guest avatar/image -- JS will handle -->
+                </span>
                 <div class="user-meta">
                   <div id="user-name-view"></div>
                 </div>
@@ -696,11 +849,14 @@
         </div>
       </div>
     </div>
+
     <!-- PROFILE TAB -->
     <div class="tab-content" id="profile-tab-content">
       <div class="auth-container" id="profile-tab-card">
         <div class="profile-view" id="profile-view-main">
-          <span id="profile-tab-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;"></span>
+          <span id="profile-tab-avatar" class="avatar avatar-large" style="display:none;justify-content: center;align-items: center;background: #0e0e15;display: flex;">
+            <!-- User/Guest avatar/image -- JS will handle -->
+          </span>
           <div id="profile-tab-name"></div>
           <div class="profile-section-buttons">
             <button class="edit-profile-btn" id="edit-profile-btn">Profil szerk.</button>
@@ -727,6 +883,7 @@
         </div>
       </div>
     </div>
+
     <!-- PM TAB -->
     <div class="tab-content" id="pm-tab-content">
       <div class="card" id="pm-card">
@@ -737,44 +894,17 @@
         <div class="error-msg hide" id="pm-error"></div>
       </div>
     </div>
+
     <!-- SETTINGS TAB -->
     <div class="tab-content" id="settings-tab-content">
       <div class="auth-container" id="settings-card">
         <h3>Beállítások</h3>
-        <form id="settings-form" autocomplete="off" style="max-width:400px;margin:0 auto;">
-          <div class="input-group" id="theme-select-group">
-            <label>
-              <span style="font-weight: 520; color:#c7c7c7;">Sötét mód:</span>
-              <select id="theme-select" style="margin-left:9px;">
-                <option value="system">Rendszer alapértelmezett</option>
-                <option value="dark">Sötét</option>
-                <option value="light">Világos</option>
-              </select>
-            </label>
-          </div>
-          <div class="input-group" style="display:none;" id="settings-hide-guest-group">
-            <!-- Vendég üzenetek elrejtése SOR elrejtve! -->
-            <label>
-              <input type="checkbox" id="settings-hide-guest" style="width:1.1em; height:1.1em;margin-right:8px;">
-              <span style="font-weight:500;color:#b5b5b5;font-size:1em;">Vendég üzenetek elrejtése</span>
-            </label>
-          </div>
-          <div class="input-group" style="margin-bottom:10px;">
-            <label>
-              <input type="checkbox" id="settings-notif-sound" style="width:1.1em; height:1.1em;margin-right:8px;" disabled>
-              <span style="font-weight:500;color:#b5b5b5;font-size:1em;">Device értesítés új üzenetnél</span>
-            </label>
-          </div>
-          <button type="submit">Mentés</button>
-        </form>
-        <div class="success-msg hide" id="settings-success"></div>
-        <div class="error-msg hide" id="settings-error"></div>
-        <hr style="margin:2.5em 0 1.4em 0; opacity:.09;">
         <div style="color:#b5b5b5; text-align:center;">
-          <span style="font-size:.98em;">Egyéb: <span id="settings-version" style="color:#aaa"></span></span>
+          <em>Beállítások tartalom ide jön majd...</em>
         </div>
       </div>
     </div>
+
     <!-- REGISTRATION TAB -->
     <div class="tab-content" id="register-tab-content">
       <div class="auth-container" id="register-card">
@@ -794,6 +924,7 @@
         </form>
       </div>
     </div>
+
     <!-- LOGIN TAB -->
     <div class="tab-content" id="login-tab-content">
       <div class="auth-container" id="login-card">
@@ -818,15 +949,17 @@
         </form>
       </div>
     </div>
+    <!-- Overlay for modal -->
     <div id="overlay-blur" class="hide"></div>
   </main>
 </div>
 <script type="module">
-// -- original javascript, MODIFIED for dark mode, device notif, and NO guest msg hider! --
+// -- original javascript, MODIFIED for delete and UI/guest requirements --
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, get, child, update, remove }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// --- Firebase config (unchanged, see original) ---
 const firebaseConfig = {
   apiKey: "AIzaSyC3Cgmy41qLWLy-HLVAyn1QFejdlflUnSY",
   authDomain: "website-26acc.firebaseapp.com",
@@ -838,8 +971,17 @@ const firebaseConfig = {
   measurementId: "G-P4XTEHXV4C"
 };
 
-// Simple hash function
-function hash(str) { let hash = 0, i, chr; if (str.length === 0) return hash; for (i = 0; i < str.length; i++) { chr = str.charCodeAt(i); hash = ((hash<<5)-hash)+chr; hash |= 0;} return Math.abs(hash).toString(36); }
+// --- Simple hash ---
+function hash(str) {
+  let hash = 0, i, chr;
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -851,80 +993,19 @@ let currentUser = null;
 let currentAvatar = '';
 let guestMode = true;
 let currentTab = "main";
-let rememberMe = true;
+let rememberMe = true; // default true
 
-const SETTINGS_KEY = "wallSettings";
-const settingsDefaults = {
-  theme: "system",
-  notifSound: false,
-};
-let wallSettings = {};
-function getSettings() {
-  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {...settingsDefaults}; }
-  catch(e) { return {...settingsDefaults}; }
-}
-function saveSettings() {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(wallSettings));
-}
-function applySettings(reRenderMessages = false) {
-  let theme = wallSettings.theme || "system";
-  if (theme === "system") {
-    document.documentElement.removeAttribute("data-theme");
-    document.body.style.background = "";
-  } else if (theme === "dark") {
-    document.documentElement.setAttribute("data-theme", "dark");
-    document.body.style.background = "#18181c";
-  } else if (theme === "light") {
-    document.documentElement.setAttribute("data-theme", "light");
-    document.body.style.background = "#fbfbfb";
-  }
-  const themeSel = document.getElementById("theme-select");
-  if (themeSel) themeSel.value = theme;
-
-  // Display settings in checkboxes if shown (only NOTIF---no guest hider!)
-  const chHideGuest = document.getElementById("settings-hide-guest");
-  const g = document.getElementById('settings-hide-guest-group');
-  if (chHideGuest && g) { g.style.display = "none"; } // Always hidden
-  const chNotif = document.getElementById("settings-notif-sound");
-  if (chNotif) {
-    chNotif.checked = false;
-    chNotif.disabled = true;
-  }
-}
-// Run at load/init:
-wallSettings = getSettings();
-applySettings();
-document.addEventListener("DOMContentLoaded",()=>{
-  const settingsForm = document.getElementById("settings-form");
-  if(settingsForm){
-    applySettings();
-    const vspan = document.getElementById("settings-version");
-    if (vspan){ vspan.textContent = "1.0.0"; }
-    settingsForm.onsubmit = function(e){
-      e.preventDefault();
-      wallSettings.theme = document.getElementById("theme-select").value;
-      // Prevent enabling notification sound setting; always keep false and disabled.
-      wallSettings.notifSound = false;
-      saveSettings();
-      applySettings(true);
-      document.getElementById("settings-success").textContent = "Elmentve!";
-      document.getElementById("settings-success").classList.remove("hide");
-      setTimeout(()=>document.getElementById("settings-success").classList.add("hide"), 900);
-    };
-  }
-});
-if(window.matchMedia){
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){
-    wallSettings = getSettings();
-    if(wallSettings.theme==="system") applySettings();
-  });
-}
-
-// ---- NEW: RESTORE LOGIN IF REMEMBERED ON PAGE LOAD ----
 function tryRestoreLogin() {
   let userObj = null;
-  if (localStorage.getItem("wallUser")) { try { userObj = JSON.parse(localStorage.getItem("wallUser")); } catch(e) {} }
-  else if (sessionStorage.getItem("wallUser")) { try { userObj = JSON.parse(sessionStorage.getItem("wallUser")); } catch(e) {} }
+  if (localStorage.getItem("wallUser")) {
+    try {
+      userObj = JSON.parse(localStorage.getItem("wallUser"));
+    } catch (e) { }
+  } else if (sessionStorage.getItem("wallUser")) {
+    try {
+      userObj = JSON.parse(sessionStorage.getItem("wallUser"));
+    } catch (e) { }
+  }
   if (userObj && userObj.username) {
     currentUser = userObj.username;
     currentAvatar = userObj.avatar || "";
@@ -934,6 +1015,8 @@ function tryRestoreLogin() {
 tryRestoreLogin();
 
 let searchTerm = "";
+
+// --- Sidebar, Tabs, Nav ---
 const tabs = {
   main: document.getElementById("main-tab-content"),
   pm: document.getElementById("pm-tab-content"),
@@ -951,6 +1034,7 @@ const tabBtns = {
   login: document.getElementById("tab-login"),
   logout: document.getElementById("tab-logout")
 };
+
 const mobBtns = {
   main: document.getElementById("tab-main-mobile"),
   pm: document.getElementById("tab-pm-mobile"),
@@ -960,6 +1044,7 @@ const mobBtns = {
   login: document.getElementById("tab-login-mobile"),
   logout: document.getElementById("tab-logout-mobile")
 };
+
 function showTab(tabKey) {
   for (let k in tabs) tabs[k].classList.remove("active");
   tabs[tabKey].classList.add("active");
@@ -969,27 +1054,39 @@ function showTab(tabKey) {
   if (mobBtns[tabKey]) mobBtns[tabKey].classList.add("selected");
   currentTab = tabKey;
   const searchBarWrap = document.getElementById("main-search-bar-wrapper");
-  if (searchBarWrap) { searchBarWrap.style.display = tabKey === "main" ? "" : "none"; }
-  if (tabKey === "profile") { showProfileMainView(); }
-  if(tabKey === "pm") { loadPmUserList(); }
+  if (searchBarWrap) {
+    if (tabKey === "main") {
+      searchBarWrap.style.display = "";
+    } else {
+      searchBarWrap.style.display = "none";
+    }
+  }
+  if (tabKey === "profile") {
+    showProfileMainView();
+  }
+  if (tabKey === "pm") {
+    loadInstagramDM();
+  }
   updateHeaderBtns();
   updateMobileNavBtns();
   updateMainMsgFormDisplay();
 }
+
 tabBtns.main.onclick = () => showTab("main");
 tabBtns.profile.onclick = () => showTab("profile");
 tabBtns.pm.onclick = () => showTab("pm");
 tabBtns.settings.onclick = () => showTab("settings");
 tabBtns.register.onclick = () => showTab("register");
 tabBtns.login.onclick = () => showTab("login");
-tabBtns.logout.onclick = () => { showLogoutConfirmModal(); };
-mobBtns.logout.onclick = () => { showLogoutConfirmModal(); };
+tabBtns.logout.onclick = () => { logout(); };
+
 mobBtns.main.onclick = () => showTab("main");
 mobBtns.profile.onclick = () => showTab("profile");
 mobBtns.pm.onclick = () => showTab("pm");
 mobBtns.settings.onclick = () => showTab("settings");
 mobBtns.register.onclick = () => showTab("register");
 mobBtns.login.onclick = () => showTab("login");
+mobBtns.logout.onclick = () => { logout(); };
 
 const userAvatarView = document.getElementById("user-avatar");
 const userNameView = document.getElementById("user-name-view");
@@ -998,22 +1095,22 @@ const profileTabName = document.getElementById("profile-tab-name");
 const editProfileBtn = document.getElementById("edit-profile-btn");
 const editProfileSection = document.getElementById("edit-profile-section");
 const profileViewMain = document.getElementById("profile-view-main");
-const mainProfileView = document.getElementById('main-profile-view');
-const guestMainForm = document.getElementById('guest-main-form');
+const mainProfileView = document.getElementById("main-profile-view");
+const guestMainForm = document.getElementById("guest-main-form");
 const messagesArea = document.getElementById("messages");
 const pmUserlist = document.getElementById("pm-userlist");
 const pmThreadArea = document.getElementById("pm-thread-area");
 const overlayBlur = document.getElementById("overlay-blur");
 
-// --- SEARCH ---
 const mainSearchInput = document.getElementById("main-search-input");
 if (mainSearchInput) {
-  mainSearchInput.addEventListener("input", function() {
+  mainSearchInput.addEventListener("input", function () {
     searchTerm = mainSearchInput.value.trim();
     renderMessages(lastMsgArr);
   });
 }
 
+// --- Modal for confirm delete (unchanged) ---
 function showDeleteModal(messageId, contentText) {
   overlayBlur.innerHTML = `
     <div id="delete-modal">
@@ -1026,16 +1123,16 @@ function showDeleteModal(messageId, contentText) {
     </div>
   `;
   overlayBlur.classList.remove("hide");
-  setTimeout(()=>{ 
+  setTimeout(() => {
     const cancelBtn = document.getElementById("modal-cancel-btn");
-    if(cancelBtn) cancelBtn.focus();
-  },60);
+    if (cancelBtn) cancelBtn.focus();
+  }, 60);
   document.getElementById("modal-cancel-btn").onclick = hideDeleteModal;
-  document.getElementById("modal-delete-btn").onclick = async function() {
+  document.getElementById("modal-delete-btn").onclick = async function () {
     try {
       await remove(child(messagesRef, messageId));
       hideDeleteModal();
-    } catch(e) {
+    } catch (e) {
       alert("Nem sikerült törölni az üzenetet.");
       hideDeleteModal();
     }
@@ -1048,39 +1145,11 @@ function hideDeleteModal() {
   window.removeEventListener("keydown", handleModalEsc);
 }
 function handleModalEsc(e) {
-  if(e.key === "Escape") {
+  if (e.key === "Escape") {
     hideDeleteModal();
-    hideLogoutModal();
   }
 }
-function showLogoutConfirmModal() {
-  overlayBlur.innerHTML = `
-    <div id="logout-modal">
-      <h4>Kijelentkezés</h4>
-      <div class="dm-msg">Biztos kijelentkezel?</div>
-      <div class="modal-btns">
-        <button class="modal-btn-cancel" id="logout-cancel-btn">Mégsem</button>
-        <button class="modal-btn-del" id="logout-do-btn">Kijelentkezés</button>
-      </div>
-    </div>
-  `;
-  overlayBlur.classList.remove("hide");
-  setTimeout(()=>{ 
-    const cancelBtn = document.getElementById("logout-cancel-btn");
-    if(cancelBtn) cancelBtn.focus();
-  },60);
-  document.getElementById("logout-cancel-btn").onclick = hideLogoutModal;
-  document.getElementById("logout-do-btn").onclick = function() {
-    hideLogoutModal();
-    logout();
-  };
-  window.addEventListener("keydown", handleModalEsc);
-}
-function hideLogoutModal() {
-  overlayBlur.classList.add("hide");
-  overlayBlur.innerHTML = '';
-  window.removeEventListener("keydown", handleModalEsc);
-}
+
 function updateHeaderBtns() {
   if (guestMode) {
     tabBtns.main.style.display = "";
@@ -1119,6 +1188,7 @@ function updateMobileNavBtns() {
     mobBtns.login.style.display = "none";
   }
 }
+
 function updateMainMsgFormDisplay() {
   const msgForm = document.getElementById("msg-form");
   const msgInput = msgForm.querySelector('input[type="text"]');
@@ -1140,13 +1210,13 @@ function showUserOrGuestAvatar(avatarElem, name, avatarStr, isGuest) {
     avatarElem.style.background = "#15141b";
     avatarElem.style.display = "flex";
     const icon = document.createElement('i');
-    icon.setAttribute('data-feather','user');
+    icon.setAttribute('data-feather', 'user');
     icon.style.width = "32px";
     icon.style.height = "32px";
     icon.style.margin = "auto";
     icon.style.color = "#868698";
     avatarElem.appendChild(icon);
-    if(window.feather) feather.replace({ elements: [avatarElem] });
+    if (window.feather) feather.replace({ elements: [avatarElem] });
   } else if (avatarStr && avatarStr.length > 10) {
     avatarElem.style.background = "#111";
     const img = document.createElement('img');
@@ -1161,13 +1231,13 @@ function showUserOrGuestAvatar(avatarElem, name, avatarStr, isGuest) {
     avatarElem.style.background = "#181824";
     avatarElem.style.display = "flex";
     const icon = document.createElement('i');
-    icon.setAttribute('data-feather','user');
+    icon.setAttribute('data-feather', 'user');
     icon.style.width = "32px";
     icon.style.height = "32px";
     icon.style.margin = "auto";
     icon.style.color = "#868698";
     avatarElem.appendChild(icon);
-    if(window.feather) feather.replace({ elements: [avatarElem] });
+    if (window.feather) feather.replace({ elements: [avatarElem] });
   }
 }
 function updateProfileBar() {
@@ -1188,15 +1258,20 @@ function showProfileMainView() {
     tabs.profile.innerHTML = `<div class="auth-container"><div style="text-align:center; color:#ababab;">Bejelentkezés szükséges a profilhoz.</div></div>`;
   }
 }
-editProfileBtn.onclick = function() {
+
+editProfileBtn.onclick = function () {
   editProfileSection.style.display = "";
   profileViewMain.style.display = "none";
   document.getElementById('profile-error').classList.add('hide');
   document.getElementById('profile-success').classList.add('hide');
   document.getElementById('edit-username').value = currentUser || "";
 };
-document.getElementById('cancel-edit-btn').onclick = function() { showProfileMainView(); };
-document.getElementById('edit-profile-form').onsubmit = async function(e) {
+
+document.getElementById('cancel-edit-btn').onclick = function () {
+  showProfileMainView();
+};
+
+document.getElementById('edit-profile-form').onsubmit = async function (e) {
   e.preventDefault();
   const avatarFile = document.getElementById('edit-avatar-file').files[0];
   const newUsernameInput = document.getElementById('edit-username').value.trim();
@@ -1205,6 +1280,7 @@ document.getElementById('edit-profile-form').onsubmit = async function(e) {
   const successDiv = document.getElementById('profile-success');
   errorDiv.classList.add('hide');
   successDiv.classList.add('hide');
+
   if (newUsernameInput.length < 3) {
     errorDiv.textContent = "Minimum 3 karakter!";
     errorDiv.classList.remove('hide');
@@ -1214,14 +1290,15 @@ document.getElementById('edit-profile-form').onsubmit = async function(e) {
     const usersSnap = await get(usersRef);
     let userExists = false;
     usersSnap.forEach(childSnap => {
-      if(childSnap.key.toLowerCase() === newUsernameInput.toLowerCase()) userExists = true;
+      if (childSnap.key.toLowerCase() === newUsernameInput.toLowerCase()) userExists = true;
     });
-    if(userExists) {
+    if (userExists) {
       errorDiv.textContent = "Ez a név foglalt!";
       errorDiv.classList.remove('hide');
       return;
     }
   }
+
   if (avatarFile) {
     if (!avatarFile.type.startsWith('image/')) {
       errorDiv.textContent = "Csak képet tölts fel!";
@@ -1250,16 +1327,20 @@ document.getElementById('edit-profile-form').onsubmit = async function(e) {
     }
     successDiv.textContent = "Elmentve!";
     successDiv.classList.remove('hide');
-    setTimeout(() => { showProfileMainView(); }, 1000);
+    setTimeout(() => {
+      showProfileMainView();
+    }, 1000);
   } catch (e) {
     errorDiv.textContent = "Mentés sikertelen.";
     errorDiv.classList.remove('hide');
   }
 };
 
-document.getElementById('msg-form').onsubmit = async function(e) {
+document.getElementById('msg-form').onsubmit = async function (e) {
   e.preventDefault();
-  const msgField = guestMode ? document.getElementById('guest-message') : document.getElementById('message');
+  const msgField = guestMode
+    ? document.getElementById('guest-message')
+    : document.getElementById('message');
   const msg = msgField.value.trim();
   document.getElementById('msg-error').classList.add('hide');
   document.getElementById('msg-success').classList.add('hide');
@@ -1280,8 +1361,8 @@ document.getElementById('msg-form').onsubmit = async function(e) {
       msgField.value = "";
       document.getElementById('msg-success').textContent = "Küldve!";
       document.getElementById('msg-success').classList.remove('hide');
-      setTimeout(()=>{ document.getElementById('msg-success').classList.add('hide'); }, 900);
-    } catch(e) {
+      setTimeout(() => { document.getElementById('msg-success').classList.add('hide'); }, 900);
+    } catch (e) {
       document.getElementById('msg-error').textContent = "Hiba küldéskor!";
       document.getElementById('msg-error').classList.remove('hide');
     }
@@ -1302,14 +1383,14 @@ document.getElementById('msg-form').onsubmit = async function(e) {
     msgField.value = "";
     document.getElementById('msg-success').textContent = "Küldve!";
     document.getElementById('msg-success').classList.remove('hide');
-    setTimeout(()=>{ document.getElementById('msg-success').classList.add('hide'); }, 900);
-  } catch(e) {
+    setTimeout(() => { document.getElementById('msg-success').classList.add('hide'); }, 900);
+  } catch (e) {
     document.getElementById('msg-error').textContent = "Hiba küldéskor!";
     document.getElementById('msg-error').classList.remove('hide');
   }
 };
 
-document.getElementById('register-form').onsubmit = async function(e) {
+document.getElementById('register-form').onsubmit = async function (e) {
   e.preventDefault();
   const uname = document.getElementById('reg-username').value.trim();
   const pwd = document.getElementById('reg-password').value.trim();
@@ -1320,12 +1401,12 @@ document.getElementById('register-form').onsubmit = async function(e) {
   regSuccess.textContent = '';
   regSuccess.classList.add('hide');
 
-  if(uname.length < 3) {
+  if (uname.length < 3) {
     regError.textContent = "Felhasználónév 3+ karakter!";
     regError.classList.remove('hide');
     return;
   }
-  if(pwd.length < 5) {
+  if (pwd.length < 5) {
     regError.textContent = "Jelszó 5+ karakter!";
     regError.classList.remove('hide');
     return;
@@ -1333,9 +1414,9 @@ document.getElementById('register-form').onsubmit = async function(e) {
   const usersSnap = await get(usersRef);
   let userExists = false;
   usersSnap.forEach(childSnap => {
-    if(childSnap.key.toLowerCase() === uname.toLowerCase()) userExists = true;
+    if (childSnap.key.toLowerCase() === uname.toLowerCase()) userExists = true;
   });
-  if(userExists) {
+  if (userExists) {
     regError.textContent = "Felhasználónév foglalt!";
     regError.classList.remove('hide');
     return;
@@ -1359,7 +1440,7 @@ const loginRememberMeCheckbox = document.getElementById('login-rememberme');
 if (loginRememberMeCheckbox) {
   loginRememberMeCheckbox.checked = true;
   rememberMe = true;
-  loginRememberMeCheckbox.addEventListener('change', function() {
+  loginRememberMeCheckbox.addEventListener('change', function () {
     rememberMe = !!loginRememberMeCheckbox.checked;
   });
 }
@@ -1368,37 +1449,44 @@ function tryPrefillLoginForm() {
   const pwdInput = document.getElementById('login-password');
   if (unameInput && pwdInput) {
     let autofill = null;
-    if(localStorage.getItem("wallUser_prefs")) {
-      try { autofill = JSON.parse(localStorage.getItem("wallUser_prefs")); } catch(e) {}
+    if (localStorage.getItem("wallUser_prefs")) {
+      try {
+        autofill = JSON.parse(localStorage.getItem("wallUser_prefs"));
+      } catch (e) { }
     }
     if (autofill && autofill.uname) {
       unameInput.value = autofill.uname;
     }
   }
 }
-tabs.login && (new MutationObserver( m=>{
-  if(tabs.login.classList.contains('active')) setTimeout(tryPrefillLoginForm,0);
+tabs.login && (new MutationObserver(m => {
+  if (tabs.login.classList.contains('active')) setTimeout(tryPrefillLoginForm, 0);
 })).observe(tabs.login, { attributes: true, attributeFilter: ['class'] });
-loginFormElem.onsubmit = async function(e) {
+
+loginFormElem.onsubmit = async function (e) {
   e.preventDefault();
   const uname = document.getElementById('login-username').value.trim();
   const pwd = document.getElementById('login-password').value.trim();
   const loginError = document.getElementById('login-error');
   loginError.textContent = '';
   loginError.classList.add('hide');
-  try { localStorage.setItem('wallUser_prefs', JSON.stringify({ uname })); } catch(e){}
+  try {
+    localStorage.setItem('wallUser_prefs', JSON.stringify({ uname }));
+  } catch (e) { }
   const usersSnap = await get(usersRef);
   let found = false;
   usersSnap.forEach(childSnap => {
-    if(childSnap.key.toLowerCase() === uname.toLowerCase()) { found = childSnap.val();}
+    if (childSnap.key.toLowerCase() === uname.toLowerCase()) {
+      found = childSnap.val();
+    }
   });
-  if(!found) {
+  if (!found) {
     loginError.textContent = "Hibás adat!";
     loginError.classList.remove('hide');
     clearLoginStorage();
     return;
   }
-  if(found.password !== hash(pwd)) {
+  if (found.password !== hash(pwd)) {
     loginError.textContent = "Hibás adat!";
     loginError.classList.remove('hide');
     clearLoginStorage();
@@ -1407,13 +1495,32 @@ loginFormElem.onsubmit = async function(e) {
   currentUser = found.username;
   currentAvatar = found.avatar;
   guestMode = false;
-  if (loginRememberMeCheckbox && loginRememberMeCheckbox.checked) { saveCurrentUserToStorage(); }
-  else { saveCurrentUserToSession(); }
+  if (loginRememberMeCheckbox && loginRememberMeCheckbox.checked) {
+    saveCurrentUserToStorage();
+  } else {
+    saveCurrentUserToSession();
+  }
   showTab("main");
 };
-function saveCurrentUserToStorage() { try { localStorage.setItem("wallUser", JSON.stringify({username: currentUser, avatar: currentAvatar || ""})); sessionStorage.removeItem("wallUser"); } catch(e){} }
-function saveCurrentUserToSession() { try { sessionStorage.setItem("wallUser", JSON.stringify({username: currentUser, avatar: currentAvatar || ""})); localStorage.removeItem("wallUser"); } catch(e){} }
-function clearLoginStorage() { try { localStorage.removeItem("wallUser"); sessionStorage.removeItem("wallUser"); } catch(e){} }
+function saveCurrentUserToStorage() {
+  try {
+    localStorage.setItem("wallUser", JSON.stringify({ username: currentUser, avatar: currentAvatar || "" }));
+    sessionStorage.removeItem("wallUser");
+  } catch (e) { }
+}
+function saveCurrentUserToSession() {
+  try {
+    sessionStorage.setItem("wallUser", JSON.stringify({ username: currentUser, avatar: currentAvatar || "" }));
+    localStorage.removeItem("wallUser");
+  } catch (e) { }
+}
+function clearLoginStorage() {
+  try {
+    localStorage.removeItem("wallUser");
+    sessionStorage.removeItem("wallUser");
+  } catch (e) { }
+}
+
 function logout() {
   currentUser = null;
   currentAvatar = '';
@@ -1424,35 +1531,42 @@ function logout() {
 
 function formatTimeHM(ts) {
   if (!ts) return "";
-  const d = new Date(ts); let hours = d.getHours(); let mins = d.getMinutes(); let pm = '';
-  if (hours === 0) { hours = 12; pm = "AM";}
-  else if (hours < 12) { pm = "AM"; }
-  else if (hours === 12) { pm = "PM"; }
-  else { pm = "PM"; hours = hours % 12;}
+  const d = new Date(ts);
+  let hours = d.getHours();
+  let mins = d.getMinutes();
+  let pm = '';
+  if (hours === 0) {
+    hours = 12; pm = "AM";
+  } else if (hours < 12) {
+    pm = "AM";
+  } else if (hours === 12) {
+    pm = "PM";
+  } else {
+    pm = "PM";
+    hours = hours % 12;
+  }
   const sH = hours.toString();
-  const sM = mins < 10 ? "0" + mins : ""+mins;
+  const sM = mins < 10 ? "0" + mins : "" + mins;
   return sH + ":" + sM + " " + pm;
 }
 function formatTimeFull(ts) {
   if (!ts) return "";
   const d = new Date(ts);
   const yyyy = d.getFullYear();
-  const mm = (d.getMonth()+1).toString().padStart(2,"0");
-  const dd = d.getDate().toString().padStart(2,"0");
+  const mm = (d.getMonth() + 1).toString().padStart(2, "0");
+  const dd = d.getDate().toString().padStart(2, "0");
   return `${yyyy}.${mm}.${dd}.  ${formatTimeHM(ts)}`;
 }
 
-// --- MESSAGE RENDERING, DEVICE NOTIFICATIONS WITHOUT SOUND ---
+// -------- MESSAGE RENDERING WITH SEARCH SUPPORT ----------
 let lastMsgArr = [];
-let lastMessageTsForNotif = 0;
 function renderMessages(msgArrRaw) {
   lastMsgArr = Array.isArray(msgArrRaw) ? msgArrRaw : [];
   messagesArea.innerHTML = "";
   let filteredArr = lastMsgArr;
-  // No guest filter anymore!
   if (searchTerm) {
     const q = searchTerm.toLowerCase();
-    filteredArr = filteredArr.filter(m =>
+    filteredArr = lastMsgArr.filter(m =>
       (m.msg && m.msg.toLowerCase().includes(q)) ||
       (m.name && m.name.toLowerCase().includes(q))
     );
@@ -1463,7 +1577,7 @@ function renderMessages(msgArrRaw) {
     } else if (searchTerm && lastMsgArr.length > 0) {
       messagesArea.innerHTML = `<div style="color:#909099;text-align:center;margin:1.5em 0;">Nincs találat a keresésre.</div>`;
     }
-    if(window.feather) feather.replace();
+    if (window.feather) feather.replace();
     return;
   }
   filteredArr.forEach(data => {
@@ -1475,7 +1589,7 @@ function renderMessages(msgArrRaw) {
     if (data.guest || !data.name || (!data.avatar || data.avatar.length <= 10)) {
       avatarWrap.style.background = "#13131b";
       const icon = document.createElement('i');
-      icon.setAttribute('data-feather','user');
+      icon.setAttribute('data-feather', 'user');
       icon.style.width = "24px";
       icon.style.height = "24px";
       icon.style.margin = "auto";
@@ -1493,8 +1607,10 @@ function renderMessages(msgArrRaw) {
       avatarWrap.appendChild(img);
     }
     div.appendChild(avatarWrap);
+
     const inner = document.createElement("div");
     inner.className = "msg-mainblock";
+
     const headrow = document.createElement("div");
     headrow.className = "msg-headerrow";
     const name = document.createElement('span');
@@ -1507,6 +1623,7 @@ function renderMessages(msgArrRaw) {
       name.dataset.profile = data.name;
     }
     headrow.appendChild(name);
+
     const actions = document.createElement("span");
     actions.className = "msg-actions";
     if (
@@ -1520,8 +1637,8 @@ function renderMessages(msgArrRaw) {
       delBtn.setAttribute("aria-label", "Üzenet törlése");
       delBtn.style.display = "flex";
       delBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 21 21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6V19.2c0 .44-.33.8-.77.8H5.77c-.44 0-.77-.36-.77-.8V6m3 0V4.8A2.8 2.8 0 0 1 10.8 2h1.4a2.8 2.8 0 0 1 2.8 2.8V6"></path><line x1="8" y1="10" x2="8" y2="16"></line><line x1="13" y1="10" x2="13" y2="16"></line></svg>`;
-      delBtn.onmouseover = function() { delBtn.style.color = "#e23c3b"; };
-      delBtn.onmouseout  = function() { delBtn.style.color = "#fff"; };
+      delBtn.onmouseover = function () { delBtn.style.color = "#e23c3b"; };
+      delBtn.onmouseout = function () { delBtn.style.color = "#fff"; };
       delBtn.onclick = (e) => {
         e.preventDefault();
         showDeleteModal(data.id, data.msg);
@@ -1530,171 +1647,489 @@ function renderMessages(msgArrRaw) {
     }
     headrow.appendChild(actions);
     inner.appendChild(headrow);
+
     const time = document.createElement('span');
     time.className = 'msg-time';
     time.textContent = formatTimeFull(data.ts);
     inner.appendChild(time);
+
     const msgElem = document.createElement('span');
     msgElem.className = 'msg-text';
     msgElem.textContent = data.msg;
     inner.appendChild(msgElem);
+
     div.appendChild(inner);
+
     messagesArea.appendChild(div);
-    if((data.guest || !data.avatar || data.avatar.length <= 10) && window.feather) {
+    if ((data.guest || !data.avatar || data.avatar.length <= 10) && window.feather) {
       feather.replace({ elements: [avatarWrap] });
     }
-    // DEVICE NOTIFICATION SUPPORT: NO SOUND!
-    if(window.enableDeviceNotification && !msgElem._notif) {
-      if (data.ts > lastMessageTsForNotif && data.ts >= Date.now()-1500) {
-        window.enableDeviceNotification(data);
-        msgElem._notif = true;
-      }
-    }
   });
-  if(window.feather) feather.replace();
+  if (window.feather) feather.replace();
 }
-// --- Show push notification ---
-// Device push notifications are supported, but without sound.
-window.enableDeviceNotification = function(msgObj) {
-  if (!("Notification" in window)) return;
-  if (document.hasFocus && document.hasFocus()) return;
-  // Use sender name as title, message as body
-  let title = (msgObj && msgObj.name ? msgObj.name : "Új üzenet");
-  let body = (msgObj && msgObj.msg ? msgObj.msg : "");
-  let icon = (msgObj && msgObj.avatar && msgObj.avatar.length > 10 ? msgObj.avatar : undefined);
-
-  if (Notification.permission === "granted") {
-    try {
-      new Notification(title, { body, icon });
-      // NO SOUND!
-    } catch(e) {}
-  } else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then(perm => {
-      if (perm === "granted") {
-        try {
-          new Notification(title, { body, icon });
-        } catch(e) {}
-      }
-    });
-  }
-};
 
 onValue(messagesRef, (snapshot) => {
   let msgArr = [];
   snapshot.forEach((child) => {
     msgArr.push({ id: child.key, ...child.val() });
   });
-  msgArr.sort((a,b)=> b.ts-a.ts);
-  // Record max seen ts for notification logic
-  const maxTs = msgArr.length > 0 ? msgArr[0].ts : 0;
-  if (maxTs > lastMessageTsForNotif) lastMessageTsForNotif = maxTs;
+  msgArr.sort((a, b) => b.ts - a.ts);
   renderMessages(msgArr);
 });
 
-async function loadPmUserList() {
-  pmUserlist.innerHTML = "<div style='margin-bottom:.6em; color:#888'>Kattints egy felhasználóra!</div>";
-  pmThreadArea.innerHTML = "";
+// ---------------------- INSTAGRAM DM SYSTEM (PM) 1:1 ---------------------------
+
+/*
+Instagram-ihletésű DM layout:
+- Bal oszlop: kereső ("Keresés"), üzenetlista (utolsó beszélgetések), egy új DM gomb
+- Közép: üzenet thread (kinyitva), vagy "Válassz beszélgetést" üres view
+- Felül: profil név, gombok, stb.
+*/
+
+let dmListenerRefs = {};
+let dmActiveUser = null;
+
+async function loadInstagramDM() {
   if (!currentUser) {
-    pmUserlist.innerHTML += '<div style="color:#b68686;text-align:center;">Lépj be!</div>';
+    tabs.pm.innerHTML = `
+      <div style="color:#b68686;text-align:center;padding:2em 0;">
+        Lépj be a privát üzenetekhez!
+      </div>
+    `;
     return;
   }
-  const usersSnap = await get(usersRef);
-  let userArr = [];
-  usersSnap.forEach(childSnap => {
-    const user = childSnap.val();
-    if (user.username && user.username !== currentUser) {
-      userArr.push(user.username);
+
+  // Setup Instagram DM layout
+  tabs.pm.innerHTML = `
+      <div id="igdm-wrap" style="display:flex;flex-direction:row;height:100%;background:#18181f;">
+        <div id="igdm-sidenav" style="width:245px;min-width:170px;max-width:320px;background:#16161b;border-right:1.5px solid #27272e;display:flex;flex-direction:column;">
+          <div style="padding:1.1em 1em 0.6em 1em;border-bottom:1px solid #262631;display:flex;align-items:center;">
+            <span style="font-size:1.16em;font-weight:800;color:#ededed;letter-spacing:.02em;margin-right:.4em;">${currentUser}</span>
+            <span id="igdm-user-avatar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;display:inline-block;"></span>
+          </div>
+          <div style="padding:.6em 1em .7em 1.2em;display:flex;align-items:center;">
+            <input type="text" placeholder="Keresés..." id="igdm-search" maxlength="28"
+              style="border-radius:6px;max-width:145px;width:100%;background:#232336;color:#e7e7ee;padding:.44em .7em;outline:none;border:1px solid #262636;font-size:.96em;">
+          </div>
+          <div id="igdm-threadlist" style="flex:1 1 0;min-height:0;overflow-y:auto;"></div>
+          <div style="padding:1em;border-top:1px solid #222227;background:#191923;text-align:center;">
+            <button id="igdm-create-msg-btn" style="border:none;background:#31314a;color:#e3e3ee;padding:.44em 1.1em;border-radius:7px;font-size:.98em;font-weight:500;cursor:pointer;">Új üzenet</button>
+          </div>
+        </div>
+        <div id="igdm-center" style="flex:1 1 0;min-width:0;background:#17171a;">
+            <div id="igdm-threadview-empty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;">
+              <div style="font-size:2.9em;color:#797994;padding:1.2em 0;">
+                <i data-feather="mail"></i>
+              </div>
+              <div style="font-size:1.25em;color:#cbcbe7;padding-bottom:.4em;">Üdvözöljük a privát üzenetben</div>
+              <div style="color:#8686a0;font-size:.98em;">Válassz vagy kezdj egy beszélgetést.</div>
+            </div>
+            <div id="igdm-threadview-real" style="display:none;height:100%;"></div>
+        </div>
+      </div>
+  `;
+  // Avatar
+  showUserOrGuestAvatar(document.getElementById("igdm-user-avatar"), currentUser, currentAvatar, false);
+
+  if (window.feather) feather.replace({ elements: [tabs.pm] });
+
+  // Load conversation list (threads)
+  const threadListDiv = document.getElementById("igdm-threadlist");
+  const searchInput = document.getElementById("igdm-search");
+  const createMsgBtn = document.getElementById("igdm-create-msg-btn");
+  const threadviewEmpty = document.getElementById("igdm-threadview-empty");
+  const threadviewReal = document.getElementById("igdm-threadview-real");
+
+  let currentQuery = '';
+  let userListCache = [];
+  let threadsMetaCache = [];
+
+  // --- DM Conversation Threads List (sorted by last msg ts) ---
+  function refreshThreadsList(searchTermText = "") {
+    // gets user's DM threads directly from DB
+    get(pmRef).then(snap => {
+      let threads = [];
+      snap.forEach(threadSnap => {
+        const key = threadSnap.key;
+        const [u1, u2] = key.split('__pm__');
+        if (u1 === currentUser || u2 === currentUser) {
+          // Who's the other
+          const otherUser = u1 === currentUser ? u2 : u1;
+          let latest = null;
+          threadSnap.forEach(msgSnap => {
+            const v = msgSnap.val();
+            if (!latest || (v.ts > latest.ts)) latest = v;
+          });
+          threads.push({
+            threadId: key,
+            user: otherUser,
+            last: latest ? latest : null
+          });
+        }
+      });
+      // Order: latest activity first
+      threads.sort((a, b) => ((b.last ? b.last.ts : 0) - (a.last ? a.last.ts : 0)));
+      threadsMetaCache = threads;
+      // Optionally filter
+      let filtered = threads;
+      if (searchTermText) {
+        filtered = threads.filter(t =>
+          t.user.toLowerCase().includes(searchTermText.toLowerCase())
+        );
+      }
+      threadListDiv.innerHTML = "";
+      if (filtered.length === 0) {
+        threadListDiv.innerHTML = `<div style="text-align:center;color:#8686a3;padding:1.6em 0;">Nincs beszélgetés.</div>`;
+        return;
+      }
+      filtered.forEach(t => {
+        const cdiv = document.createElement("div");
+        cdiv.className = "igdm-threadcard";
+        cdiv.style.display = "flex";
+        cdiv.style.alignItems = "center";
+        cdiv.style.gap = "0.8em";
+        cdiv.style.padding = "0.6em 1em";
+        cdiv.style.cursor = "pointer";
+        cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
+        cdiv.style.borderBottom = "1px solid #1d1d23";
+        cdiv.onmouseenter = () => cdiv.style.background = "#222231";
+        cdiv.onmouseleave = () => cdiv.style.background = (dmActiveUser === t.user) ? "#222231" : "transparent";
+        cdiv.onclick = () => {
+          openInstagramThread(t.user);
+        };
+
+        // Avatar
+        const av = document.createElement("span");
+        av.style.width = '38px';
+        av.style.height = '38px';
+        av.style.borderRadius = "50%";
+        av.style.background = "#22223b";
+        av.style.overflow = "hidden";
+        av.style.display = "inline-block";
+        get(child(usersRef, t.user)).then(snap => {
+          if (snap.exists() && snap.val().avatar && snap.val().avatar.length > 10) {
+            let img = document.createElement("img");
+            img.src = snap.val().avatar;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
+            av.appendChild(img);
+          } else {
+            av.innerHTML = '<i data-feather="user"></i>';
+            if (window.feather) feather.replace({ elements: [av] });
+          }
+        });
+        cdiv.appendChild(av);
+
+        // Middle: Name, last msg.
+        const info = document.createElement("div");
+        info.style.flex = "1 1 0";
+        info.style.overflow = "hidden";
+
+        // Name (user)
+        const nameSpan = document.createElement("div");
+        nameSpan.textContent = t.user;
+        nameSpan.style.fontWeight = 700;
+        nameSpan.style.fontSize = "1em";
+        nameSpan.style.color = "#e7e7ee";
+        info.appendChild(nameSpan);
+
+        // Last message (from who, short and faded)
+        if (t.last) {
+          const msgRow = document.createElement("div");
+          msgRow.style.fontSize = "0.97em";
+          msgRow.style.color = "#ababc2";
+          msgRow.style.whiteSpace = "nowrap";
+          msgRow.style.overflow = "hidden";
+          msgRow.style.textOverflow = "ellipsis";
+          msgRow.innerHTML =
+            (t.last.from === currentUser ? "Te: " : "") +
+            (t.last.msg.length > 34 ? t.last.msg.substring(0, 33) + "…" : t.last.msg);
+          info.appendChild(msgRow);
+        }
+        cdiv.appendChild(info);
+
+        // Time (right)
+        if (t.last) {
+          const timeDiv = document.createElement("div");
+          timeDiv.style.fontSize = ".92em";
+          timeDiv.style.color = "#85859d";
+          timeDiv.textContent = formatTimeHM(t.last.ts);
+          cdiv.appendChild(timeDiv);
+        } else {
+          cdiv.appendChild(document.createElement("div"));
+        }
+
+        threadListDiv.appendChild(cdiv);
+      });
+    });
+  }
+
+  // --- Search field events ---
+  searchInput.addEventListener("input", function () {
+    refreshThreadsList(searchInput.value.trim());
+  });
+
+  // --- "Új üzenet" (new DM) button ---
+  createMsgBtn.onclick = async function () {
+    if (!userListCache.length) {
+      // Cache all known usernames
+      userListCache = [];
+      const usersSnap = await get(usersRef);
+      usersSnap.forEach(childSnap => {
+        if (childSnap.key !== currentUser)
+          userListCache.push(childSnap.key);
+      });
     }
-  });
-  if (userArr.length == 0) {
-    pmUserlist.innerHTML += "<div style='color:#888;text-align:center;'>Más regisztrált nincs.</div>";
-    return;
+    // Simple modal to select user to DM
+    const selectUser = prompt("Írd be a felhasználó nevét akinek írni akarsz:", "");
+    if (selectUser && userListCache.includes(selectUser)) {
+      openInstagramThread(selectUser, true);
+    } else if (selectUser) {
+      alert("Felhasználó nem található.");
+    }
+  };
+
+  // Show thread list
+  refreshThreadsList();
+
+  // Show placeholder at startup
+  showInstagramDmThread(null);
+
+  // Reset previous listeners
+  for (let k in dmListenerRefs) {
+    if (typeof dmListenerRefs[k] === "function") dmListenerRefs[k]();
   }
-  userArr.forEach(uname => {
-    const btn = document.createElement("button");
-    btn.className = "edit-profile-btn";
-    btn.style.marginRight = "0";
-    btn.textContent = uname;
-    btn.onclick = () => openPmThread(uname);
-    pmUserlist.appendChild(btn);
-  });
+  dmListenerRefs = {};
+  dmActiveUser = null;
 }
 
-async function openPmThread(targetName) {
-  pmThreadArea.innerHTML = `
-    <div style="text-align:center; font-size:1.04em; color:#b7b7b7;margin-bottom:0.5rem;">
-      Üzenet: <b>${currentUser}</b> — <b>${targetName}</b>
-    </div>
-    <div id="pmthread-messages"></div>
-    <form id="pmthread-form" style="background:none;width:100%;">
-      <input type="text" id="pmthread-input" placeholder="Írj valamit..." maxlength="300" style="width:84%;display:inline-block;" />
-      <button type="submit" style="width:15%;display:inline-block;margin-left:1%;background:transparent;color:#d1d1d1;padding:0;font-size:1.34rem;border:none;vertical-align:middle;" aria-label="Küldés" title="Küldés">
-         <i data-feather="send"></i>
-      </button>
-    </form>
-    <button class="logout-btn" id="close-pmthread-btn" style="margin-top:0.6rem;">Vissza</button>
-  `;
-  const threadId = getPmThreadId(currentUser, targetName);
-  const threadRef = child(pmRef, threadId);
-  onValue(threadRef, snap => {
-    const threadMsgs = [];
-    snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
-    threadMsgs.sort((a,b)=>a.ts-b.ts);
-    const msgbox = pmThreadArea.querySelector('#pmthread-messages');
-    msgbox.innerHTML = '';
-    threadMsgs.forEach(data => {
-      const msgDiv = document.createElement("div");
-      msgDiv.className = 'pm-message';
-      const who = document.createElement('span');
-      who.className = 'pm-author';
-      who.textContent = data.from === currentUser ? "Te" : data.from;
-      const text = document.createElement('span');
-      text.className = 'pm-text';
-      text.textContent = data.msg;
-      msgDiv.appendChild(who);
-      msgDiv.appendChild(text);
-      msgbox.appendChild(msgDiv);
-    });
-    msgbox.scrollTop = msgbox.scrollHeight;
-  });
-  pmThreadArea.querySelector('#pmthread-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const msgInput = pmThreadArea.querySelector('#pmthread-input');
-    const msg = msgInput.value.trim();
-    if (!msg) return;
-    try {
-      await push(child(pmRef, threadId), {
-        from: currentUser,
-        msg,
-        ts: Date.now()
-      });
-      msgInput.value = '';
-    } catch (e) {
-      document.getElementById('pm-error').textContent = "Nem sikerült elküldeni!";
-      document.getElementById('pm-error').classList.remove('hide');
-    }
+// ---- Open/Display a 1:1 thread Insta-style ----
+
+// UTILITY: Find and keep the topbar if any; the render should keep it on top, not be blown away.
+function ensureInstagramThreadTopBar(threadviewReal, targetUser, avatar) {
+  let top = document.getElementById("igdm-thread-topbar");
+  if (!top) {
+    renderInstagramThreadTopBar(targetUser, avatar);
   }
-  pmThreadArea.querySelector('#close-pmthread-btn').onclick = () => loadPmUserList();
+  // return bar
+  return document.getElementById("igdm-thread-topbar");
 }
+
+function showInstagramDmThread(targetUser) {
+  const threadviewEmpty = document.getElementById("igdm-threadview-empty");
+  const threadviewReal = document.getElementById("igdm-threadview-real");
+  if (!targetUser) {
+    threadviewEmpty.style.display = "";
+    threadviewReal.style.display = "none";
+    threadviewReal.innerHTML = "";
+    dmActiveUser = null;
+    return;
+  }
+  threadviewEmpty.style.display = "none";
+  threadviewReal.style.display = "";
+
+  // Get user data for target
+  get(child(usersRef, targetUser)).then(snap => {
+    const val = snap.exists() ? snap.val() : { username: targetUser, avatar: "" };
+
+    // We render the top bar **outside** the bubble/message holder, so that it stays on top
+    // MOD: Lower vertical padding on form, padding: .30em 1em;
+    // MOD: Lower input field padding top-bottom (.44em 1em), and font-size:1em to keep placeholder visually lower
+    threadviewReal.innerHTML = `
+      <div id="igdm-thread-messages" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:1em 1.2em;"></div>
+      <div style="border-top:1px solid #27273b;background:#17171e;">
+        <form id="igdm-msg-form" style="display:flex;gap:.7em;align-items:center;padding:.30em 1em;">
+          <input type="text" id="igdm-msg-input" placeholder="Üzenet..." maxlength="400"
+            style="flex:1 1 0;margin:0 0.3em;border:none;outline:none;padding:.44em 1em;border-radius:28px;font-size:1em;background:#23233a;color:#e7e7ef;">
+          <button type="submit" style="border:none;background:#39395e;color:#fff;padding:.6em 1.5em;border-radius:28px;font-weight:500;cursor:pointer;">Küldés</button>
+        </form>
+      </div>
+    `;
+
+    // Insert the topbar **before** the message list (stay at top)
+    renderInstagramThreadTopBar(targetUser, val.avatar);
+
+    // Move the topbar as the very first child, always (overwrites if already exists)
+    const topBar = document.getElementById("igdm-thread-topbar");
+    if (topBar && threadviewReal.firstChild !== topBar) {
+      threadviewReal.insertBefore(topBar, threadviewReal.firstChild);
+    }
+  });
+
+  // Realtime thread listener (unsubscribe previous)
+  if (dmListenerRefs[targetUser]) {
+    dmListenerRefs[targetUser](); // unsubscribe previous
+  }
+  const threadId = getPmThreadId(currentUser, targetUser);
+
+  // We need to get handles after we have created the HTML (not async section above)
+  setTimeout(() => {
+    const msgDiv = document.getElementById("igdm-thread-messages");
+    // Listen for updates
+    dmListenerRefs[targetUser] = onValue(child(pmRef, threadId), snap => {
+      let threadMsgs = [];
+      snap.forEach(childSnap => threadMsgs.push(childSnap.val()));
+      threadMsgs.sort((a, b) => a.ts - b.ts);
+
+      // Render Insta-style chat bubbles
+      msgDiv.innerHTML = "";
+      threadMsgs.forEach(data => {
+        const bubble = document.createElement("div");
+        bubble.style.display = "flex";
+        bubble.style.marginBottom = ".32em";
+        bubble.style.justifyContent = data.from === currentUser ? "flex-end" : "flex-start";
+        bubble.style.alignItems = "flex-end";
+        // Bubble inner
+        const bubbleInner = document.createElement("div");
+        bubbleInner.style.maxWidth = "70%";
+        bubbleInner.style.minWidth = "1px";
+        bubbleInner.style.background = data.from === currentUser ? "linear-gradient(94deg,#595bb4 40%,#3d9ea6 99%)" : "#23233b";
+        bubbleInner.style.color = "#fff";
+        bubbleInner.style.borderRadius = data.from === currentUser ? "14px 14px 2px 14px" : "14px 14px 14px 2px";
+        bubbleInner.style.padding = ".55em 1.0em";
+        bubbleInner.style.fontSize = "1.02em";
+        bubbleInner.style.wordBreak = "break-word";
+        bubbleInner.style.marginLeft = data.from === currentUser ? "12px" : "0";
+        bubbleInner.style.marginRight = data.from === currentUser ? "0" : "12px";
+        bubbleInner.textContent = data.msg;
+        bubble.appendChild(bubbleInner);
+
+        // Optionally small timestamp (below each msg - Instagram usually via tooltip, here inline)
+        const meta = document.createElement("div");
+        meta.style.fontSize = ".86em";
+        meta.style.opacity = "0.45";
+        meta.style.marginTop = "1px";
+        meta.style.textAlign = data.from === currentUser ? "right" : "left";
+        meta.textContent = formatTimeHM(data.ts);
+        bubbleInner.appendChild(document.createElement('br'));
+        bubbleInner.appendChild(meta);
+
+        msgDiv.appendChild(bubble);
+      });
+      // Always scroll to bottom (after a new msg arrives)
+      setTimeout(() => {
+        msgDiv.scrollTop = msgDiv.scrollHeight;
+      }, 10);
+    });
+
+    // Handle multi-message sending
+    const form = document.getElementById("igdm-msg-form");
+    const input = document.getElementById("igdm-msg-input");
+    let sending = false;
+
+    // Fix: sending lockout addressed (disable button/input only during push)
+    form.onsubmit = async function (e) {
+      e.preventDefault();
+      if (sending) return;
+      const val = input.value.trim();
+      if (!val) return;
+      sending = true;
+      form.querySelector('button[type="submit"]').disabled = true;
+      input.disabled = true;
+      try {
+        await push(child(pmRef, threadId), {
+          from: currentUser,
+          msg: val,
+          ts: Date.now()
+        });
+        input.value = "";
+        // After sending, immediate re-enable
+        input.disabled = false;
+        form.querySelector('button[type="submit"]').disabled = false;
+        sending = false;
+        // Scroll to bottom (again for safety)
+        setTimeout(() => { msgDiv.scrollTop = msgDiv.scrollHeight; }, 10);
+      } catch (e) {
+        input.disabled = false;
+        form.querySelector('button[type="submit"]').disabled = false;
+        sending = false;
+        alert("Nem sikerült elküldeni az üzenetet!");
+      }
+    };
+  }, 0);
+
+  dmActiveUser = targetUser;
+  // Update threads list selection
+  setTimeout(() => {
+    const cards = document.querySelectorAll(".igdm-threadcard");
+    for (let c of cards) {
+      if (c.querySelector("div") && c.querySelector("div").textContent === targetUser) {
+        c.style.background = "#222231";
+      } else {
+        c.style.background = "transparent";
+      }
+    }
+  }, 30);
+}
+
+// Top bar for Insta DM view
+function renderInstagramThreadTopBar(targetUser, avatar) {
+  const threadviewReal = document.getElementById("igdm-threadview-real");
+  if (!threadviewReal) return;
+  let top = document.getElementById("igdm-thread-topbar");
+  if (!top) {
+    top = document.createElement("div");
+    top.id = "igdm-thread-topbar";
+    top.style.display = "flex";
+    top.style.alignItems = "center";
+    top.style.gap = ".7em";
+    top.style.padding = "1.05em 1.12em";
+    top.style.borderBottom = "1px solid #23233a";
+    threadviewReal.insertBefore(top, threadviewReal.firstChild);
+  }
+  // Left: back button for mobile
+  top.innerHTML = `
+    <button id="igdm-thread-back" style="border:none;background:transparent;outline:none;font-size:1.18em;color:#8aaedd;display:inline-block;margin-right:.6em;cursor:pointer;">
+      <i data-feather="arrow-left"></i>
+    </button>
+    <span id="igdm-top-avatar" style="width:34px;height:34px;border-radius:50%;overflow:hidden;display:inline-block;background:#202033;"></span>
+    <span id="igdm-top-username" style="font-size:1.1em;font-weight:600;color:#f4f4fb">${targetUser}</span>
+  `;
+  // Show avatar
+  const av = document.getElementById("igdm-top-avatar");
+  if (avatar && avatar.length > 10) {
+    av.innerHTML = `<img src="${avatar}" alt="-" style="width:100%;height:100%;object-fit:cover;">`;
+  } else {
+    av.innerHTML = `<i data-feather="user"></i>`;
+    if (window.feather) feather.replace({ elements: [av] });
+  }
+  // Back button only works on small screen
+  document.getElementById("igdm-thread-back").onclick = function () {
+    dmActiveUser = null;
+    showInstagramDmThread(null);
+  };
+  if (window.feather) feather.replace({ elements: [top] });
+}
+
+// Handles clicking on a user to open thread
+function openInstagramThread(targetUser, alwaysOpen = false) {
+  if (!targetUser) return;
+  // Fix: Don't switch tab, just open thread. (Old code never did showTab("main"), so this is safe)
+  showInstagramDmThread(targetUser);
+}
+
+// Given 2 users, get thread ID (same canonicalization as before)
 function getPmThreadId(user1, user2) {
   return [user1, user2].sort().join('__pm__');
 }
 
+// --- fileToBase64Square, unchanged ---
 function fileToBase64Square(file, sz) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const reader = new FileReader();
-    reader.onload = function(evt) {
+    reader.onload = function (evt) {
       const img = new window.Image();
-      img.onload = function() {
+      img.onload = function () {
         const canvas = document.createElement('canvas');
         canvas.width = sz;
         canvas.height = sz;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = "#181821";
-        ctx.fillRect(0,0,sz,sz);
+        ctx.fillRect(0, 0, sz, sz);
         let size = Math.min(img.width, img.height);
-        let sx = (img.width-size)/2;
-        let sy = (img.height-size)/2;
+        let sx = (img.width - size) / 2;
+        let sy = (img.height - size) / 2;
         ctx.drawImage(img, sx, sy, size, size, 0, 0, sz, sz);
         resolve(canvas.toDataURL('image/png'));
       };
@@ -1703,6 +2138,7 @@ function fileToBase64Square(file, sz) {
     reader.readAsDataURL(file);
   });
 }
+
 function initTabDisplay() {
   updateHeaderBtns();
   updateMobileNavBtns();
@@ -1710,7 +2146,7 @@ function initTabDisplay() {
   showTab("main");
 }
 initTabDisplay();
-if(window.feather) feather.replace();
+if (window.feather) feather.replace();
 </script>
 </body>
 </html>
