@@ -1442,7 +1442,7 @@ function formatTimeFull(ts) {
   return `${yyyy}.${mm}.${dd}.  ${formatTimeHM(ts)}`;
 }
 
-// --- MESSAGE RENDERING, NO DEVICE NOTIFICATIONS ---
+// --- MESSAGE RENDERING, DEVICE NOTIFICATIONS WITHOUT SOUND ---
 let lastMsgArr = [];
 let lastMessageTsForNotif = 0;
 function renderMessages(msgArrRaw) {
@@ -1543,21 +1543,40 @@ function renderMessages(msgArrRaw) {
     if((data.guest || !data.avatar || data.avatar.length <= 10) && window.feather) {
       feather.replace({ elements: [avatarWrap] });
     }
-    // DEVICE NOTIFICATION SUPPORT REMOVED (sound and push notification suppressed)
-    // Previously here:
-    // if(wallSettings && wallSettings.notifSound && window.enableDeviceNotification && !msgElem._notif) {
-    //   if (data.ts > lastMessageTsForNotif && data.ts >= Date.now()-1500) {
-    //     window.enableDeviceNotification(data);
-    //     msgElem._notif = true;
-    //   }
-    // }
+    // DEVICE NOTIFICATION SUPPORT: NO SOUND!
+    if(window.enableDeviceNotification && !msgElem._notif) {
+      if (data.ts > lastMessageTsForNotif && data.ts >= Date.now()-1500) {
+        window.enableDeviceNotification(data);
+        msgElem._notif = true;
+      }
+    }
   });
   if(window.feather) feather.replace();
 }
 // --- Show push notification ---
-// REMOVE/SUPPRESS Device notification and sound entirely.
+// Device push notifications are supported, but without sound.
 window.enableDeviceNotification = function(msgObj) {
-  // Notifications are disabled (sound removed)
+  if (!("Notification" in window)) return;
+  if (document.hasFocus && document.hasFocus()) return;
+  // Use sender name as title, message as body
+  let title = (msgObj && msgObj.name ? msgObj.name : "Új üzenet");
+  let body = (msgObj && msgObj.msg ? msgObj.msg : "");
+  let icon = (msgObj && msgObj.avatar && msgObj.avatar.length > 10 ? msgObj.avatar : undefined);
+
+  if (Notification.permission === "granted") {
+    try {
+      new Notification(title, { body, icon });
+      // NO SOUND!
+    } catch(e) {}
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(perm => {
+      if (perm === "granted") {
+        try {
+          new Notification(title, { body, icon });
+        } catch(e) {}
+      }
+    });
+  }
 };
 
 onValue(messagesRef, (snapshot) => {
